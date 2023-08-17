@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Mod Manager</title>
+<style>
+    @keyframes loadingAnimation {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    } /* Keep this in memory so we can use it when loading other content, */
+
+    .loading-box {
+        position: absolute;
+        display: none;
+        width: 40px;
+        height: 40px;
+        top: 50%;
+        left: 50%;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #2F81F7;
+        border-radius: 50%;
+        animation: loadingAnimation 1s linear infinite;
+        margin: 20px auto;
+    }
+
+    .header-container {
+        background-color: #1E2327;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        width: 99%;
+        top: 0px;
+        left: 0px;
+        z-index: 1;
+        /* Ensure the header stays above other content because its fucking retarded with this flex style */
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-decoration: none;
+        height: 50px;
+        width: min-content;
+    }
+
+    .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+        margin: 0;
+    }
+
+    .nav-link {
+        font-size: 18px;
+        color: #FFFFFF;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .nav-link:hover {
+        color: #2F81F7;
+    }
+</style>
+<style>
+    body {
+        background-color: #010409;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .main-container {
+display: flex;
+justify-content: center;
+flex-direction: row-reverse;
+align-items: center;
+}
+.left-container {
+padding: 10px;
+max-width: 200px;
+background-color: #0D1117;
+height: 3.5in;
+}
+    .mod-discovery {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        flex-grow: 1;
+    }
+    .workshop-header {
+        font-size: 24px;
+        margin: 20px 0;
+        color: #FFFFFF;
+    }
+    .carousel {
+        display: flex;
+        overflow-x: auto;
+        gap: 10px;
+    }
+    .sorting-bar {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .search-bar,
+    .mod-type-select {
+        padding: 5px;
+        border: 1px solid #2F81F7;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        color: #000000;
+        margin: 0 10px;
+    }
+    .expandable-tags {
+        position: relative;
+    }
+    .expand-tags-button {
+        padding: 5px 10px;
+        background-color: #2F81F7;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .tags {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #0D1117;
+        border: 1px solid #2F81F7;
+        border-radius: 5px;
+        padding: 5px;
+        display: none;
+    }
+    .tags.active {
+        display: block;
+    }
+    .sorting-options {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .sorting-option {
+        padding: 5px 10px;
+        background-color: #2F81F7;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .mod-results {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .header-container-workshop {
+    background-color: #1E2327;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    width: 99%;
+    top: 65px;
+    left: 0px;
+    z-index: 1;
+    /* Ensure the header stays above other content because its fucking retarded with this flex style */
+}
+
+.logo-workshop {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-decoration: none;
+    height: 50px;
+    width: min-content;
+}
+
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Regular.ttf?v=4.015') format('truetype');
+font-weight:normal;
+font-style:normal;
+} 
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Light.ttf?v=4.015') format('truetype');
+font-weight:300;
+/* Light */
+font-style:normal;
+} 
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Thin.ttf?v=4.015') format('truetype');
+font-weight:200;
+/* Ultra-Light / Thin */
+font-style:normal;
+} 
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Medium.ttf?v=4.015') format('truetype');
+font-weight:500;
+/* Medium */
+font-style:normal;
+} 
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Bold.ttf?v=4.015') format('truetype');
+font-weight:bold;
+font-style:normal;
+} 
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-RegularItalic.ttf?v=4.015') format('truetype');
+font-weight:normal;
+font-style:italic;
+} 
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-LightItalic.ttf?v=4.015') format('truetype');
+font-weight:300;
+/* Light */
+font-style:italic;
+} 
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-BoldItalic.ttf?v=4.015') format('truetype');
+font-weight:bold;
+font-style:italic;
+} 
+@font-face { 
+font-family:'Motiva Sans';
+src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Black.ttf?v=4.015') format('truetype');
+font-weight:900;
+/* Black */
+font-style:normal;
+} 
+body {  
+background:#1b2838;
+text-align:left;
+color:#636363;
+font-size:14px;
+font-family:"Motiva Sans",Arial,Helvetica,sans-serif;
+font-weight:300;
+}  
+.apphub_HomeHeader { 
+margin: 0 auto 8px auto; 
+max-width: 948px;
+} 
+
+.apphub_background { 
+background-position: center top; 
+background-attachment: fixed; 
+background-repeat: no-repeat; 
+background-size: cover; 
+} 
+
+.responsive_page_frame { 
+position: relative;
+} 
+
+body { 
+background: #1b2838; 
+text-align: left; 
+color: #8F98A0; 
+font-size: 14px; 
+margin: 0; 
+padding: 0;
+} 
+
+body { 
+font-family: Arial, Helvetica, Verdana, sans-serif;
+} 
+
+body { 
+background: #1b2838; 
+color: #acb2b8;
+} 
+
+body { 
+font-family: "Motiva Sans",Arial,Helvetica,sans-serif; 
+font-weight: 300;
+} 
+
+body { 
+color: #969696; 
+font-family: "Motiva Sans",Arial,Helvetica,sans-serif;
+} 
+
+body.apphub_blue { 
+background: #1b2838; 
+color: #636363;
+} 
+
+html.responsive body { 
+min-height: 100%; 
+height: auto; 
+position: relative;
+} 
+
+html { 
+height: 100%;
+} 
+
+:root { 
+--gpStoreDarkGrey: #2A475E; 
+--gpStoreDarkerGrey: #1B2838; 
+--gpGradient-StoreBackground: linear-gradient(180deg, var(--gpStoreDarkGrey) 0%, var(--gpStoreDarkerGrey) 80%); 
+--gpSpace-Gutter: 24px; 
+--gpSpace-Gap: 12px; 
+--screen-width: 100vw; 
+--gpWidth-6colcap: calc((var(--screen-width) - (5 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 6); 
+--gpWidth-5colcap: calc((var(--screen-width) - (4 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 5); 
+--gpWidth-4colcap: calc((var(--screen-width) - (3 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 4); 
+--gpWidth-3colcap: calc((var(--screen-width) - (2 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 3); 
+--gpWidth-2colcap: calc((var(--screen-width) - (1 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 2); 
+--gpWidth-1colcap: calc((var(--screen-width) - (2 * var(--gpSpace-Gutter)))); 
+} 
+
+@media screen and (min-width: 1280px){ 
+:root { 
+--gpSpace-Gutter: calc(24px + 2vw);
+} 
+}     
+
+html.responsive { 
+height: 100%;
+} 
+
+.workshop_header {
+max-width: max-content;
+height: 203px;
+background-repeat: no-repeat;
+position: relative;
+box-shadow: 0 0 6px 0 #000000;
+background-repeat-x: no-repeat;
+background-repeat-y: no-repeat;
+width: 170%;
+left: 25%;
+overflow: hidden;
+}
+
+:selection { 
+background: #54a5d4; 
+text-shadow: 1px 1px 2px rgba(0,0,0,.6666666667); 
+color: #fff;
+} 
+
+:-webkit-scrollbar { 
+height: 12px; 
+width: 14px; 
+background: rgba(0,0,0,0); 
+z-index: 12; 
+overflow: visible;
+} 
+
+:-webkit-scrollbar-thumb { 
+background: rgba(255,255,255,.1);
+} 
+
+:-webkit-scrollbar-thumb { 
+width: 10px; 
+background-color: #434953; 
+border-radius: 10px; 
+z-index: 12; 
+border: 4px solid rgba(0,0,0,0); 
+background-clip: padding-box; 
+transition: background-color .32s ease-in-out; 
+margin: 4px; 
+min-height: 32px; 
+min-width: 32px;
+} 
+
+:-webkit-scrollbar-corner { 
+background: #202020;
+} 
+
+:-webkit-scrollbar-thumb:hover { 
+background-color: #4e5157;
+} 
+
+.browseAppDetails { 
+display: table; 
+width: 958px; 
+height: 160px; 
+position: relative;
+} 
+
+.workshop_browse_menu_area { 
+position: absolute; 
+
+position: absolute;
+left: 0px;
+right: 0px;
+bottom: 0px;
+padding-top: 10px;
+padding-bottom: 10px;
+height: 25px;
+padding-left: 20px;
+/* background: -webkit-linear-gradient( left, rgba( 43, 60, 85, 0.8 ) 5%,rgba( 42, 63, 95, 0.2 ) 95%); */
+/* background: linear-gradient( to right, rgba( 43, 60, 85, 0.8 ) 5%,rgba( 42, 63, 95, 0.2 ) 95%); */
+text-align: left;
+border-bottom: none;
+padding-bottom: 8px;
+}
+.customBrowseDescContainer { 
+display: table-cell; 
+vertical-align: middle; 
+width: 100%;
+} 
+
+.workshop_browse_tab { 
+font-size: 14px; 
+display: inline-block; 
+padding-right: 10px; 
+color: #cccccc; 
+line-height: 25px;
+} 
+
+.workshop_browse_tab.active { 
+border-bottom: 2px solid #fff; 
+padding-bottom: 8px;
+} 
+
+.workshop_browse_tab.active { 
+color: #fff;
+} 
+
+.workshop_browse_tab.drop { 
+padding-right: 0px;
+} 
+
+.workshop_browse_search { 
+position: absolute; 
+top: 6px; 
+height: 32px; 
+width: 290px; 
+right: 5px; 
+padding: 0px 7px 0px 0px; 
+background-color: rgba( 0, 0, 0, 0.6 ); 
+border-radius: 4px; 
+border-left: 1px solid #000; 
+border-top: 1px solid #000; 
+border-right: 1px solid #354357; 
+border-bottom: 1px solid #354357;
+} 
+
+a { 
+color: #ebebeb; 
+text-decoration: none; 
+cursor: pointer;
+} 
+
+.customBrowseLink { 
+display: block; 
+position: absolute; 
+top: 0; 
+max-width: 500px; 
+width: 100%; 
+height: 158px;
+} 
+
+.customBrowseDesc { 
+text-align: left; 
+width: 411px; 
+float: right; 
+margin-right: 20px; 
+margin-bottom: 10px;
+} 
+
+.workshop_browse_tab a  { 
+color: #cccccc; 
+padding-left: 10px;
+} 
+
+.workshop_browse_tab.active a  { 
+color: #fff;
+} 
+
+.workshop_browse_tab a:hover, .workshop_browse_tab.active a:hover { 
+color: #67c1f5;
+} 
+
+.workshop_browse_tab a.dropdown  { 
+padding-right: 20px; 
+background-image: url(  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAMCAYAAACA0IaCAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MUFBQkYyMTI2QjhGMTFFNDlDQkJDQkEwNzc3NkZDQ0IiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MUFBQkYyMTM2QjhGMTFFNDlDQkJDQkEwNzc3NkZDQ0IiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoxQUFCRjIxMDZCOEYxMUU0OUNCQkNCQTA3Nzc2RkNDQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxQUFCRjIxMTZCOEYxMUU0OUNCQkNCQTA3Nzc2RkNDQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmBJsMgAAABKSURBVHjaYvz//z8DtQATAxXBqGGkAxZ0gWNHDuONXisbW0aiXWZta4dTMT45nN7EpomQQXjDDFkzMQZhDTO0HMGIRYw+sQkQYABhFRFejI1rLQAAAABJRU5ErkJggg==' ); 
+background-position: right center; 
+background-repeat: no-repeat; 
+margin-right: 4px; 
+padding-top: 5px; 
+} 
+
+a.dropdown:hover { 
+color: #e5e5e5; 
+border-right: none; 
+border-top-left-radius: 3px; 
+border-top-right-radius: 3px;
+} 
+
+form { 
+margin: 0; 
+padding: 0;
+} 
+
+.customBrowseTitle { 
+font-size: 22px; 
+color: #66c0f4; 
+font-family: "Motiva Sans", Sans-serif; 
+font-weight: 300;
+} 
+
+.customBrowseText { 
+font-size: 13px; 
+line-height: 17px; 
+color: #c6d4df; 
+font-family: "Motiva Sans", Sans-serif; 
+font-weight: 300;
+} 
+
+input { 
+font-family: "Motiva Sans",Arial,Helvetica,sans-serif; 
+font-weight: 300;
+} 
+
+input[type="text"] { 
+color: #909090; 
+background-color: rgba( 0, 0, 0, 0.2 ); 
+border: 1px solid #000; 
+border-radius: 3px;
+} 
+
+input.search_text { 
+position: relative; 
+left: 2px; 
+padding: 0; 
+padding-left: 4px; 
+margin: 0; 
+border: none; 
+max-width: 250px; 
+width: 100%; 
+height: 31px; 
+background: transparent; 
+box-shadow: none; 
+color: white;
+} 
+
+input.search_text.default_text { 
+color: #6d6d6a; 
+font-style: italic;
+} 
+
+img { 
+border: none;
+} 
+
+img { 
+-webkit-user-drag: none;
+} 
+
+.search_text_submit_img { 
+position: absolute; 
+right: 5px; 
+top: 7px; 
+width: 23px; 
+height: 18px; 
+padding: 0; 
+margin: 0; 
+border: none; 
+cursor: pointer;
+} 
+
+
+/* These were inline style tags. Uses id+class to override almost everything */
+#style-QwJIZ.style-QwJIZ {  
+background-image:url('https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/294100/46a8dc20179dc5c8e433cca6a9316261029dadef.jpg');  
+}  
+
+</style>
+
+</head>
+
+
+<body>
+
+    <header>
+        
+        <div class="header-container">
+            <img class="logo" src="https://cdn.discordapp.com/attachments/1116718992808226837/1139859068278820924/simplfied-mtga-logo.png" alt="Mod Manager Logo">
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link">Kings</a></li>
+                    <li><a href="#" class="nav-link">Scrotum</a></li>
+                    <li><a href="#" class="nav-link">is hairy</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+<div class="workshop_header" style="background-image:url('https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/294100/46a8dc20179dc5c8e433cca6a9316261029dadef.jpg');">
+				<div class="browseAppDetails">
+					<div class="customBrowseDescContainer appid_294100">
+						<a data-panel="{&quot;focusable&quot;:false}" class="customBrowseLink" href="https://steamcommunity.com/app/294100/workshop/"></a>
+						<div class="customBrowseDesc responsive_local_menu">
+							<div class="customBrowseTitle">RimWorld Workshop</div>
+							<div class="customBrowseText">Mods and scenarios for RimWorld. Mods can also be found at the Ludeon forums at ludeon.com/forums</div>
+						</div>
+					</div>
+				</div>
+				<div data-panel="{&quot;flow-children&quot;:&quot;row&quot;}" class="workshop_browse_menu_area">
+
+
+		<div class="workshop_browse_tab active">
+		<a href="https://steamcommunity.com/app/294100/workshop/">Home</a>
+	</div>
+	<div class="workshop_browse_tab drop ">
+		<a data-panel="{&quot;focusable&quot;:true,&quot;clickOnActivate&quot;:true}" class="dropdown" data-dropdown-html="
+																					<a href=&quot;https://steamcommunity.com/workshop/browse/?appid=294100&amp;browsesort=trend&amp;section=readytouseitems&quot;>Items</a>
+																												<a href=&quot;https://steamcommunity.com/workshop/browse/?appid=294100&amp;browsesort=trend&amp;section=collections&quot;>Collections</a>
+																																									">Browse</a>
+	</div>
+		<div class="workshop_browse_tab ">
+		<a href="#">Add mod</a>
+	</div>
+		<div class="workshop_browse_tab ">
+		<a href="https://steamcommunity.com/workshop/about/?appid=294100">About</a>
+	</div>
+</div>
+</div>
+    <div class="main-container">
+        <div class="left-container">
+            <div class="sorting-bar">
+                <input type="text" class="search-bar" placeholder="Search...">
+                <!-- Rest of your sorting-bar content -->
+            </div>
+            <select class="mod-type-select">
+                <option value="">All Types</option>
+                <option value="client">Client Mod</option>
+                <option value="server">Server Mod</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+        <div class="mod-discovery">
+            <div class="carousel">
+                <!-- Featured mods carousel content -->
+            </div>
+            <div class="mod-results">
+                <!-- Mod results will be populated dynamically -->
+            </div>
+        </div>
+    <!-- Dynamicly load these from the database, obviously, we arent going ot manually populate these, final will be using http/templating -->
+</div>
+      </div>
+    <div class="loading-box" style="display: none;">
+    </div>
+
+    <script>
+        const gameChoices = document.querySelectorAll('.game-choice');
+        const loadingBox = document.querySelector('.loading-box');
+        const flavor = document.querySelector('.flavor');
+
+        gameChoices.forEach(choice => {
+            choice.addEventListener('click', () => {
+                flavor.style.display = 'none';
+                gameChoices.forEach(c => c.style.display = 'none');
+                loadingBox.style.display = 'block';
+                simulateLoading();
+                // Load corresponding mod manager UI content based on user selection
+                if (choice.id === 'spt-aki') {
+                    loadSptAkiContent();
+                } else if (choice.id === 'mtga') {
+                    loadMtgaContent();
+                }
+            });
+        });
+
+        function simulateLoading() {
+            setTimeout(() => {
+                loadingBox.style.display = 'none';
+            }, 2000);
+        }
+
+
+        function loadSptAkiContent() {
+            const html = /* html */`
+            <style>
+        body {
+            background-color: #010409;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .main-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+.left-container {
+    padding: 20px;
+    max-width: 200px;
+    background-color: #0D1117;
+}
+        .mod-discovery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            flex-grow: 1;
+        }
+        .workshop-header {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #FFFFFF;
+        }
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+        }
+        .sorting-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-bar,
+        .mod-type-select {
+            padding: 5px;
+            border: 1px solid #2F81F7;
+            border-radius: 5px;
+            background-color: #FFFFFF;
+            color: #000000;
+            margin: 0 10px;
+        }
+        .expandable-tags {
+            position: relative;
+        }
+        .expand-tags-button {
+            padding: 5px 10px;
+            background-color: #2F81F7;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .tags {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #0D1117;
+            border: 1px solid #2F81F7;
+            border-radius: 5px;
+            padding: 5px;
+            display: none;
+        }
+        .tags.active {
+            display: block;
+        }
+        .sorting-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .sorting-option {
+            padding: 5px 10px;
+            background-color: #2F81F7;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .mod-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .header-container-workshop {
+        background-color: #1E2327;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        width: 99%;
+        top: 65px;
+        left: 0px;
+        z-index: 1;
+        /* Ensure the header stays above other content because its fucking retarded with this flex style */
+    }
+
+    .logo-workshop {
+        font-size: 24px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-decoration: none;
+        height: 50px;
+        width: min-content;
+    }
+    
+    @font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Regular.ttf?v=4.015') format('truetype');
+  font-weight:normal;
+  font-style:normal;
+} 
+@font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Light.ttf?v=4.015') format('truetype');
+  font-weight:300;
+  /* Light */
+	font-style:normal;
+} 
+@font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Thin.ttf?v=4.015') format('truetype');
+  font-weight:200;
+  /* Ultra-Light / Thin */
+	font-style:normal;
+} 
+@font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Medium.ttf?v=4.015') format('truetype');
+  font-weight:500;
+  /* Medium */
+	font-style:normal;
+} 
+@font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Bold.ttf?v=4.015') format('truetype');
+  font-weight:bold;
+  font-style:normal;
+} 
+@font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-RegularItalic.ttf?v=4.015') format('truetype');
+  font-weight:normal;
+  font-style:italic;
+} 
+@font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-LightItalic.ttf?v=4.015') format('truetype');
+  font-weight:300;
+  /* Light */
+	font-style:italic;
+} 
+@font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-BoldItalic.ttf?v=4.015') format('truetype');
+  font-weight:bold;
+  font-style:italic;
+} 
+@font-face { 
+  font-family:'Motiva Sans';
+  src:url('https://community.akamai.steamstatic.com/public/shared/fonts/MotivaSans-Black.ttf?v=4.015') format('truetype');
+  font-weight:900;
+  /* Black */
+	font-style:normal;
+} 
+  body {  
+    background:#1b2838;
+    text-align:left;
+    color:#636363;
+    font-size:14px;
+    font-family:"Motiva Sans",Arial,Helvetica,sans-serif;
+    font-weight:300;
+  }  
+.apphub_HomeHeader { 
+    margin: 0 auto 8px auto; 
+    max-width: 948px;
+} 
+
+.apphub_background { 
+    background-position: center top; 
+    background-attachment: fixed; 
+    background-repeat: no-repeat; 
+    background-size: cover; 
+    background-repeat-x: no-repeat; 
+    background-repeat-y: no-repeat;
+} 
+
+.responsive_page_frame { 
+    position: relative;
+} 
+
+body { 
+    background: #1b2838; 
+    text-align: left; 
+    color: #8F98A0; 
+    font-size: 14px; 
+    margin: 0; 
+    padding: 0;
+} 
+
+body { 
+    font-family: Arial, Helvetica, Verdana, sans-serif;
+} 
+
+body { 
+    background: #1b2838; 
+    color: #acb2b8;
+} 
+
+body { 
+    font-family: "Motiva Sans",Arial,Helvetica,sans-serif; 
+    font-weight: 300;
+} 
+
+body { 
+    color: #969696; 
+    font-family: "Motiva Sans",Arial,Helvetica,sans-serif;
+} 
+
+body.apphub_blue { 
+    background: #1b2838; 
+    color: #636363;
+} 
+
+html.responsive body { 
+    min-height: 100%; 
+    height: auto; 
+    position: relative;
+} 
+
+html { 
+    height: 100%;
+} 
+
+:root { 
+    --gpStoreDarkGrey: #2A475E; 
+    --gpStoreDarkerGrey: #1B2838; 
+    --gpGradient-StoreBackground: linear-gradient(180deg, var(--gpStoreDarkGrey) 0%, var(--gpStoreDarkerGrey) 80%); 
+    --gpSpace-Gutter: 24px; 
+    --gpSpace-Gap: 12px; 
+    --screen-width: 100vw; 
+    --gpWidth-6colcap: calc((var(--screen-width) - (5 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 6); 
+    --gpWidth-5colcap: calc((var(--screen-width) - (4 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 5); 
+    --gpWidth-4colcap: calc((var(--screen-width) - (3 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 4); 
+    --gpWidth-3colcap: calc((var(--screen-width) - (2 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 3); 
+    --gpWidth-2colcap: calc((var(--screen-width) - (1 * var(--gpSpace-Gap)) - (2 * var(--gpSpace-Gutter))) / 2); 
+    --gpWidth-1colcap: calc((var(--screen-width) - (2 * var(--gpSpace-Gutter)))); 
+} 
+
+@media screen and (min-width: 1280px){ 
+  :root { 
+    --gpSpace-Gutter: calc(24px + 2vw);
+  } 
+}     
+
+html.responsive { 
+    height: 100%;
+} 
+
+.workshop_header { 
+    max-width: 65; 
+    height: 203px; 
+    background-repeat: no-repeat; 
+    position: relative; 
+    box-shadow: 0 0 6px 0 #000000; 
+    background-repeat-x: no-repeat; 
+    background-repeat-y: no-repeat;
+} 
+
+:selection { 
+    background: #54a5d4; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,.6666666667); 
+    color: #fff;
+} 
+
+:-webkit-scrollbar { 
+    height: 12px; 
+    width: 14px; 
+    background: rgba(0,0,0,0); 
+    z-index: 12; 
+    overflow: visible;
+} 
+
+:-webkit-scrollbar-thumb { 
+    background: rgba(255,255,255,.1);
+} 
+
+:-webkit-scrollbar-thumb { 
+    width: 10px; 
+    background-color: #434953; 
+    border-radius: 10px; 
+    z-index: 12; 
+    border: 4px solid rgba(0,0,0,0); 
+    background-clip: padding-box; 
+    transition: background-color .32s ease-in-out; 
+    margin: 4px; 
+    min-height: 32px; 
+    min-width: 32px;
+} 
+
+:-webkit-scrollbar-corner { 
+    background: #202020;
+} 
+
+:-webkit-scrollbar-thumb:hover { 
+    background-color: #4e5157;
+} 
+
+.browseAppDetails { 
+    display: table; 
+    width: 958px; 
+    height: 160px; 
+    position: relative;
+} 
+
+.workshop_browse_menu_area { 
+    position: absolute; 
+    left: 0px; 
+    right: 0px; 
+    bottom: 0px; 
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    height: 25px; 
+    padding-left: 20px; 
+    background: -webkit-linear-gradient( left, rgba( 43, 60, 85, 0.8 ) 5%,rgba( 42, 63, 95, 0.2 ) 95%); 
+    background: linear-gradient( to right, rgba( 43, 60, 85, 0.8 ) 5%,rgba( 42, 63, 95, 0.2 ) 95%); 
+    text-align: left;
+} 
+
+.customBrowseDescContainer { 
+    display: table-cell; 
+    vertical-align: middle; 
+    width: 100%;
+} 
+
+.workshop_browse_tab { 
+    font-size: 14px; 
+    display: inline-block; 
+    padding-right: 10px; 
+    color: #cccccc; 
+    line-height: 25px;
+} 
+
+.workshop_browse_tab.active { 
+    border-bottom: 2px solid #fff; 
+    padding-bottom: 8px;
+} 
+
+.workshop_browse_tab.active { 
+    color: #fff;
+} 
+
+.workshop_browse_tab.drop { 
+    padding-right: 0px;
+} 
+
+.workshop_browse_search { 
+    position: absolute; 
+    top: 6px; 
+    height: 32px; 
+    width: 290px; 
+    right: 5px; 
+    padding: 0px 7px 0px 0px; 
+    background-color: rgba( 0, 0, 0, 0.6 ); 
+    border-radius: 4px; 
+    border-left: 1px solid #000; 
+    border-top: 1px solid #000; 
+    border-right: 1px solid #354357; 
+    border-bottom: 1px solid #354357;
+} 
+
+a { 
+    color: #ebebeb; 
+    text-decoration: none; 
+    cursor: pointer;
+} 
+
+.customBrowseLink { 
+    display: block; 
+    position: absolute; 
+    top: 0; 
+    max-width: 500px; 
+    width: 100%; 
+    height: 158px;
+} 
+
+.customBrowseDesc { 
+    text-align: left; 
+    width: 411px; 
+    float: right; 
+    margin-right: 20px; 
+    margin-bottom: 10px;
+} 
+
+.workshop_browse_tab a  { 
+    color: #cccccc; 
+    padding-left: 10px;
+} 
+
+.workshop_browse_tab.active a  { 
+    color: #fff;
+} 
+
+.workshop_browse_tab a:hover, .workshop_browse_tab.active a:hover { 
+    color: #67c1f5;
+} 
+
+.workshop_browse_tab a.dropdown  { 
+    padding-right: 20px; 
+    background-image: url(  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAMCAYAAACA0IaCAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MUFBQkYyMTI2QjhGMTFFNDlDQkJDQkEwNzc3NkZDQ0IiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MUFBQkYyMTM2QjhGMTFFNDlDQkJDQkEwNzc3NkZDQ0IiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoxQUFCRjIxMDZCOEYxMUU0OUNCQkNCQTA3Nzc2RkNDQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxQUFCRjIxMTZCOEYxMUU0OUNCQkNCQTA3Nzc2RkNDQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmBJsMgAAABKSURBVHjaYvz//z8DtQATAxXBqGGkAxZ0gWNHDuONXisbW0aiXWZta4dTMT45nN7EpomQQXjDDFkzMQZhDTO0HMGIRYw+sQkQYABhFRFejI1rLQAAAABJRU5ErkJggg==' ); 
+    background-position: right center; 
+    background-repeat: no-repeat; 
+    margin-right: 4px; 
+    padding-top: 5px; 
+    background-repeat-x: no-repeat; 
+    background-repeat-y: no-repeat;
+} 
+
+a.dropdown:hover { 
+    color: #e5e5e5; 
+    border-right: none; 
+    border-top-left-radius: 3px; 
+    border-top-right-radius: 3px;
+} 
+
+form { 
+    margin: 0; 
+    padding: 0;
+} 
+
+.customBrowseTitle { 
+    font-size: 22px; 
+    color: #66c0f4; 
+    font-family: "Motiva Sans", Sans-serif; 
+    font-weight: 300;
+} 
+
+.customBrowseText { 
+    font-size: 13px; 
+    line-height: 17px; 
+    color: #c6d4df; 
+    font-family: "Motiva Sans", Sans-serif; 
+    font-weight: 300;
+} 
+
+input { 
+    font-family: "Motiva Sans",Arial,Helvetica,sans-serif; 
+    font-weight: 300;
+} 
+
+input[type="text"] { 
+    color: #909090; 
+    background-color: rgba( 0, 0, 0, 0.2 ); 
+    border: 1px solid #000; 
+    border-radius: 3px;
+} 
+
+input.search_text { 
+    position: relative; 
+    left: 2px; 
+    padding: 0; 
+    padding-left: 4px; 
+    margin: 0; 
+    border: none; 
+    max-width: 250px; 
+    width: 100%; 
+    height: 31px; 
+    background: transparent; 
+    box-shadow: none; 
+    color: white;
+} 
+
+input.search_text.default_text { 
+    color: #6d6d6a; 
+    font-style: italic;
+} 
+
+img { 
+    border: none;
+} 
+
+img { 
+    -webkit-user-drag: none;
+} 
+
+.search_text_submit_img { 
+    position: absolute; 
+    right: 5px; 
+    top: 7px; 
+    width: 23px; 
+    height: 18px; 
+    padding: 0; 
+    margin: 0; 
+    border: none; 
+    cursor: pointer;
+} 
+
+
+/* These were inline style tags. Uses id+class to override almost everything */
+#style-QwJIZ.style-QwJIZ {  
+   background-image:url('https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/294100/46a8dc20179dc5c8e433cca6a9316261029dadef.jpg');  
+}  
+
+    </style>
+<div class="workshop_header" style="background-image:url('https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/294100/46a8dc20179dc5c8e433cca6a9316261029dadef.jpg');">
+				<div class="browseAppDetails">
+					<div class="customBrowseDescContainer appid_294100">
+						<a data-panel="{&quot;focusable&quot;:false}" class="customBrowseLink" href="https://steamcommunity.com/app/294100/workshop/"></a>
+						<div class="customBrowseDesc responsive_local_menu">
+							<div class="customBrowseTitle">RimWorld Workshop</div>
+							<div class="customBrowseText">Mods and scenarios for RimWorld. Mods can also be found at the Ludeon forums at ludeon.com/forums</div>
+						</div>
+					</div>
+				</div>
+				<div data-panel="{&quot;flow-children&quot;:&quot;row&quot;}" class="workshop_browse_menu_area">
+
+
+		<div class="workshop_browse_tab active">
+		<a href="https://steamcommunity.com/app/294100/workshop/">Home</a>
+	</div>
+	<div class="workshop_browse_tab drop ">
+		<a data-panel="{&quot;focusable&quot;:true,&quot;clickOnActivate&quot;:true}" class="dropdown" data-dropdown-html="
+																					<a href=&quot;https://steamcommunity.com/workshop/browse/?appid=294100&amp;browsesort=trend&amp;section=readytouseitems&quot;>Items</a>
+																												<a href=&quot;https://steamcommunity.com/workshop/browse/?appid=294100&amp;browsesort=trend&amp;section=collections&quot;>Collections</a>
+																																									">Browse</a>
+	</div>
+		<div class="workshop_browse_tab ">
+		<a href="#">Add mod</a>
+	</div>
+		<div class="workshop_browse_tab ">
+		<a href="https://steamcommunity.com/workshop/about/?appid=294100">About</a>
+	</div>
+</div>
+</div>
+    <div class="main-container">
+        <div class="left-container">
+            <div class="sorting-bar">
+                <input type="text" class="search-bar" placeholder="Search...">
+                <!-- Rest of your sorting-bar content -->
+            </div>
+            <select class="mod-type-select">
+                <option value="">All Types</option>
+                <option value="client">Client Mod</option>
+                <option value="server">Server Mod</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+        <div class="mod-discovery">
+            <div class="carousel">
+                <!-- Featured mods carousel content -->
+            </div>
+            <div class="mod-results">
+                <!-- Mod results will be populated dynamically -->
+            </div>
+        </div>
+    <!-- Dynamicly load these from the database, obviously, we arent going ot manually populate these, final will be using http/templating -->
+</div>
+      `
+            // Fetch or load SPT-AKI mod manager UI content
+            // Example: Fetch from a file or server
+            //fetch('spt-aki.html')
+            //    .then(response => response.text())
+            //    .then(html => {
+            document.querySelector('.container').innerHTML = html;
+            // Set up any necessary interactions and functionality for SPT-AKI mod manager UI
+            //    });
+        }
+
+        function loadMtgaContent() {
+            const html = /* html */` 
+      <style>
+        body {
+    background-color: #010409;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.mod-discovery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mod-result {
+    display: flex;
+    background-color: #0D1117;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.mod-thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.mod-info {
+    flex: 1;
+}
+
+.mod-title {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.mod-description {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.mod-tags {
+    margin-bottom: 10px;
+}
+
+.mod-tag {
+    background-color: #238636;
+    color: white;
+    padding: 3px 6px;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.mod-link {
+    display: inline-block;
+    background-color: #2F81F7;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.mod-link:hover {
+    background-color: #1E2327;
+}
+/* ... (your existing CSS) */
+
+.workshop-header {
+    font-size: 24px;
+    margin: 20px 0;
+    color: #FFFFFF;
+}
+
+.carousel {
+    /* Styling for the featured mods carousel */
+    /* Example styles */
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+}
+
+.sorting-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    /* Styling for the search bar */
+    /* Example styles */
+    padding: 5px;
+    border: 1px solid #2F81F7;
+    border-radius: 5px;
+    width: 200px;
+    color: #000000;
+}
+
+.expandable-tags {
+    position: relative;
+    margin: 0 10px;
+}
+
+.expand-tags-button {
+    /* Styling for the expand tags button */
+    /* Example styles */
+    padding: 5px 10px;
+    background-color: #2F81F7;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tags {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #0D1117;
+    border: 1px solid #2F81F7;
+    border-radius: 5px;
+    padding: 5px;
+    display: none;
+}
+
+.mod-type-select {
+    /* Styling for the mod type select */
+    /* Example styles */
+    padding: 5px;
+    border: 1px solid #2F81F7;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+.sorting-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.sorting-option {
+    /* Styling for the sorting options */
+    /* Example styles */
+    padding: 5px 10px;
+    background-color: #2F81F7;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.mod-results {
+    /* Styling for the mod results */
+    /* Example styles */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+        </style>
+        <div class="mod-discovery">
+        <h1 class="workshop-header">MTGA Workshop</h1>
+        <div class="carousel">
+            <!-- Featured mods carousel content -->
+        </div>
+        <div class="sorting-bar">
+            <input type="text" class="search-bar" placeholder="Search...">
+            <div class="expandable-tags">
+                <button class="expand-tags-button">Expand Tags</button>
+                <div class="tags">
+                    <!-- Tags will be populated dynamically -->
+                </div>
+            </div>
+            <select class="mod-type-select">
+                <option value="">All Types</option>
+                <option value="client">Client Mod</option>
+                <option value="server">Server Mod</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+        <div class="sorting-options">
+            <button class="sorting-option active">Recently Added</button>
+            <button class="sorting-option">Recently Updated</button>
+            <button class="sorting-option">Most Downloaded</button>
+        </div>
+        <div class="mod-results">
+            <!-- Mod results will be populated dynamically -->
+        </div>
+    </div>
+    <!-- Dynamicly load these from the database, obviously, we arent going ot manually populate these, final will be using http/templating -->
+</div>
+      `
+            // Fetch or load MTGA mod manager UI content
+            // Example: Fetch from a file or server
+            //fetch('mtga.html')
+            //    .then(response => response.text())
+            //    .then(html => {
+            document.querySelector('.container').innerHTML = html;
+            // Set up any necessary interactions and functionality for MTGA mod manager UI
+            //    });
+        }
+    </script>
+
+
+</body>
+</html>
