@@ -64,15 +64,15 @@
   height: 32px;
   border-radius: 50%;
   background-color: #262f83;
-  color: #fff;
+  color: white;
   font-size: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  right: 64px
+  left: 90%;
+  transform: translate(-50%, -50%);
 }
 
 .grab-button:hover {
@@ -188,6 +188,8 @@ body {
 }
 
 .mod-discovery {
+  /* flex-direction: column-reverse; */
+  /* flex-direction: column-reverse; */
   height: fit-content;
   flex-grow: 1;
   background-color: var(--GithubA-dark);
@@ -197,8 +199,9 @@ body {
   overflow: hidden;
   position: absolute;
   left: 24.9vw;
-  top: 24rem;
-  justify-content: center
+  top: 10rem;
+  justify-content: center;
+  /* align-items: stretch; */
 }
 
 .workshop_header {
@@ -229,78 +232,83 @@ body {
   margin-bottom: 20px
 }
 
-.mod-type-select,
-.search-bar {
-  padding: 5px;
-  border: 1px solid #2f81f7;
-  border-radius: 5px;
-  background-color: #fff;
-  color: #000;
-  margin: 0 10px
+.search-bar,
+.mod-type-select {
+    padding: 5px;
+    border: 1px solid #2F81F7;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    color: #000000;
+    margin: 0 10px;
 }
 
 .mod-results {
   margin-top: 20px;
   position: relative;
   height: fit-content;
-  width: fit-content
+  width: fit-content;
 }
 
 .mod-tags {
   display: inline;
   align-items: center;
   margin-top: 20px;
-  height: fit-content
+height: fit-content;
 }
+
 
 .pill {
   display: inline-block;
   padding: 5px 15px;
   border-radius: 20px;
-  background-color: #6e6969;
-  color: #fff;
+  background-color: #6E6969;
+  color: white;
   text-decoration: none;
   margin-right: 10px;
   margin-bottom: 5px;
   position: relative;
-  transition: color .7s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .2)
+  transition: color 0.7s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adjust values as needed */
 }
 
 .pill::before {
   content: "";
   position: absolute;
   left: 5px;
-  font-weight: 700
+  font-weight: bold;
 }
 
+/* Add this for hover effect */
 .pill:hover {
-  border: #fff 1px solid
+  border: white 1px solid;
+
 }
 
 .pill.version {
   display: inline-block;
   padding: 5px 15px;
   border-radius: 20px;
-  background-color: var(--Github-#ffa500);
-  color: #fff;
+  background-color: var(--Github-orange);
+  color: white;
   text-decoration: none;
   margin-right: 10px;
   margin-bottom: 5px;
   position: relative;
-  transition: color .7s ease
+  transition: color 0.7s ease;
 }
 
 .pill.version::before {
   content: "";
   position: absolute;
   left: 5px;
-  font-weight: 700
+  font-weight: bold;
 }
 
+/* Add this for hover effect */
 .pill.version:hover {
-  border: #fff 1px solid
-}
+      border: white 1px solid;
+
+  }
 html {
   height: 100%
 }
@@ -332,6 +340,23 @@ html {
   background: rgba(0, 0, 0, 0);
   z-index: 12;
   overflow: visible
+}
+
+.mod_entry_row {
+  /* padding: 3px; */
+  margin-bottom: 5px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  border: 1px solid rgba(0,0,0,0);
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+  background-attachment: scroll;
+  background-origin: initial;
+  background-clip: initial;
+  background-color: rgba(0, 0, 0, 0);
+  display: flow-root;
+  width: 740px;
+  height: fit-content;
+  overflow: hidden;
+  position: relative;
 }
 
 :-webkit-scrollbar-thumb {

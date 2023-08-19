@@ -1,14 +1,4 @@
 <template>
-  <div>
-
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Mod Manager</title>
-
-    </head>
-
-    <body>
       <component :is="selectedComponent" v-if="selected" />
 
 
@@ -29,8 +19,6 @@
       </div>
       <div class="loading-background" v-if="isLoading"></div>
       <div class="loading-box" v-if="isLoading"></div>
-    </body>
-  </div>
 </template>
 
 <script>
@@ -71,9 +59,8 @@ export default {
   }
 };
 </script>
-<style>
-  @import './style.css';
-</style>
+<link rel="stylesheet" href="@/assets/styles/style.css">
+
 
 
 
