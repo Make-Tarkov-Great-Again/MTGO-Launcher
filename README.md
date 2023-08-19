@@ -1,4 +1,5 @@
 
+
 <p  align="center">
 
 <img  src="https://user-images.githubusercontent.com/21200584/224684261-cfd9d151-91f5-4c31-8cfa-93cac25295e5.png"  alt="MTGABABYYY">
@@ -39,7 +40,10 @@ MTGA Version: Latest
 
 GO Version: 1.21.0 windows/amd64
 
-Right now this is a prototype, a proof of concept. A backend server has not been made yet. As such, no functionality is ready.
+```diff
+! Right now this is a prototype, a proof of concept. A backend server has not been made yet. As such, no functionality is ready.
+```
+
 
 ## Known issues
 
@@ -57,9 +61,9 @@ MTGA is a organization founded by a few Altered Escape developers.
 
 
 
-We felt that there shouldn't just be one option for emulation and began development on MTGA.
+We felt that there shouldn't just be one option for emulation and began development on MTGA, but for our launcher, we decided we dont want to keep thease features to ourselves, and so we decided to expand to allow our launcher, and mod managment system to work with SPT-AKI aswell,
 
-We are developing this emulator to offer an accessible experience, that is up-to-date and easy to modify to provide the best out-of-the-box experience for casuals and enthusiasts.
+We are developing this launcher to offer an accessible experience to all those in the tarkov offline scene.
 
 
 
