@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "title": "Escape from Hell",
+        "images": [
+            "https://i.imgur.com/oyrIBpI.png",
+            "https://i.imgur.com/oyrIBpI.png"
+        ],
+        "author": "EFHDev",
+        "tags": [
+            "Server",
+            "Client",
+            "Overhaul"
+        ],
+        "version": "3.5.0",
+        "emu": "aki",
+        "description": "This is a description of the mod \"Escape from Hell\". Lorem ipsum dolor sit amet...",
+        "downloadurl": "https://dl.dropboxusercontent.com/s/iv7ywhy87gx6c1a/image.png?dl=1"
+    },
+    {
+        "id": 2,
+        "title": "Escape from Hell",
+        "images": [
+            "https://i.imgur.com/oyrIBpI.png",
+            "https://i.imgur.com/oyrIBpI.png"
+        ],
+        "author": "EFHDev",
+        "tags": [
+            "Server",
+            "Client",
+            "Overhaul"
+        ],
+        "version": "3.5.0",
+        "emu": "aki",
+        "description": "This is a description of the mod \"Escape from Hell\". Lorem ipsum dolor sit amet...",
+        "downloadurl": "https://dl.dropboxusercontent.com/s/iv7ywhy87gx6c1a/image.png?dl=1"
+    }
+]
