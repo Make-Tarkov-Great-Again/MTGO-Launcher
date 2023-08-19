@@ -92,18 +92,21 @@
     <br>
     Latest mods
     <div v-for="mod in mods"
+
          class="mod_entry_row"
          :key="mod.id"
          :data-modID="mod.id"
          @click="modPage(mod.id)"
          style="cursor:pointer;">
+         <router-link :to="{ name: '/mod/', params: { id: mod.id } }">
       <img class="preview_image loadable" :src="mod.imageUrl" :alt="mod.title">
       <div class="mod_entry_title ellipsis">{{ mod.title }}</div>
       <div class="user_actions"></div>
-      <div class="grab-button" style="cursor: pointer;" @click.stop="handleGrabButtonClick(mod.id)">+</div>
       <div class="mod_author">By {{ mod.author }}</div>
       <div class="mod_tags ellipsis tag version">{{ mod.version }}</div>
       <div class="mod_tags ellipsis tag" v-for="tag in mod.tags">{{ tag }}</div>
+      </router-link>
+      <div class="grab-button" style="cursor: pointer;" @click.stop="handleGrabButtonClick(mod.id)">+</div>
     </div>
   </div>
     </div>
@@ -113,9 +116,14 @@
   </template>
 
 <script>
+import ModPageComponent from './ModPageComponent.vue';
+
 export default {
   data() {
     return {
+      components: {
+    ModPageComponent,
+  },
       mods: [ // temp json-like mods for testing
         {
           id: 1,
