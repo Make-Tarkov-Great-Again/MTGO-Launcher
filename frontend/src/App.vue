@@ -24,11 +24,14 @@
 <script>
 import AkiWorkshopComponent from './components/AkiWorkshopComponent.vue';
 import MtgaContentComponent from './components/AkiWorkshopComponent.vue'; //haha aki template go brrrr
+import ModPageComponent from './components/ModPageComponent.vue'; //haha aki template go brrrr
+
 
 export default {
   components: {
     AkiWorkshopComponent,
-    MtgaContentComponent
+    MtgaContentComponent,
+    ModPageComponent
     //TODO: Mod pages
     // TODO: Mod-pack pages
     // TODO: Search
