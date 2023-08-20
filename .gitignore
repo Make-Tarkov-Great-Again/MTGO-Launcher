@@ -24,3 +24,4 @@ frontend/node_modules/*
 
 # Go workspace file
 go.work
+.vscode/settings.json
