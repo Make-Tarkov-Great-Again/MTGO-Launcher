@@ -24,59 +24,33 @@
   </template>
 
 <script>
+import modexamples from './mods.json'
 export default {
-  props: ['id'], // Receive the mod ID as a prop
-  data() {
-    return {
-      mod: {}, // Mod data will be fetched from API in the future
-    };
+  computed:{
+    modID(){
+      return parseInt(this.$route.params.id)
+    },
+    mod(){
+      console.log("buuu")
+      console.log(this.modID)
+      console.log("breh \n" + modexamples.toString())
+
+      console.log("bruh \n" + modexamples.find(mod => mod.id === this.modID))
+      return modexamples.find(mod => mod.id === this.modID)
+    }
   },
+  props: ['id'], // Receive the mod ID as a prop
   methods: {
-    handleGrabButtonClick(modID) {
-      // Handle grab button click
+    handleGrabButtonClick() {
+      // Handle subscription using this.modID
     },
   },
   created() {
     // Fetch mod data using the mod ID
     // For now, use switch statement for mock data
-    switch (this.id) {
-      case 1:
-        this.mod = {
-          id: 1,
-          title: 'Escape from Hell',
-          images: [
-            'https://i.imgur.com/oyrIBpI.png',
-            'https://i.imgur.com/oyrIBpI.png'
-          ],
-          author: 'EFHDev',
-          tags: ['Server', 'Client', 'Overhaul'],
-          version: '3.5.0',
-          description: 'This is a description of the mod "Escape from Hell". Lorem ipsum dolor sit amet...',
-        };
-        break;
-      case 2:
-        this.mod = {
-          id: 2,
-          title: 'MP-43 12GA SAWED-OFF DOUBLE-BARREL SHOTGUN',
-          images: [
-            'https://hub.sp-tarkov.com/files/images/file/6e/1395.png',
-            'https://hub.sp-tarkov.com/files/images/file/6e/1395.png'
-          ],
-          author: 'Mighty_Condor',
-          tags: ['Server', 'Weapons'],
-          version: '3.5.0',
-          description: 'This is a description of the mod "MP-43 12GA SAWED-OFF DOUBLE-BARREL SHOTGUN". Lorem ipsum dolor sit amet...',
-        };
-        break;
-      // Add more cases for other mod IDs here
-      default:
-        // Handle unknown mod IDs
-        break;
-    }
   },
 };
 </script>
-
 
   <style scoped>
 :root {

@@ -3,6 +3,10 @@
   </header>
 
   <div class="container">
+    <div class="floating-page" v-if="showFloatingPage">
+      <button class="close-button" @click="closeFloatingPage">Close</button>
+      <router-view></router-view>
+    </div>
     <div class="workshop_header">
       <div class="browseAppDetails loadable">
       </div>
@@ -29,7 +33,6 @@
       </div>
     </div>
     <div class="main-container">
-
       <div class="mod-discovery">
 
         <div class="left-container"> <!--Why does everything in here move around so much when zooming in or out?-->
@@ -73,47 +76,42 @@
         </div>
 
         <div class="slideshow-container">
-    <h1 style="position: relative; top:1px;">Mod highlight</h1>
+          <h1 style="position: relative; top:1px;">Mod highlight</h1>
 
-    <div v-for="(item, index) in slideshowItems" :key="index" class="slideshow-item" :data-modID="item.modID"
-           :style="{ display: index === currentSlideIndex ? 'block' : 'none' }">
-         <img class="loadable" :src="item.imageUrl" :alt="item.title">
-      <div class="slideshow-item-details">
-        <div class="slideshow-item-title">{{ item.title }}</div>
-        <div class="slideshow-item-creator">By {{ item.author }}</div>
+          <div v-for="(item, index) in slideshowItems" :key="index" class="slideshow-item" :data-modID="item.modID"
+            :style="{ display: index === currentSlideIndex ? 'block' : 'none' }">
+            <img class="loadable" :src="item.imageUrl" :alt="item.title">
+            <div class="slideshow-item-details">
+              <div class="slideshow-item-title">{{ item.title }}</div>
+              <div class="slideshow-item-creator">By {{ item.author }}</div>
+            </div>
+          </div>
+
+          <button id="prevBtn" @click="prevSlide">❮</button>
+          <button id="nextBtn" @click="nextSlide">❯</button>
+        </div>
+
+        <div class="mod-results">
+          <br>
+          Latest mods
+          <div v-for="mod in mods" class="mod_entry_row" :key="mod.id" @click="ModPage(mod.id)" :data-modID="mod.id"
+            style="cursor:pointer;">
+            <div class="mod-entry-content">
+                <img class="preview_image loadable" :src="mod.imageUrl" :alt="mod.title">
+                <div class="mod_entry_title ellipsis">{{ mod.title }}</div>
+                <div class="mod_author">By {{ mod.author }}</div>
+                <div class="mod_tags ellipsis tag version">{{ mod.version }}</div>
+                <div class="mod_tags ellipsis tag" v-for="tag in mod.tags">{{ tag }}</div>
+              <div class="grab-button" style="cursor: pointer;" @click="handleGrabButtonClick(mod.id, $event)">+</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-
-    <button id="prevBtn" @click="prevSlide">❮</button>
-      <button id="nextBtn" @click="nextSlide">❯</button>
   </div>
-
-  <div class="mod-results">
-    <br>
-    Latest mods
-    <div v-for="mod in mods"
-
-         class="mod_entry_row"
-         :key="mod.id"
-         :data-modID="mod.id"
-         @click="modPage(mod.id)"
-         style="cursor:pointer;">
-         <router-link :to="{ name: '/mod/', params: { id: mod.id } }">
-      <img class="preview_image loadable" :src="mod.imageUrl" :alt="mod.title">
-      <div class="mod_entry_title ellipsis">{{ mod.title }}</div>
-      <div class="user_actions"></div>
-      <div class="mod_author">By {{ mod.author }}</div>
-      <div class="mod_tags ellipsis tag version">{{ mod.version }}</div>
-      <div class="mod_tags ellipsis tag" v-for="tag in mod.tags">{{ tag }}</div>
-      </router-link>
-      <div class="grab-button" style="cursor: pointer;" @click.stop="handleGrabButtonClick(mod.id)">+</div>
-    </div>
-  </div>
-    </div>
-    </div>
-    </div>
-    <div class="loading-box" style="display: none;"></div>
-  </template>
+  <div class="loading-box" style="display: none;"></div>
+</template>
 
 <script>
 import ModPageComponent from './ModPageComponent.vue';
@@ -122,15 +120,17 @@ export default {
   data() {
     return {
       components: {
-    ModPageComponent,
-  },
+      },
+      showFloatingPage: false, // Initially set to false
+      selectedModID: null,
+
       mods: [ // temp json-like mods for testing
         {
           id: 1,
           title: 'Escape from Hell',
           imageUrl: 'https://i.imgur.com/oyrIBpI.png',
           author: 'EFHDev',
-          tags: [ 'Server', 'Client', 'Overhaul'],
+          tags: ['Server', 'Client', 'Overhaul'],
           version: '3.5.0'
         },
         {
@@ -162,6 +162,21 @@ export default {
     };
   },
   methods: {
+    ModPage(modID) {
+      console.log(modID);
+      this.showFloatingPage = true;
+      this.selectedModID = modID;
+      this.$router.push({ name: 'modpage', params: { id: modID } });
+    },
+    openFloatingPage() {
+      console.log('Door open sound')
+      this.showFloatingPage = true;
+    },
+    closeFloatingPage() {
+      console.log('Door close sound')
+
+      this.showFloatingPage = false;
+    },
     prevSlide() {
       if (this.currentSlideIndex > 0) {
         this.currentSlideIndex--;
@@ -172,9 +187,45 @@ export default {
         this.currentSlideIndex++;
       }
     },
-    modPage(modID) {
-      // lol none
+    handleGrabButtonClick(modID, event) {
+      event.stopPropagation(); // Stop event propagation here
+      // Rest of your logic
     }
   }
 };
 </script>
+
+
+<style scoped>
+.floating-page {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 800px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #d32f2f;
+}
+</style>
