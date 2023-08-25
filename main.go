@@ -21,9 +21,11 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "MTGO Launcher",
-		Width:  1024,
-		Height: 768,
+		Title:         "MTGO Launcher",
+		Width:         957,
+		Height:        662,
+		DisableResize: true,
+		Frameless:     true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
