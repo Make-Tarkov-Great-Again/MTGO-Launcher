@@ -74,6 +74,7 @@ func (dt dataType) folderName(identifier string) string {
 	}
 }
 
+// Dont call. Call other functions insted. Like StoreProfileData
 func storeDataWithType(dataType dataType, identifier, filename string, data interface{}) error {
 	appDataDir, err := getAppDataDir()
 	if err != nil {
@@ -108,7 +109,12 @@ type ProfileData struct {
 	} `json:"Info"`
 }
 
-func StoreProfileData(filePath string) error {
+// Stores profile data, in %appdata%/MT-GO/profiles/@filePath
+//
+// Parameters:
+//
+// filePath - Absolute path to file.
+func StoreProfileData(filePath string, copyAll bool) error {
 	appDataDir, err := getAppDataDir()
 	if err != nil {
 		return err
@@ -150,10 +156,26 @@ func StoreProfileData(filePath string) error {
 		return err
 	}
 
-	newFilePath := filepath.Join(targetDir, "character.json")
-	err = copyFile(filePath, newFilePath)
-	if err != nil {
-		return err
+	if copyAll {
+		files, err := os.ReadDir(filepath.Dir(filePath))
+		if err != nil {
+			return err
+		}
+
+		for _, file := range files {
+			srcFilePath := filepath.Join(filepath.Dir(filePath), file.Name())
+			destFilePath := filepath.Join(targetDir, file.Name())
+			err = copyFile(srcFilePath, destFilePath)
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		newFilePath := filepath.Join(targetDir, "character.json")
+		err = copyFile(filePath, newFilePath)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
