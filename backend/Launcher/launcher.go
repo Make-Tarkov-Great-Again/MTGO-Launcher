@@ -165,3 +165,44 @@ func (u UI) Info() {
 func (u UI) Reload() {
 	wails.WindowReloadApp(u.ctx)
 }
+
+type App struct {
+	ctx context.Context
+}
+
+func NewApp() App {
+	// Initialize and return an App instance
+	return App{}
+}
+
+// Minimizes the launcher
+func (a App) Minimize() {
+	wails.WindowMinimise(a.ctx)
+}
+
+// Closes the launcher
+func (a App) Close() {
+	wails.Quit(a.ctx)
+}
+
+// Hides the launcher from view entirely
+func (a App) Hide() {
+	wails.WindowHide(a.ctx)
+}
+
+// Shows the launcher if its hidden.
+func (a App) Show() {
+	wails.WindowShow(a.ctx)
+}
+
+var childProcesses []*os.Process
+
+// Kills all child processes, So closes the servers.
+func (a App) CloseServers() {
+	for _, process := range childProcesses {
+		err := process.Signal(syscall.SIGTERM)
+		if err != nil {
+			fmt.Println("Error killing process:", err)
+		}
+	}
+}
