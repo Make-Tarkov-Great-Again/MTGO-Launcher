@@ -62,3 +62,18 @@ func (s Storage) Check(neededSpace int64) {
 func (s Storage) Clear() {
 
 }
+type Config struct {
+}
+
+func NewConfig() Config {
+	return Config{}
+}
+
+//func (c Config) Update() {
+//	// I dont think this is how i wanna do this specificly. kekw
+//}
+
+func (c Config) ClearIconCache() {
+	// TODO: Implement ClearIconCache
+	return
+}
