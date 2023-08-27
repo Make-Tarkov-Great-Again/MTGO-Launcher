@@ -206,3 +206,58 @@ func (a App) CloseServers() {
 		}
 	}
 }
+type AKI struct {
+}
+
+func NewAKI() AKI {
+	return AKI{}
+}
+
+func (a AKI) StartServer(serverPath string) (*os.Process, error) {
+	files, err := os.ReadDir(serverPath)
+	if err != nil {
+		return nil, err
+	}
+
+	var exePath string
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".exe") {
+			exePath = filepath.Join(serverPath, file.Name())
+			break
+		}
+	}
+
+	// lol no server, and no hoes
+	if exePath == "" {
+		title := "Starting AKI Server Failed"
+		message := fmt.Sprintf("No server was found in AKI server path: %s. Is this the root folder of your AKI installation?", serverPath)
+		program.UI.Error(title, message)                 // Call the UI.Error() method on the UI instance
+		return nil, fmt.Errorf("%s: %s", title, message) // Return an error
+	}
+
+	cmd := exec.Command(exePath)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Start()
+	if err != nil {
+		return nil, err
+	}
+
+	process := cmd.Process
+	childProcesses = append(childProcesses, process)
+
+	return process, nil
+}
+
+type MTGA struct {
+}
+
+func NewMTGA() MTGA {
+	// Initialize and return an MTGA instance
+	return MTGA{}
+}
+
+func (m MTGA) StartServer() {
+	// TODO: Implement the StartServer method
+}
