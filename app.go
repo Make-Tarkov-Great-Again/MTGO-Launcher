@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	launcher "mtgolauncher/backend/Launcher"
 	storage "mtgolauncher/backend/Storage"
 )
 
@@ -17,6 +18,7 @@ func NewApp() *App {
 
 // Functions to run on startup
 func (a *App) startup(ctx context.Context) {
+	app := launcher.NewLauncher()
 	a.ctx = ctx
 
 	err := storage.InitializeAppDataDir() // Corrected function call
@@ -24,15 +26,17 @@ func (a *App) startup(ctx context.Context) {
 		fmt.Println("Error initializing app data directory:", err)
 		return
 	}
+	fmt.Println("Data stored successfully!")
 
-	err = storage.StoreProfileData("C:/Users/armyo/OneDrive/Desktop/character.json")
-	if err != nil {
-		fmt.Println("Error storing profile data:", err)
-		return
+	//Online check
+	if app.Online.Check() {
+		fmt.Println("Connected to the internet... Starting in online mode.")
+		//I guess i really dont have to do anything here...
+	} else {
+		fmt.Println("No internet connection... Starting in offline mode. Check your firewall if this is a error.")
+		//TODO: Offline mode
 	}
 
-	fmt.Println("Data stored successfully!")
-	// TODO: Online check
 	// TODO: Database check
 	// TODO: If either fails -> Offline mode
 }
