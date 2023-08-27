@@ -44,6 +44,7 @@ var program *Launcher
 func init() {
 	program = NewLauncher()
 }
+
 type Storage struct {
 }
 
@@ -62,6 +63,7 @@ func (s Storage) Check(neededSpace int64) {
 func (s Storage) Clear() {
 
 }
+
 type Config struct {
 }
 
@@ -88,12 +90,14 @@ func NewDownload() Download {
 func (d Download) Mod(modID string) {
 	return
 }
+
 type Online struct {
 }
 
 func NewOnline() *Online {
 	return &Online{}
 }
+
 // Checks if the app has a internet connection
 //
 // Returns:
@@ -113,6 +117,7 @@ func (o *Online) Heartbeat() {
 	//Database heartbeat. no database yet lol
 	return
 }
+
 type Mod struct {
 }
 
@@ -129,6 +134,7 @@ func (m Mod) ThrowConflict() {
 func (m Mod) ProfileThrowMissing() {
 	// TODO: Implement the ProfileThrowMissing method
 }
+
 type UI struct {
 	ctx context.Context
 }
@@ -206,6 +212,7 @@ func (a App) CloseServers() {
 		}
 	}
 }
+
 type AKI struct {
 }
 
