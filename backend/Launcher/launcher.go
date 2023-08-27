@@ -44,3 +44,21 @@ var program *Launcher
 func init() {
 	program = NewLauncher()
 }
+type Storage struct {
+}
+
+func NewStorage() Storage {
+	return Storage{}
+}
+
+func (s Storage) AddModEntry(mod string) {
+	//what the fuck was i going to use this for??????????? i cannot fucking remember
+}
+
+func (s Storage) Check(neededSpace int64) {
+	// TODO: Implement Storage space Check
+}
+
+func (s Storage) Clear() {
+
+}
