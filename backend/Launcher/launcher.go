@@ -88,3 +88,9 @@ func NewDownload() Download {
 func (d Download) Mod(modID string) {
 	return
 }
+type Online struct {
+}
+
+func NewOnline() *Online {
+	return &Online{}
+}
