@@ -77,3 +77,14 @@ func (c Config) ClearIconCache() {
 	// TODO: Implement ClearIconCache
 	return
 }
+
+type Download struct {
+}
+
+func NewDownload() Download {
+	return Download{}
+}
+
+func (d Download) Mod(modID string) {
+	return
+}
