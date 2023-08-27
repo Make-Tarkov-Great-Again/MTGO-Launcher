@@ -113,3 +113,19 @@ func (o *Online) Heartbeat() {
 	//Database heartbeat. no database yet lol
 	return
 }
+type Mod struct {
+}
+
+func NewMod() Mod {
+	return Mod{}
+}
+
+// Throws conflict warning. Lets you pick to disable one of the conflicts, or contuine.
+func (m Mod) ThrowConflict() {
+	// TODO: Implement the ThrowConflict method
+}
+
+// Send missing mod popup. Cancel launch on "Cancel" and contuine on "I know what im doing!".
+func (m Mod) ProfileThrowMissing() {
+	// TODO: Implement the ProfileThrowMissing method
+}
