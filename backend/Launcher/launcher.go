@@ -94,3 +94,22 @@ type Online struct {
 func NewOnline() *Online {
 	return &Online{}
 }
+// Checks if the app has a internet connection
+//
+// Returns:
+//
+//	bool: true if "online"
+//	bool: false if !"online"
+func (o *Online) Check() bool {
+	_, err := http.Get("http://www.google.com")
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+// Returns { alive } if successful probally
+func (o *Online) Heartbeat() {
+	//Database heartbeat. no database yet lol
+	return
+}
