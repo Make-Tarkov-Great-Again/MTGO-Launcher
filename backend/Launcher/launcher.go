@@ -129,3 +129,39 @@ func (m Mod) ThrowConflict() {
 func (m Mod) ProfileThrowMissing() {
 	// TODO: Implement the ProfileThrowMissing method
 }
+type UI struct {
+	ctx context.Context
+}
+
+func NewUI() UI {
+	// Initialize and return a UI instance
+	return UI{}
+}
+
+// Send Panic popup message to app and closes on button press
+func (u UI) Panic() {
+	// TODO: Implement Panic popup
+	//wails.Quit(u.ctx)
+	return
+}
+
+// Send error popup message to app
+func (u UI) Error(title string, message string) {
+	wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
+		Type:          wails.ErrorDialog,
+		Title:         title,
+		Message:       message,
+		DefaultButton: "Ok",
+	})
+}
+
+// Send info popup message to app
+func (u UI) Info() {
+	// TODO: Implement Info popup
+	return
+}
+
+// Reloads frontend.
+func (u UI) Reload() {
+	wails.WindowReloadApp(u.ctx)
+}
