@@ -10,6 +10,8 @@ import (
 	"strings"
 	"syscall"
 
+	"golang.org/x/sys/windows"
+
 	wails "github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -56,8 +58,18 @@ func (s Storage) AddModEntry(mod string) {
 	//what the fuck was i going to use this for??????????? i cannot fucking remember
 }
 
-func (s Storage) Check(neededSpace int64) {
-	// TODO: Implement Storage space Check
+func (s Storage) Check(neededSpace int64) bool {
+	var freeBytesAvailable uint64
+	var totalNumberOfBytes uint64
+	var totalNumberOfFreeBytes uint64
+	err := windows.GetDiskFreeSpaceEx(windows.StringToUTF16Ptr("C:"),
+		&freeBytesAvailable, &totalNumberOfBytes, &totalNumberOfFreeBytes)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	return freeBytesAvailable >= uint64(neededSpace)
 }
 
 func (s Storage) Clear() {
