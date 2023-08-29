@@ -10,7 +10,7 @@ import (
 
 const appSubdir = "MT-GO"
 
-func getAppDataDir() (string, error) {
+func GetAppDataDir() (string, error) {
 	appDataDir := os.Getenv("APPDATA")
 	if appDataDir == "" {
 		return "", fmt.Errorf("APPDATA environment variable not set")
@@ -30,7 +30,7 @@ func writeDataToFile(filePath string, data []byte) error {
 }
 
 func StoreData(subdir, filename string, data []byte) error {
-	appDataDir, err := getAppDataDir()
+	appDataDir, err := GetAppDataDir()
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func StoreData(subdir, filename string, data []byte) error {
 }
 
 func InitializeAppDataDir() error {
-	appDataDir, err := getAppDataDir()
+	appDataDir, err := GetAppDataDir()
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,7 @@ func (dt dataType) folderName(identifier string) string {
 
 // Dont call. Call other functions insted. Like StoreProfileData
 func storeDataWithType(dataType dataType, identifier, filename string, data interface{}) error {
-	appDataDir, err := getAppDataDir()
+	appDataDir, err := GetAppDataDir()
 	if err != nil {
 		return err
 	}
@@ -114,8 +114,16 @@ type ProfileData struct {
 // Parameters:
 //
 // filePath - Absolute path to file.
+/*
+Example usage:
+	err = storage.StoreProfileData(C://path/to/file, false)
+	if err != nil {
+		fmt.Println("Error storing profile data:", err)
+		return
+	}
+*/
 func StoreProfileData(filePath string, copyAll bool) error {
-	appDataDir, err := getAppDataDir()
+	appDataDir, err := GetAppDataDir()
 	if err != nil {
 		return err
 	}
