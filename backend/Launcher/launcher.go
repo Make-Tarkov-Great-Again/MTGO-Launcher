@@ -154,6 +154,10 @@ func (s Storage) Clear() {
 		fmt.Printf("[Launcher.Storage] Failed to removed all files from %s. \n %s", s.AppDataDir, err)
 	}
 }
+func (s Storage) ClearIconCache() {
+	// TODO: Implement ClearIconCache
+	return
+}
 
 //#endregion Storage
 
