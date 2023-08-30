@@ -154,6 +154,7 @@ func (s Storage) Clear() {
 		fmt.Printf("[Launcher.Storage] Failed to removed all files from %s. \n %s", s.AppDataDir, err)
 	}
 }
+
 func (s Storage) ClearIconCache() {
 	// TODO: Implement ClearIconCache
 	return
@@ -165,11 +166,6 @@ func (s Storage) ClearIconCache() {
 //func (c Config) Update() {
 //	// I dont think this is how i wanna do this specificly. kekw
 //}
-
-func (c Config) ClearIconCache() {
-	// TODO: Implement ClearIconCache
-	return
-}
 
 //#endregion Config
 
@@ -234,6 +230,7 @@ func (m Mod) ProfileThrowMissing() {
 //#endregion Mod
 
 // #region UI
+
 // Send Panic popup message to app and closes on button press
 func (u UI) Panic(title string, message string) {
 	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
@@ -312,7 +309,7 @@ func (a App) CloseServers() {
 	}
 }
 
-//endregion App
+//#endregion App
 
 //#region EMU
 
