@@ -235,9 +235,19 @@ func (m Mod) ProfileThrowMissing() {
 
 // #region UI
 // Send Panic popup message to app and closes on button press
-func (u UI) Panic() {
-	// TODO: Implement Panic popup
-	//wails.Quit(u.ctx)
+func (u UI) Panic(title string, message string) {
+	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
+		Type:          wails.ErrorDialog,
+		Message:       "Whoops, something went very wrong, and we can't continue! See error below!\n" + message,
+		Buttons:       []string{"Ok"},
+		DefaultButton: "Ok",
+	})
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	if selection == "Ok" {
+		wails.Quit(u.ctx)
+	}
 	return
 }
 
