@@ -86,3 +86,11 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
+func (w *Window) OnMinimize() {
+	w.Minimize()
+}
+
+func (w *Window) OnClose() {
+	w.Close()
+}
