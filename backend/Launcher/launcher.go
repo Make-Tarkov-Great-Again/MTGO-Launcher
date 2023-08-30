@@ -98,6 +98,8 @@ func init() {
 	program = NewLauncher()
 }
 
+//#region Storage
+
 func (s Storage) AddModEntry(mod string) {
 	//what the fuck was i going to use this for??????????? i cannot fucking remember
 }
@@ -148,6 +150,9 @@ func (s Storage) Clear() {
 
 }
 
+//#endregion Storage
+
+//#region Config
 //func (c Config) Update() {
 //	// I dont think this is how i wanna do this specificly. kekw
 //}
@@ -157,10 +162,16 @@ func (c Config) ClearIconCache() {
 	return
 }
 
+//#endregion Config
+
+// #region Download
 func (d Download) Mod(modID string) {
 	return
 }
 
+//#endregion Config
+
+//#region Online
 /*
 Package launcher
 
@@ -197,6 +208,10 @@ func (o *Online) Heartbeat() {
 	return
 }
 
+//#endregion Online
+
+//#region Mod
+
 // Throws conflict warning. Lets you pick to disable one of the conflicts, or contuine.
 func (m Mod) ThrowConflict() {
 	// TODO: Implement the ThrowConflict method
@@ -207,6 +222,9 @@ func (m Mod) ProfileThrowMissing() {
 	// TODO: Implement the ProfileThrowMissing method
 }
 
+//#endregion Mod
+
+// #region UI
 // Send Panic popup message to app and closes on button press
 func (u UI) Panic() {
 	// TODO: Implement Panic popup
@@ -235,6 +253,9 @@ func (u UI) Reload() {
 	wails.WindowReloadApp(u.ctx)
 }
 
+//#endregion UI
+
+// #region App
 // Minimizes the launcher
 func (a App) Minimize() {
 	wails.WindowMinimise(a.ctx)
@@ -266,6 +287,10 @@ func (a App) CloseServers() {
 		}
 	}
 }
+
+//endregion App
+
+//#region EMU
 
 /*
 AKI.StartServer starts an AKI server from the specified serverPath.
@@ -356,6 +381,9 @@ func (m MTGA) StartServer() {
 	// TODO: Implement the StartServer method
 }
 
+//#endregion EMU
+
+// #region structs
 type Launcher struct {
 	Storage  Storage
 	Config   Config
@@ -389,7 +417,9 @@ type AKI struct {
 type MTGA struct {
 }
 
-// === Component Initialization ===
+//#endregion
+
+//#region === Component Initialization ===
 
 // NewLauncher creates a new Launcher instance with initialized components.
 func NewLauncher() *Launcher {
@@ -451,4 +481,4 @@ func NewMTGA() MTGA {
 	return MTGA{}
 }
 
-// === End of Component Initialization ===
+//#endregion === End of Component Initialization ===
