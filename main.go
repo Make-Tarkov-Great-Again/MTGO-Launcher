@@ -70,7 +70,7 @@ func main() {
 			WindowIsTranslucent:  false,
 			About: &mac.AboutInfo{
 				Title:   "MTGO Launcher",
-				Message: "© 2021 Me",
+				Message: "© 2021 Make Tarkov Great Again",
 			},
 		},
 		Linux: &linux.Options{
@@ -85,12 +85,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func (w *Window) OnMinimize() {
-	w.Minimize()
-}
-
-func (w *Window) OnClose() {
-	w.Close()
 }
