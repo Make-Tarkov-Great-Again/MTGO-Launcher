@@ -1,3 +1,60 @@
+/*
+Package storage provides functionalities to manage data storage for the MTGO-Launcher.
+
+This package offers methods to handle data storage, retrieval, and management within the application. It includes functions to work with various types of data such as profiles, configuration, and more.
+
+Usage:
+
+	import "mtgolauncher/backend/Storage"
+
+Store profile data using the `StoreProfileData` function to save profile information to storage.
+
+	profilePath := "C://AKI/user"
+	err := storage.StoreProfileData(profilePath, false)
+	if err != nil {
+		fmt.Println("Error storing profile data:", err)
+	}
+
+# Valid commands for storage
+
+# App Data Directory Initialization
+
+  - [InitializeAppDataDir]: Initializes the app data directory for MTGO-Launcher. This function creates the necessary directory structure. Is called when applacation starts, so you probally dont need this.
+
+# Storage
+
+  - [GetAppDataDir]: Returns the path to the app data directory.
+
+  - [CreateFolderIfNotExists]: Creates a folder at the specified path if it does not exist.
+
+  - [WriteDataToFile]: Writes data to a file at the specified path.
+
+  - [StoreData]: Stores data in a specified subdirectory and filename within the app data directory.
+
+# Profile Data Storage
+
+- [StoreProfileData]: Copies profile data to storage at "%appdata%/MT-GO/profiles". See function doc for more info.
+
+# File Operations
+
+- [CopyFile]: Copies a file from the source path to the destination path.
+
+# UNFINISHED/UNSTARTED Functions
+
+- [StoreMod]: (UNFINISHED/UNSTARTED) Stores mod data in storage.
+
+- [StoreModList]: (UNFINISHED/UNSTARTED) Stores mod list data in storage.
+
+- [StoreJSON]: (UNFINISHED/UNSTARTED) Stores JSON data in storage.
+
+- [StoreBundles]: (UNFINISHED/UNSTARTED) Stores bundle data in storage.
+
+- [StoreMisc]: (UNFINISHED/UNSTARTED) Stores miscellaneous data in storage.
+
+Note: The storage package provides essential functionalities for handling data storage within the MTGO-Launcher application. The "UNFINISHED/UNSTARTED" functions listed above are placeholders for future development.
+
+See the function documentation for detailed information and usage examples.
+*/
 package storage
 
 import (
@@ -10,6 +67,11 @@ import (
 
 const appSubdir = "MT-GO"
 
+/*
+	Returns the AppDataDir for MTGO.
+
+%appdata%/MT-GO
+*/
 func GetAppDataDir() (string, error) {
 	appDataDir := os.Getenv("APPDATA")
 	if appDataDir == "" {
@@ -18,17 +80,20 @@ func GetAppDataDir() (string, error) {
 	return filepath.Join(appDataDir, appSubdir), nil
 }
 
-func createFolderIfNotExists(folderPath string) error {
+// QoD function
+func CreateFolderIfNotExists(folderPath string) error {
 	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
 		return os.MkdirAll(folderPath, 0755)
 	}
 	return nil
 }
 
-func writeDataToFile(filePath string, data []byte) error {
+// QoD function
+func WriteDataToFile(filePath string, data []byte) error {
 	return os.WriteFile(filePath, data, 0644)
 }
 
+// QoD function
 func StoreData(subdir, filename string, data []byte) error {
 	appDataDir, err := GetAppDataDir()
 	if err != nil {
@@ -36,22 +101,23 @@ func StoreData(subdir, filename string, data []byte) error {
 	}
 
 	subdirPath := filepath.Join(appDataDir, subdir)
-	err = createFolderIfNotExists(subdirPath)
+	err = CreateFolderIfNotExists(subdirPath)
 	if err != nil {
 		return err
 	}
 
 	filePath := filepath.Join(subdirPath, filename)
-	return writeDataToFile(filePath, data)
+	return WriteDataToFile(filePath, data)
 }
 
+// Initilizes the appdata folder, only needs to be ran once, obviously.
 func InitializeAppDataDir() error {
 	appDataDir, err := GetAppDataDir()
 	if err != nil {
 		return err
 	}
 
-	return createFolderIfNotExists(appDataDir)
+	return CreateFolderIfNotExists(appDataDir)
 }
 
 type dataType int
@@ -82,7 +148,7 @@ func storeDataWithType(dataType dataType, identifier, filename string, data inte
 	}
 
 	subdir := filepath.Join(appDataDir, dataType.folderName(identifier))
-	err = createFolderIfNotExists(subdir)
+	err = CreateFolderIfNotExists(subdir)
 	if err != nil {
 		return err
 	}
@@ -94,7 +160,7 @@ func storeDataWithType(dataType dataType, identifier, filename string, data inte
 		if err != nil {
 			return err
 		}
-		return writeDataToFile(filePath, jsonData)
+		return WriteDataToFile(filePath, jsonData)
 	}
 
 	return nil
@@ -109,17 +175,28 @@ type ProfileData struct {
 	} `json:"Info"`
 }
 
-// Stores profile data, in %appdata%/MT-GO/profiles/@filePath
-//
-// Parameters:
-//
-// filePath - Absolute path to file.
 /*
+StoreProfileData copies profile data to storage, @ "%appdata%/MT-GO"
+
+Parameters:
+
+- filePath: The absolute path to the source file containing the profile data.
+
+- copyAll: A boolean flag indicating whether to copy the entire profile within the src folder (true) or just the character.json file (false).
+
+Returns:
+An error if there are any issues encountered during the storage process, otherwise nil.
+
+Additional Info:
+
+This function reads the character.json file to obtain profile information, including the profile's nickname, level, and faction. It uses the profile nickname to name the folder where the profile will be stored within "%appdata%/MT-GO/profiles". Additionally, a profile-details.json file is created within the profile folder, containing basic profile information in JSON format so we can quickly get basic info about the profile without reprasing the possibly long character.json.
+
 Example usage:
-	err = storage.StoreProfileData(C://path/to/file, false)
+
+err := storage.StoreProfileData("C://AKI/user", false)
+
 	if err != nil {
-		fmt.Println("Error storing profile data:", err)
-		return
+	    fmt.Println("Error storing profile data:", err)
 	}
 */
 func StoreProfileData(filePath string, copyAll bool) error {
@@ -142,13 +219,13 @@ func StoreProfileData(filePath string, copyAll bool) error {
 	targetDirectory := profileData.Info.Nickname
 
 	profilesDir := filepath.Join(appDataDir, "profiles")
-	err = createFolderIfNotExists(profilesDir)
+	err = CreateFolderIfNotExists(profilesDir)
 	if err != nil {
 		return err
 	}
 
 	targetDir := filepath.Join(profilesDir, profiles.folderName(targetDirectory))
-	err = createFolderIfNotExists(targetDir)
+	err = CreateFolderIfNotExists(targetDir)
 	if err != nil {
 		return err
 	}
@@ -159,7 +236,7 @@ func StoreProfileData(filePath string, copyAll bool) error {
 	}
 
 	profileDetailsPath := filepath.Join(targetDir, "profile-details.json")
-	err = writeDataToFile(profileDetailsPath, profileDataJSON)
+	err = WriteDataToFile(profileDetailsPath, profileDataJSON)
 	if err != nil {
 		return err
 	}
@@ -173,14 +250,14 @@ func StoreProfileData(filePath string, copyAll bool) error {
 		for _, file := range files {
 			srcFilePath := filepath.Join(filepath.Dir(filePath), file.Name())
 			destFilePath := filepath.Join(targetDir, file.Name())
-			err = copyFile(srcFilePath, destFilePath)
+			err = CopyFile(srcFilePath, destFilePath)
 			if err != nil {
 				return err
 			}
 		}
 	} else {
 		newFilePath := filepath.Join(targetDir, "character.json")
-		err = copyFile(filePath, newFilePath)
+		err = CopyFile(filePath, newFilePath)
 		if err != nil {
 			return err
 		}
@@ -189,7 +266,26 @@ func StoreProfileData(filePath string, copyAll bool) error {
 	return nil
 }
 
-func copyFile(src, dest string) error {
+/*
+	CopyFile function copies a file from the source path to the destination path.
+
+Parameters:
+src - The source file path to be copied.
+
+dest - The destination file path where the source file will be copied to.
+
+Returns:
+An error if the copying process encounters any issues, otherwise nil.
+
+Example usage:
+
+err := CopyFile("source.txt", "destination.txt")
+
+	if err != nil {
+	    fmt.Println("Error copying file:", err)
+	}
+*/
+func CopyFile(src, dest string) error {
 	sourceFile, err := os.Open(src)
 	if err != nil {
 		return err
