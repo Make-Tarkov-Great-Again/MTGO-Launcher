@@ -89,6 +89,8 @@ import (
 
 	"golang.org/x/sys/windows"
 
+	appData "mtgolauncher/backend/Storage"
+
 	wails "github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -147,7 +149,10 @@ func (s Storage) Check(neededSpace int64) bool {
 }
 
 func (s Storage) Clear() {
-
+	err := os.RemoveAll(s.AppDataDir)
+	if err != nil {
+		fmt.Printf("[Launcher.Storage] Failed to removed all files from %s. \n %s", s.AppDataDir, err)
+	}
 }
 
 //#endregion Storage
@@ -397,6 +402,7 @@ type Launcher struct {
 }
 
 type Storage struct {
+	AppDataDir string
 }
 type Config struct {
 }
@@ -438,7 +444,15 @@ func NewLauncher() *Launcher {
 
 // NewStorage creates and returns a new Storage instance.
 func NewStorage() Storage {
-	return Storage{}
+	appDataDir, err := appData.GetAppDataDir()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return Storage{}
+	}
+
+	return Storage{
+		AppDataDir: appDataDir,
+	}
 }
 
 // NewConfig creates and returns a new Config instance.
