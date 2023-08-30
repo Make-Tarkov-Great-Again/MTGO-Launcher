@@ -253,12 +253,17 @@ func (u UI) Panic(title string, message string) {
 
 // Send error popup message to app
 func (u UI) Error(title string, message string) {
-	wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
+	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
-		Title:         title,
-		Message:       message,
-		DefaultButton: "Ok",
+		Message:       "Whoops, something went wrong, but we can continue! See error below!\n" + message,
+		Buttons:       []string{"Continue"},
+		DefaultButton: "Continue",
 	})
+	if err != nil {
+		// Handle the error
+		fmt.Println("Error:", err)
+	}
+	fmt.Printf("selection: %v\n", selection)
 }
 
 // Send info popup message to app
