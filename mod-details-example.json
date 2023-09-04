@@ -1,0 +1,16 @@
+{
+    "ModInfo": {
+        "Name": "ModName",
+        "Version": {
+            "Emu": "AKI || MTGA",
+            "EmuVersion": "x.x.x"
+        },
+        "ID": "ModID (As integer)",
+        "Author": "ModAuthor",
+        "Description": "ModDescription",
+        "DownloadedAt": "DownloadedDate"
+    },
+    "ModConfig": {
+        //Mods Config goes here.
+    }
+}
