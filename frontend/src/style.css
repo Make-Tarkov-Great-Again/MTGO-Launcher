@@ -154,7 +154,8 @@ body {
   font: 300 14px "Motiva Sans", Arial, Helvetica, sans-serif;
   margin: 0;
   background: var(--GithubM-dark);
-  color: #969696
+  color: #969696;
+  overflow-x: hidden;
 }
 
 .main-container {
@@ -166,8 +167,8 @@ body {
   top: 50vh;
   left: 50vw;
   transform: translate(-50%, -50%);
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   justify-content: center;
   background: transparent !important;
 }
@@ -198,7 +199,7 @@ body {
   align-content: flex-start;
   overflow: hidden;
   position: absolute;
-  left: 24.9vw;
+  /* left: 24.9vw; */
   top: 10rem;
   justify-content: center;
   /* align-items: stretch; */
@@ -210,8 +211,6 @@ body {
   max-width: max-content;
   height: 203px;
   position: relative;
-  background-repeat-x: no-repeat;
-  background-repeat-y: no-repeat;
   width: 170%;
   top: 190px;
   background-size: cover;
@@ -221,11 +220,10 @@ body {
   height: 203px;
   background-repeat: no-repeat;
   position: relative;
-  background-repeat-x: no-repeat;
-  background-repeat-y: no-repeat;
   width: 100%;
-  left: 25%;
-  top: 150px
+  left: 3%;
+  top: 150px;
+  overflow: hidden;
 }
 
 .sorting-bar {
@@ -314,8 +312,10 @@ html {
 }
 
 :root {
-  --GithubM-dark: #01040900;
-  --GithubA-dark: #0d111780;
+  --GithubM-dark: #010409;
+  --GithubA-darkT: #0D1117;
+  --GithubM-darkT: #01040900;
+  --GithubA-darkT: #0d111780;
   --Github-orange: #F78166;
   --text-color: #EDEDED;
   --aki-orange: #ffc107;
