@@ -79,6 +79,7 @@ package launcher
 import (
 	"bufio"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -86,10 +87,13 @@ import (
 	"path/filepath"
 	"strings"
 	"syscall"
+	"time"
 
 	"golang.org/x/sys/windows"
 
 	appData "mtgolauncher/backend/Storage"
+
+	config "mtgolauncher/backend/Storage/config"
 
 	wails "github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -162,10 +166,155 @@ func (s Storage) ClearIconCache() {
 
 //#endregion Storage
 
-//#region Config
-//func (c Config) Update() {
-//	// I dont think this is how i wanna do this specificly. kekw
-//}
+// #region Config
+
+// GetConfig retrieves the global configuration.
+func (c *Config) GetConfig() *Config {
+	// Implement logic to retrieve the global configuration.
+	return c
+}
+
+type ModDetails struct {
+	ModInfo struct {
+		Name         string     `json:"Name"`
+		Version      ModVersion `json:"Version"`
+		ID           int        `json:"ID"`
+		Author       string     `json:"Author"`
+		Description  string     `json:"Description"`
+		DownloadedAt time.Time  `json:"DownloadedAt"`
+	}
+	ModConfig map[string]interface{} `json:"ModConfig"`
+}
+
+type ModVersion struct {
+	Emu        string `json:"Emu"`
+	EmuVersion string `json:"EmuVersion"`
+}
+
+func (c *Config) CreateConfigIfNotExist(modID int, modName string, modAuthor string, modDescription string) error {
+	appDataDir := c.AppDataDir
+
+	err := appData.CreateFolderIfNotExists(filepath.Join(appDataDir, "Mods"))
+	if err != nil {
+		return err
+	}
+
+	modDir := filepath.Join(appDataDir, "Mods", fmt.Sprintf("%d", modID))
+	modConfigFile := filepath.Join(modDir, "mod-details.json")
+
+	if _, err := os.Stat(modConfigFile); os.IsNotExist(err) {
+		err = appData.CreateFolderIfNotExists(modDir)
+		if err != nil {
+			return err
+		}
+
+		// Read package.json file to determine emulator type and version
+		packageJSONPath := filepath.Join(modDir, "package.json")
+		packageJSON, err := os.ReadFile(packageJSONPath)
+		if err != nil {
+			return err
+		}
+
+		var packageInfo struct {
+			Name        string `json:"name"`
+			AkiVersion  string `json:"AkiVersion"`
+			MtgaVersion string `json:"MtgaVersion"`
+			Author      string `json:"author"`
+			Description string `json:"description"`
+		}
+
+		err = json.Unmarshal(packageJSON, &packageInfo)
+		if err != nil {
+			return err
+		}
+
+		emulatorType := "Unknown"
+		emulatorVersion := "Unknown"
+
+		if packageInfo.AkiVersion != "" {
+			emulatorType = "AKI"
+			emulatorVersion = packageInfo.AkiVersion
+		} else if packageInfo.MtgaVersion != "" {
+			emulatorType = "MTGA"
+			emulatorVersion = packageInfo.MtgaVersion
+		}
+
+		// Find and read config.json files
+		configFiles, err := config.FindConfigFiles(modDir)
+		if err != nil {
+			return err
+		}
+
+		// Create init structure
+		modDetails := ModDetails{
+			ModInfo: struct {
+				Name         string     `json:"Name"`
+				Version      ModVersion `json:"Version"`
+				ID           int        `json:"ID"`
+				Author       string     `json:"Author"`
+				Description  string     `json:"Description"`
+				DownloadedAt time.Time  `json:"DownloadedAt"`
+			}{
+				Name: modName,
+				Version: ModVersion{
+					Emu:        emulatorType,
+					EmuVersion: emulatorVersion,
+				},
+				ID:           modID,
+				Author:       packageInfo.Author,
+				Description:  packageInfo.Description,
+				DownloadedAt: time.Now(),
+			},
+			ModConfig: make(map[string]interface{}),
+		}
+
+		// Unmarshal and add config.json files to ModConfig
+		for key, filePath := range configFiles {
+			configJSON, err := os.ReadFile(filePath)
+			if err != nil {
+				return err
+			}
+			var configData interface{}
+			err = json.Unmarshal(configJSON, &configData)
+			if err != nil {
+				return err
+			}
+			modDetails.ModConfig[key] = configData
+		}
+
+		// Marshal
+		modDetailsJSON, err := json.MarshalIndent(modDetails, "", "  ")
+		if err != nil {
+			return err
+		}
+
+		// Write
+		err = appData.StoreData("Mods", fmt.Sprintf("/%d/mod-details.json", modID), modDetailsJSON)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// UpdateConfig updates the global configuration.
+func (c *Config) UpdateConfig(updatedConfig *Config) error {
+	// Implement logic to update the global configuration.
+	return nil
+}
+
+// GetConfigByModID retrieves configuration for a specific mod by its ID.
+func (c *Config) GetConfigByModID(modID string) (*Config, error) {
+	// Implement logic to retrieve configuration by mod ID.
+	return nil, fmt.Errorf("not implemented")
+}
+
+// GetConfigByModName retrieves configuration for a specific mod by its name.
+func (c *Config) GetConfigByModName(modName string) (*Config, error) {
+	// Implement logic to retrieve configuration by mod name.
+	return nil, fmt.Errorf("not implemented")
+}
 
 //#endregion Config
 
@@ -225,6 +374,15 @@ func (m Mod) ThrowConflict() {
 // Send missing mod popup. Cancel launch on "Cancel" and contuine on "I know what im doing!".
 func (m Mod) ProfileThrowMissing() {
 	// TODO: Implement the ProfileThrowMissing method
+}
+
+func (m Mod) ActivateMod() {
+	//TODO: Implment Mod activation.
+}
+
+func (m Mod) DisableMods() {
+	//TODO: Implment Mod disabling.
+	// -> Config.go
 }
 
 //#endregion Mod
@@ -421,6 +579,7 @@ type Storage struct {
 	AppDataDir string
 }
 type Config struct {
+	AppDataDir string
 }
 type Download struct {
 }
@@ -473,7 +632,15 @@ func NewStorage() Storage {
 
 // NewConfig creates and returns a new Config instance.
 func NewConfig() Config {
-	return Config{}
+	appDataDir, err := appData.GetAppDataDir()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return Config{}
+	}
+
+	return Config{
+		AppDataDir: appDataDir,
+	}
 }
 
 // NewDownload creates and returns a new Download instance.
