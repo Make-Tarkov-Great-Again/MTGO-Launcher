@@ -1,48 +1,62 @@
 <template>
     <div class="single-mod-page">
-      <header>
-        <!-- Header content goes here -->
-      </header>
-
-      <div class="container">
-        <div class="main-container">
+      <div class="mod-page-container">
+        <div class="mod-page-main-container">
           <div class="mod-name">{{ mod.title }}</div>
 
-          <div class="mod-picture-gallery">
-            <img v-for="(image, index) in mod.images" :key="index" :src="image" :alt="mod.title">
+
+
+          <div class="slideshow-containerMp">
+          <div v-for="(image, index) in mod.images" :key="index" class="slideshow-itemMp"
+            :style="{ display: index === currentSlideIndexMp ? 'block' : 'none' }">
+            <img class="loadable" :src="image" :alt="mod.title">
+            </div>
           </div>
 
+          <button id="prevBtn" @click="prevSlideMp">❮</button>
+          <button id="nextBtn" @click="nextSlideMp">❯</button>
+        </div>
+
           <div class="mod-name-subscribe">
-            <div class="mod-name">{{ mod.title }}</div>
-            <div class="grab-button" @click="handleGrabButtonClick(mod.id)">Grab</div>
+            <div class="mod-title">{{ mod.title }}</div>
+            <div class="grab-buttonmp" @click="handleGrabButtonClick(mod.id)">Grab</div>
           </div>
 
           <div class="mod-description">{{ mod.description }}</div>
         </div>
       </div>
-    </div>
-  </template>
+</template>
 
 <script>
-import modexamples from './mods.json'
-export default {
-  computed:{
-    modID(){
-      return parseInt(this.$route.params.id)
-    },
-    mod(){
-      console.log("buuu")
-      console.log(this.modID)
-      console.log("breh \n" + modexamples.toString())
+import modexamples from './mods.json'; // TODO: Replace with API fetch
 
-      console.log("bruh \n" + modexamples.find(mod => mod.id === this.modID))
-      return modexamples.find(mod => mod.id === this.modID)
-    }
+export default {
+  computed: {
+    modID() {
+      return parseInt(this.$route.params.id);
+    },
+    mod() {
+      return modexamples.find(mod => mod.id === this.modID);
+    },
   },
-  props: ['id'], // Receive the mod ID as a prop
+  data() {
+    return {
+      currentSlideIndexMp: 0,
+    };
+  },
   methods: {
     handleGrabButtonClick() {
       // Handle subscription using this.modID
+    },
+    prevSlideMp() {
+      if (this.currentSlideIndexMp > 0) {
+        this.currentSlideIndexMp--;
+      }
+    },
+    nextSlideMp() {
+      if (this.currentSlideIndexMp < this.mod.images.length - 1) {
+        this.currentSlideIndexMp++;
+      }
     },
   },
   created() {
@@ -52,33 +66,23 @@ export default {
 };
 </script>
 
-  <style scoped>
-:root {
-  --GithubM-dark: #01040900; /* Main color */
-  --GithubA-dark: #0d111780; /* Accent */
-  --Github-orange: #F78166;
-  --text-color: #EDEDED;
-  --aki-orange: #ffc107;
-  --mtga-blue: #262f83;
-}
-
+<style scoped>
 .single-mod-page {
   background-color: var(--GithubM-dark);
   color: var(--text-color);
-  padding: 20px;
 }
 
-.container {
-  background-color: var(--GithubA-dark);
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 20px;
+.mod-page-container {
+    background-color: var(--GithubM-dark);
 }
 
-.main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.mod-page-main-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .mod-name {
@@ -88,16 +92,19 @@ export default {
 
 .mod-picture-gallery {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
 }
 
-.mod-picture-gallery img {
-  max-width: 100%;
-  height: auto;
+.gallery-image {
+  flex-basis: calc(33.33% - 20px);
+  overflow: hidden;
   border-radius: 8px;
+}
+
+.gallery-img {
+  width: 100%;
+  height: auto;
 }
 
 .mod-name-subscribe {
@@ -108,7 +115,7 @@ export default {
   margin-bottom: 20px;
 }
 
-.grab-button {
+.grab-buttonmp {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -124,4 +131,58 @@ export default {
 .mod-description {
   font-size: 16px;
   line-height: 1.5;
-}  </style>
+}
+
+.slideshow-containerMp {
+  position: relative;
+  max-width: 630px;
+  height: 400px;
+  overflow: hidden;
+  background-color: var(--GithubA-dark);
+  border: #21262d 1px;
+  padding: 5px;
+  left: 35px
+}
+
+.slideshow-itemMp {
+  display: none;
+  width: 100%;
+  height: 100%
+}
+
+.slideshow-itemMp img {
+  object-fit: contain;
+  width: 100%;
+  height: 35%
+}
+
+.slideshow-itemMp-details {
+  background-color: rgb(0 0 0 / 40%);
+  color: #fff;
+  padding: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%
+}
+
+#nextBtn,
+#prevBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  background: 0 0;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1
+}
+
+#prevBtn {
+  left: 10px
+}
+
+#nextBtn {
+  right: 10px
+}
+</style>

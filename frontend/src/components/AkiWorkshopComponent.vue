@@ -142,7 +142,7 @@ export default {
           version: '3.5.0'
         }
       ],
-      slideshowItems: [
+      slideshowItems: [ //TODO: Make this use fetch
         {
           modID: 1,
           imageUrl: 'https://i.imgur.com/oyrIBpI.png',
@@ -190,23 +190,36 @@ export default {
     handleGrabButtonClick(modID, event) {
       event.stopPropagation(); // Stop event propagation here
       // Rest of your logic
+    },
+    handleDocumentClick(event) {
+      const floatingPageElement = this.$refs.floatingPage;
+
+      if (floatingPageElement && !floatingPageElement.contains(event.target)) {
+        this.closeFloatingPage();
+      }
     }
-  }
+  },
+  mounted() {
+    document.addEventListener('click', this.handleDocumentClick);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleDocumentClick);
+  },
 };
 </script>
 
 
 <style scoped>
 .floating-page {
+  color: black;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
-  max-width: 800px;
-  background-color: white;
+  max-width: 85vw;
+  max-height: 65vh;
+  background-color: var(--GithubM-dark);
   border-radius: 10px;
-  padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
