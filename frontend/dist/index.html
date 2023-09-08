@@ -2,116 +2,122 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta name="transparent" content="true">
-    <title>myproject</title>
-    
-  <script type="module" crossorigin src="/assets/index.0f58624d.js"></script>
-  <link rel="stylesheet" href="/assets/index.4b10f49d.css">
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta name="transparent" content="true">
+  <title>myproject</title>
+  
+  <script type="module" crossorigin src="/assets/index.b89abacc.js"></script>
+  <link rel="stylesheet" href="/assets/index.52a49b7a.css">
 </head>
 
 <body>
-        <svg class="home">
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="19px" height="24px">
-           <image  x="0px" y="0px" width="19px" height="24px"  xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAYCAQAAACyng6EAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCBUOMRhPjd8YAAABOklEQVQoz63SQUtUURyG8d8591zHUSYZiZGZdZIVgjphLaRW7YL2QZtADCRs0bJv0WfoK/Q1wl27XEQqTQbChHWdbhuT69StWfisznl5zp/3cE7oG6Nn3tBHRTXMeuPSY48sGdivxqmynnHTQ88sKHW88c7R36bd88oTVwQsW3Zsd1xr2fbcuqaAIOpYdM0HX35rmdu2bLolr1SIOla1DR0qsl7Lupc2zfmTZMUNnw2y3lM7Nkyp46o1KdnQN6OehuvuR/NO/Zvv5qIffv5HKxXRREyopQu7wldDI0FTW7NOO/DaW0ca7nrhTv20T94boetbfbdoVhvTWhcHXO5NJ9ZS5dnz82Ox0m1KHqXKL8tlAgiVNEqh/0BXQ4ng2K49J5IFq7pKcGoQ+rOSeKaNnCiUgsy0/EwrjX4BTS4/5jIoxv4AAAAASUVORK5CYII=" />
-        </svg>
-        <svg class="minimize" onclick="window.runtime.WindowMinimise()">
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="11px" height="2px">
-           <image  x="0px" y="0px" width="11px" height="2px"  xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAACCAQAAAAkqu5lAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCBUOMQUsi7PBAAAAGUlEQVQI12M0fskgyoAO/rIwPGT4hCH8HwByTwUGWZVcMwAAAABJRU5ErkJggg==" />
-        </svg>
-        <svg class="close" onclick="window.runtime.Quit()">
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="14px" height="14px">
-           <image  x="0px" y="0px" width="14px" height="14px"  xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCBUOMBxR+ypAAAAA4klEQVQY01XQMUrDABTG8V9NMYMFC+JgDtALZNKi4qiiIlqbgngCFyf1HoKCSO0tTK+gS0cLghUcHcyoFBzS1OYtD96fj+/Pq8R1V2rOlWde10vVtkv8uiihnsROEA292dW0KJ2gUE8ikwTR2MDI3hSHHiUyLWkQwcDIvjU1z+51ZE70qcRFz5kHVUMN3xJPkCfz9KcDS34cFe1zM4Ybk71VnIpkqOfUlzuxzcI8h4Vh4tbHv3kQEerqyLT0Z8zr0iBquNGWaU+fkONVy0HUdG3sOJef4neHViox6xZKKJ+W1z8KUj3KY02Q2QAAAABJRU5ErkJggg==" />
-       </svg>
-       <svg
-       xmlns="http://www.w3.org/2000/svg"
-       data-wails-drag
-       xmlns:xlink="http://www.w3.org/1999/xlink"
-       width="167px" height="17px" class="branding">
-      <text kerning="auto" font-family="Myriad Pro" fill="rgb(0, 0, 0)" transform="matrix( 0.48731871312543, 8.2502619912076e-17, 0, 0.48731871312543,0.42824092964651, 16.9900666200713)" font-size="50px"><tspan font-size="50px" font-family="Bender" fill="#FFFFFF">MTGO&#32;Launcher</tspan></text>
-      </svg>
-          <div class="main-container" id="app">
-        
-    </div>
+  <svg class="home" onclick="TestError('{{ .ctx }}')">
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="19px" height="24px">
+    <image x="0px" y="0px" width="19px" height="24px"
+      xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAYCAQAAACyng6EAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCBUOMRhPjd8YAAABOklEQVQoz63SQUtUURyG8d8591zHUSYZiZGZdZIVgjphLaRW7YL2QZtADCRs0bJv0WfoK/Q1wl27XEQqTQbChHWdbhuT69StWfisznl5zp/3cE7oG6Nn3tBHRTXMeuPSY48sGdivxqmynnHTQ88sKHW88c7R36bd88oTVwQsW3Zsd1xr2fbcuqaAIOpYdM0HX35rmdu2bLolr1SIOla1DR0qsl7Lupc2zfmTZMUNnw2y3lM7Nkyp46o1KdnQN6OehuvuR/NO/Zvv5qIffv5HKxXRREyopQu7wldDI0FTW7NOO/DaW0ca7nrhTv20T94boetbfbdoVhvTWhcHXO5NJ9ZS5dnz82Ox0m1KHqXKL8tlAgiVNEqh/0BXQ4ng2K49J5IFq7pKcGoQ+rOSeKaNnCiUgsy0/EwrjX4BTS4/5jIoxv4AAAAASUVORK5CYII=" />
+  </svg>
+  <svg class="minimize" onclick="window.runtime.WindowMinimise()">
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="11px" height="2px">
+    <image x="0px" y="0px" width="11px" height="2px"
+      xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAACCAQAAAAkqu5lAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCBUOMQUsi7PBAAAAGUlEQVQI12M0fskgyoAO/rIwPGT4hCH8HwByTwUGWZVcMwAAAABJRU5ErkJggg==" />
+  </svg>
+  <svg class="close" onclick="window.runtime.Quit()">
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="14px" height="14px">
+    <image x="0px" y="0px" width="14px" height="14px"
+      xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCBUOMBxR+ypAAAAA4klEQVQY01XQMUrDABTG8V9NMYMFC+JgDtALZNKi4qiiIlqbgngCFyf1HoKCSO0tTK+gS0cLghUcHcyoFBzS1OYtD96fj+/Pq8R1V2rOlWde10vVtkv8uiihnsROEA292dW0KJ2gUE8ikwTR2MDI3hSHHiUyLWkQwcDIvjU1z+51ZE70qcRFz5kHVUMN3xJPkCfz9KcDS34cFe1zM4Ybk71VnIpkqOfUlzuxzcI8h4Vh4tbHv3kQEerqyLT0Z8zr0iBquNGWaU+fkONVy0HUdG3sOJef4neHViox6xZKKJ+W1z8KUj3KY02Q2QAAAABJRU5ErkJggg==" />
+  </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" data-wails-drag xmlns:xlink="http://www.w3.org/1999/xlink" width="167px"
+    height="17px" class="branding">
+    <text kerning="auto" font-family="Myriad Pro" fill="rgb(0, 0, 0)"
+      transform="matrix( 0.48731871312543, 8.2502619912076e-17, 0, 0.48731871312543,0.42824092964651, 16.9900666200713)"
+      font-size="50px">
+      <tspan font-size="50px" font-family="Bender" fill="#FFFFFF">MTGO&#32;Launcher</tspan>
+    </text>
+  </svg>
+  <div class="main-container" id="app">
+    
+  </div>
 </body>
 <style>
-
-
-#app {
+  #app {
     background-color: black;
     max-width: 902px;
     max-height: 592px;
 
-    --wails-draggable:no-drag;
-}
+    --wails-draggable: no-drag;
+  }
 
-.mainapp {
-  background-color: black;
-  left: 0px;
-  top: 0px;
-  width: 956px;
-  height: 662px;
-  z-index: 9;
-}
-.home {
-    position: fixed;
-  left: 32px;
-  top: 12px;
-  width: 19px;
-  height: 24px;
-  z-index: 8;
-}
-.minimize {
-  cursor: pointer;
-  position: fixed;
-  left: 901px;
-  top: 16px;
-  width: 11px;
-  height: 2px;
-  z-index: 7;
-}
-.close {
-    position: fixed;
-  left: 923px;
-  top: 10px;
-  width: 14px;
-  height: 14px;
-  z-index: 6;
-}
-.branding {
-  font-size: 15.85px;
-  font-family: "Bender";
-  color: rgba(255, 255, 255, 0.639);
-  line-height: 1.2;
-  text-align: left;
-  -moz-transform: matrix( 0.48731871312543,8.2502619912076e-17,0,0.48731871312543,0,0);
-  -webkit-transform: matrix( 0.48731871312543,8.2502619912076e-17,0,0.48731871312543,0,0);
-  -ms-transform: matrix( 0.48731871312543,8.2502619912076e-17,0,0.48731871312543,0,0);
-  position: fixed;
-  top: 18px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-  padding: 10px;
-}
+  .mainapp {
+    background-color: black;
+    left: 0px;
+    top: 0px;
+    width: 956px;
+    height: 662px;
+    z-index: 9;
+  }
 
-.main_container {
-  border-radius: 10px;
-  background-color: rgb(13, 17, 23);
-  position: absolute;
-  left: 27px;
-  top: 70px;
-  width: 903px;
-  height: 592px;
-  z-index: 4;
-}
+  .home {
+    position: fixed;
+    left: 32px;
+    top: 12px;
+    width: 19px;
+    height: 24px;
+    z-index: 8;
+  }
+
+  .minimize {
+    cursor: pointer;
+    position: fixed;
+    left: 901px;
+    top: 16px;
+    width: 11px;
+    height: 2px;
+    z-index: 7;
+  }
+
+  .close {
+    position: fixed;
+    left: 923px;
+    top: 10px;
+    width: 14px;
+    height: 14px;
+    z-index: 6;
+  }
+
+  .branding {
+    font-size: 15.85px;
+    font-family: "Bender";
+    color: rgba(255, 255, 255, 0.639);
+    line-height: 1.2;
+    text-align: left;
+    -moz-transform: matrix(0.48731871312543, 8.2502619912076e-17, 0, 0.48731871312543, 0, 0);
+    -webkit-transform: matrix(0.48731871312543, 8.2502619912076e-17, 0, 0.48731871312543, 0, 0);
+    -ms-transform: matrix(0.48731871312543, 8.2502619912076e-17, 0, 0.48731871312543, 0, 0);
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    padding: 10px;
+  }
+
+  .main_container {
+    border-radius: 10px;
+    background-color: rgb(13, 17, 23);
+    position: absolute;
+    left: 27px;
+    top: 70px;
+    width: 903px;
+    height: 592px;
+    z-index: 4;
+  }
 </style>
 
 </html>

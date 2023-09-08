@@ -114,7 +114,8 @@
 </template>
 
 <script>
-import ModPageComponent from './ModPageComponent.vue';
+import { Error } from "../../wailsjs/go/launcher/UI";
+
 
 export default {
   data() {
@@ -163,10 +164,12 @@ export default {
   },
   methods: {
     ModPage(modID) {
-      console.log(modID);
-      this.showFloatingPage = true;
-      this.selectedModID = modID;
-      this.$router.push({ name: 'modpage', params: { id: modID } });
+      const ctx = this.ctx //???? wails.ctx???
+      Error("This feature isnt ready!", "Please wait for more updates!");
+      //console.log(modID);
+      //this.showFloatingPage = true;
+      //this.selectedModID = modID;
+      //this.$router.push({ name: 'modpage', params: { id: modID } });
     },
     openFloatingPage() {
       console.log('Door open sound')

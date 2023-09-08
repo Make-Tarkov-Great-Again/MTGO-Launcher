@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"log"
+	launcher "mtgolauncher/backend/Launcher"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -18,6 +19,15 @@ var assets embed.FS
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
+	launcher := launcher.NewLauncher()
+	online := launcher.Online
+	UI := launcher.UI
+	Storage := launcher.Storage
+	Config := launcher.Config
+	Mod := launcher.Mod
+	App := launcher.App
+	AKI := launcher.AKI
+	MTGA := launcher.MTGA
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -33,6 +43,15 @@ func main() {
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
+			launcher,
+			online,
+			UI,
+			Storage,
+			Config,
+			Mod,
+			App,
+			AKI,
+			MTGA,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              true,

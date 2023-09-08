@@ -95,6 +95,7 @@ import (
 
 	config "mtgolauncher/backend/Storage/config"
 
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 	wails "github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -106,7 +107,7 @@ func init() {
 
 //#region Storage
 
-func (s Storage) AddModEntry(mod string) {
+func (s *Storage) AddModEntry(mod string) {
 	//what the fuck was i going to use this for??????????? i cannot fucking remember
 }
 
@@ -138,7 +139,7 @@ hasEnoughSpace := storage.Check(1024 * 1024 * 1024) // 1 GB
 	    fmt.Println("Insufficient disk space.")
 	}
 */
-func (s Storage) Check(neededSpace int64) bool {
+func (s *Storage) Check(neededSpace int64) bool {
 	var freeBytesAvailable uint64
 	var totalNumberOfBytes uint64
 	var totalNumberOfFreeBytes uint64
@@ -152,14 +153,14 @@ func (s Storage) Check(neededSpace int64) bool {
 	return freeBytesAvailable >= uint64(neededSpace)
 }
 
-func (s Storage) Clear() {
+func (s *Storage) Clear() {
 	err := os.RemoveAll(s.AppDataDir)
 	if err != nil {
 		fmt.Printf("[Launcher.Storage] Failed to removed all files from %s. \n %s", s.AppDataDir, err)
 	}
 }
 
-func (s Storage) ClearIconCache() {
+func (s *Storage) ClearIconCache() {
 	// TODO: Implement ClearIconCache
 	return
 }
@@ -319,7 +320,7 @@ func (c *Config) GetConfigByModName(modName string) (*Config, error) {
 //#endregion Config
 
 // #region Download
-func (d Download) Mod(modID string) {
+func (d *Download) Mod(modID string) {
 	return
 }
 
@@ -367,20 +368,20 @@ func (o *Online) Heartbeat() {
 //#region Mod
 
 // Throws conflict warning. Lets you pick to disable one of the conflicts, or contuine.
-func (m Mod) ThrowConflict() {
+func (m *Mod) ThrowConflict() {
 	// TODO: Implement the ThrowConflict method
 }
 
 // Send missing mod popup. Cancel launch on "Cancel" and contuine on "I know what im doing!".
-func (m Mod) ProfileThrowMissing() {
+func (m *Mod) ProfileThrowMissing() {
 	// TODO: Implement the ProfileThrowMissing method
 }
 
-func (m Mod) ActivateMod() {
+func (m *Mod) ActivateMod() {
 	//TODO: Implment Mod activation.
 }
 
-func (m Mod) DisableMods() {
+func (m *Mod) DisableMods() {
 	//TODO: Implment Mod disabling.
 	// -> Config.go
 }
@@ -390,7 +391,7 @@ func (m Mod) DisableMods() {
 // #region UI
 
 // Send Panic popup message to app and closes on button press
-func (u UI) Panic(title string, message string) {
+func (u *UI) Panic(title string, message string) {
 	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
 		Message:       "Whoops, something went very wrong, and we can't continue! See error below!\n" + message,
@@ -407,7 +408,7 @@ func (u UI) Panic(title string, message string) {
 }
 
 // Send error popup message to app
-func (u UI) Error(title string, message string) {
+func (u *UI) Error(title string, message string) {
 	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
 		Message:       "Whoops, something went wrong, but we can continue! See error below!\n" + message,
@@ -421,14 +422,21 @@ func (u UI) Error(title string, message string) {
 	fmt.Printf("selection: %v\n", selection)
 }
 
+func (u *UI) TestError(title string, message string, ctx context.Context) {
+	runtime.MessageDialog(u.ctx, runtime.MessageDialogOptions{
+		Type:  runtime.InfoDialog,
+		Title: "Works",
+	})
+}
+
 // Send info popup message to app
-func (u UI) Info() {
+func (u *UI) Info() {
 	// TODO: Implement Info popup
 	return
 }
 
 // Reloads frontend.
-func (u UI) Reload() {
+func (u *UI) Reload() {
 	wails.WindowReloadApp(u.ctx)
 }
 
@@ -491,7 +499,7 @@ process, err := aki.StartServer("C:/path/to/aki-server")
 	    fmt.Println("AKI server started with process ID:", process.Pid)
 	}
 */
-func (a AKI) StartServer(serverPath string) (*os.Process, error) {
+func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
 	files, err := os.ReadDir(serverPath)
 	if err != nil {
 		return nil, err
@@ -556,7 +564,7 @@ func (a AKI) StartServer(serverPath string) (*os.Process, error) {
 }
 
 // Starts the MTGA server via @mtga-path
-func (m MTGA) StartServer() {
+func (m *MTGA) StartServer() {
 	// TODO: Implement the StartServer method
 }
 
@@ -564,15 +572,15 @@ func (m MTGA) StartServer() {
 
 // #region structs
 type Launcher struct {
-	Storage  Storage
-	Config   Config
-	Download Download
+	Storage  *Storage
+	Config   *Config
+	Download *Download
 	Online   *Online
-	Mod      Mod
-	UI       UI
-	App      App
-	AKI      AKI
-	MTGA     MTGA
+	Mod      *Mod
+	UI       *UI
+	App      *App
+	AKI      *AKI
+	MTGA     *MTGA
 }
 
 type Storage struct {
@@ -618,34 +626,34 @@ func NewLauncher() *Launcher {
 }
 
 // NewStorage creates and returns a new Storage instance.
-func NewStorage() Storage {
+func NewStorage() *Storage {
 	appDataDir, err := appData.GetAppDataDir()
 	if err != nil {
 		fmt.Println("Error:", err)
-		return Storage{}
+		return &Storage{}
 	}
 
-	return Storage{
+	return &Storage{
 		AppDataDir: appDataDir,
 	}
 }
 
 // NewConfig creates and returns a new Config instance.
-func NewConfig() Config {
+func NewConfig() *Config {
 	appDataDir, err := appData.GetAppDataDir()
 	if err != nil {
 		fmt.Println("Error:", err)
-		return Config{}
+		return &Config{}
 	}
 
-	return Config{
+	return &Config{
 		AppDataDir: appDataDir,
 	}
 }
 
 // NewDownload creates and returns a new Download instance.
-func NewDownload() Download {
-	return Download{}
+func NewDownload() *Download {
+	return &Download{}
 }
 
 // NewOnline creates and returns a new Online instance.
@@ -654,28 +662,28 @@ func NewOnline() *Online {
 }
 
 // NewMod creates and returns a new Mod instance.
-func NewMod() Mod {
-	return Mod{}
+func NewMod() *Mod {
+	return &Mod{}
 }
 
 // NewUI creates and returns a new UI instance.
-func NewUI() UI {
-	return UI{}
+func NewUI() *UI {
+	return &UI{}
 }
 
 // NewApp creates and returns a new App instance.
-func NewApp() App {
-	return App{}
+func NewApp() *App {
+	return &App{}
 }
 
 // NewAKI creates and returns a new AKI instance.
-func NewAKI() AKI {
-	return AKI{}
+func NewAKI() *AKI {
+	return &AKI{}
 }
 
 // NewMTGA creates and returns a new MTGA instance.
-func NewMTGA() MTGA {
-	return MTGA{}
+func NewMTGA() *MTGA {
+	return &MTGA{}
 }
 
 //#endregion === End of Component Initialization ===
