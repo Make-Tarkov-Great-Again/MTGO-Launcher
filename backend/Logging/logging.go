@@ -2,20 +2,23 @@ package logging
 
 import (
 	"fmt"
-	"io"
 	"log"
 	storage "mtgolauncher/backend/Storage"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 	"time"
 )
 
 var logsFolder string
+var logsFolderAppDir string
 
 func init() {
 	var err error
 	logsFolder, err = storage.GetAppDataDir()
+	logsFolderAppDir = path.Join(logsFolder, "/logs")
+	logsFolder = logsFolderAppDir
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -34,13 +37,13 @@ func GetFlog() map[string]func(message string, args ...interface{}) {
 func logDating() string {
 	now := time.Now()
 	milliseconds := now.Nanosecond() / 1e6
-	return fmt.Sprintf("[%02d:%02d:%02d:%03d] ->", now.Hour(), now.Minute(), now.Second(), milliseconds)
+	return fmt.Sprintf("%02d:%02d:%02d:%03d", now.Hour(), now.Minute(), now.Second(), milliseconds)
 }
 
 func updateLoggingRoutesFile() {
 	logTypeFolders := make(map[string]string)
 
-	logTypes := []string{"warn", "error", "info", "debug"}
+	logTypes := []string{"warn", "error", "info", "debug", "server", "aki", "mtga", "online"}
 	for _, logType := range logTypes {
 		logTypeFolder := path.Join(logsFolder, logType)
 		logTypeFolders[logType] = logTypeFolder
@@ -72,7 +75,7 @@ func updateLoggingRoutesFile() {
 func readLoggingRoutesFile() {
 	content, err := os.ReadFile(loggingRoutesFile)
 	if err != nil {
-		log.Printf("Failed to read logging routes file: %v\n", err)
+		//log.Printf("Failed to read logging routes file: %v\n", err) I dont wanna hear "OH OH OH WE CANT READ THAT" x30 and im too lazy to change it. fuck you. i dont even think i used logging routes since fucking verson 1.
 		return
 	}
 
@@ -88,11 +91,36 @@ func readLoggingRoutesFile() {
 func createLogFunction(logType string) func(message string, args ...interface{}) {
 	readLoggingRoutesFile()
 	return func(message string, args ...interface{}) {
-		flogg(logType, message, args...)
+		flogg(logType, message, false, args...)
 	}
 }
 
-func flogg(logType, format string, args ...interface{}) {
+func flogg(logType, format string, silent bool, args ...interface{}) {
+	pc, _, _, _ := runtime.Caller(2)
+	callerFunc := runtime.FuncForPC(pc)
+	callerFuncName := "unknown"
+	callerPackageName := "unknown"
+	if callerFunc != nil {
+		callerFuncNameFull := callerFunc.Name()
+		parts := strings.Split(callerFuncNameFull, ".")
+
+		if len(parts) > 1 {
+			//If its a method receiver. (If it has "(*" ) extract the method receivers name, and put it infront of func name so i dont get shit like "Launcher.StartServer" WHICH ONE?
+			if strings.Contains(parts[1], "(*") {
+				receiverPart := strings.Trim(parts[1], "(*")
+				receiverPart = strings.Trim(receiverPart, ")")
+				packageParts := strings.Split(parts[0], "/")
+				callerPackageName = packageParts[len(packageParts)-1]
+				callerFuncName = receiverPart + "." + parts[2]
+			} else {
+				// Non-method receiver
+				packageParts := strings.Split(parts[0], "/")
+				callerPackageName = packageParts[len(packageParts)-1]
+				callerFuncName = parts[1] + "." + parts[2]
+			}
+		}
+	}
+
 	if _, exists := logFileMap[logType]; !exists {
 		logTypeFolder := path.Join(logsFolder, logType)
 		if _, err := os.Stat(logTypeFolder); os.IsNotExist(err) {
@@ -111,9 +139,7 @@ func flogg(logType, format string, args ...interface{}) {
 	}
 	defer logFile.Close()
 
-	log.SetOutput(io.MultiWriter(os.Stdout, logFile))
-
-	prefix := fmt.Sprintf("%s [%s]:", logDating(), strings.ToUpper(logType))
+	prefix := fmt.Sprintf("[%s] [%s.%s]:", logDating(), callerPackageName, callerFuncName)
 
 	var argsSlice []interface{}
 	for _, arg := range args {
@@ -121,7 +147,11 @@ func flogg(logType, format string, args ...interface{}) {
 	}
 
 	message := fmt.Sprintf(format, argsSlice...)
-	log.Println(prefix, message)
+	logFile.WriteString(prefix + " " + message + "\n")
+
+	if !silent {
+		fmt.Println(prefix, message)
+	}
 }
 func init() {
 	updateLoggingRoutesFile()
