@@ -535,23 +535,26 @@ func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
 
 	var exePath string
 	for _, file := range files {
+		if strings.HasPrefix(filepath.Base(file.Name()), "Aki.Server") {
 		if strings.HasSuffix(file.Name(), ".exe") {
 			exePath = filepath.Join(serverPath, file.Name())
 			break
+			} else {
+				program.UI.Errorctx("Unknown file", "The file you have selected for your AKI Path doesn't seem to be an AKI Server... Make sure it's named \"AKI.Server\" and is a .exe file!", a.ctx)
+			}
 		}
 	}
 
 	if exePath == "" {
 		title := "Starting AKI Server Failed"
 		message := fmt.Sprintf("No server was found in AKI server path: %s. Is this the root folder of your AKI installation?", serverPath)
-		program.UI.Error(title, message)
+		program.UI.Errorctx(title, message, a.ctx)
 		return nil, fmt.Errorf("%s: %s", title, message)
 	}
 
 	// Define the outputCallback function
 	outputCallback := func(line string) {
 		fmt.Println("Server Output:", line)
-		// You can perform additional actions here as needed
 	}
 
 	// Create the command
