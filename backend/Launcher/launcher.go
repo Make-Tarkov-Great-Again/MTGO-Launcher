@@ -95,7 +95,6 @@ import (
 
 	config "mtgolauncher/backend/Storage/config"
 
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 	wails "github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -424,7 +423,7 @@ func (u *UI) Error(title string, message string) {
 	case "Exit":
 		wails.Quit(u.ctx)
 	default:
-	fmt.Printf("selection: %v\n", selection)
+		fmt.Printf("selection: %v\n", selection)
 
 	}
 }
@@ -450,6 +449,7 @@ func (u *UI) Errorctx(title string, message string, ctx context.Context) {
 
 	}
 }
+
 //func (u *UI) TestError(title string, message string, ctx context.Context) {
 //	runtime.MessageDialog(u.ctx, runtime.MessageDialogOptions{
 //		Type:  runtime.InfoDialog,
@@ -536,9 +536,9 @@ func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
 	var exePath string
 	for _, file := range files {
 		if strings.HasPrefix(filepath.Base(file.Name()), "Aki.Server") {
-		if strings.HasSuffix(file.Name(), ".exe") {
-			exePath = filepath.Join(serverPath, file.Name())
-			break
+			if strings.HasSuffix(file.Name(), ".exe") {
+				exePath = filepath.Join(serverPath, file.Name())
+				break
 			} else {
 				program.UI.Errorctx("Unknown file", "The file you have selected for your AKI Path doesn't seem to be an AKI Server... Make sure it's named \"AKI.Server\" and is a .exe file!", a.ctx)
 			}
