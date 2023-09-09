@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"log"
 	launcher "mtgolauncher/backend/Launcher"
@@ -40,8 +41,12 @@ func main() {
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
-		Bind: []interface{}{
+		OnStartup: func(ctx context.Context) {
+			UI.Startup(ctx)
+			App.Startup(ctx)
+			app.startup(ctx)
+			AKI.Startup(ctx)
+		}, Bind: []interface{}{
 			app,
 			launcher,
 			online,
