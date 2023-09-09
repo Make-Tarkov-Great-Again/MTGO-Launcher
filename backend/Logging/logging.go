@@ -1,3 +1,41 @@
+/*
+Package logging provides a flexible and extensible logging framework for the MTGO-Launcher application. It supports various log types and allows you to control log output both to files and the console.
+
+Usage:
+
+	log.Init()
+
+	// Logging examples
+	log.Info("This is an informative message") // Logs to file and console
+	log.Error("This is an error message", true)  // Logs to file only (silent)
+	log.Debug("This is a debug message", false)    // Logs to file only by default, pass false to make it print to console
+	log.AKIServerOutput("This is a AKI server output") // Logs to file only by default pass false to make it print to console
+
+Supported Log Types:
+- "warn"
+- "error"
+- "info"
+- "debug"
+- "aki"
+- "mtga"
+- "online"
+
+Logging functions are provided for each log type and accept an optional "silent" parameter to control console output.
+
+Functions:
+- Info(message string, silent ...bool)
+- Error(message string, silent ...bool)
+- Debug(message string, silent ...bool)
+- AKIServerOutput(message string, silent ...bool)
+- MTGAServerOutput(message string, silent ...bool)
+
+Example:
+
+	log.Info("This is an informative message")         // Log to file and console
+	log.Info("This message is silent", true)           // Log to file only
+	log.AKIServerOutput("Server message", false)       // Log to file and console
+	log.MTGAServerOutput("MTGA server message", false)   // Log to file and console
+*/
 package logging
 
 import (
@@ -194,6 +232,11 @@ func LogInit() {
 	flogg("info", "Hello world", true)
 }
 
+// Flog: File Logging -> Info
+//
+// Prints to file and console by default, override it by passing true to make it silent
+//
+//	log.Info("Foobar", true)
 func Info(message string, args ...interface{}) {
 	silent := false
 	if len(args) > 0 {
@@ -205,6 +248,27 @@ func Info(message string, args ...interface{}) {
 	flogg("info", message, silent, args...)
 }
 
+// Flog: File Logging -> Info
+//
+// Prints to file and console by default, override it by passing true to make it silent
+//
+//	log.Warn("Foobar", true)
+func Warn(message string, args ...interface{}) {
+	silent := false
+	if len(args) > 0 {
+		if val, ok := args[0].(bool); ok {
+			silent = val
+			args = args[1:]
+		}
+	}
+	flogg("info", message, silent, args...)
+}
+
+// Flog: File Logging -> error
+//
+// Prints to file and console by default, override it by passing true to make it silent
+//
+//	log.Error("Foobar", true)
 func Error(message string, args ...interface{}) {
 	silent := false
 	if len(args) > 0 {
@@ -216,6 +280,11 @@ func Error(message string, args ...interface{}) {
 	flogg("error", message, silent, args...)
 }
 
+// Flog: File Logging -> debug
+//
+// Only prints to file by default, override it by passing false
+//
+//	log.Debug("Foobar", false)
 func Debug(message string, args ...interface{}) {
 	silent := true //Def true becaue debug
 	if len(args) > 0 {
@@ -227,7 +296,11 @@ func Debug(message string, args ...interface{}) {
 	flogg("debug", message, silent, args...)
 }
 
-// Flog: File Logging -> AKI
+// Flog: File Logging -> aki
+//
+// Only prints to file by default, override it by passing false
+//
+//	log.AKIServerOutput("Foobar", false)
 func AKIServerOutput(message string, args ...interface{}) {
 	silent := true //Def true because its server output
 	if len(args) > 0 {
@@ -240,6 +313,10 @@ func AKIServerOutput(message string, args ...interface{}) {
 }
 
 // Flog: File Logging -> mtga
+//
+// Only prints to file by default, override it by passing false
+//
+//	log.MTGAServerOutput("Foobar", false)
 func MTGAServerOutput(message string, args ...interface{}) {
 	silent := true
 	if len(args) > 0 {
@@ -249,4 +326,20 @@ func MTGAServerOutput(message string, args ...interface{}) {
 		}
 	}
 	flogg("mtga", message, silent, args...)
+}
+
+// Flog: File Logging -> online
+//
+// Prints to file and console by default, override it by passing true to make it silent
+//
+//	log.OnlineLog("Foobar", true)
+func OnlineLog(message string, args ...interface{}) {
+	silent := false
+	if len(args) > 0 {
+		if val, ok := args[0].(bool); ok {
+			silent = val
+			args = args[1:]
+		}
+	}
+	flogg("online", message, silent, args...)
 }
