@@ -302,7 +302,7 @@ func (c *Config) CreateConfigIfNotExist(modID int, modName string, modAuthor str
 // UpdateConfig updates the global configuration.
 func (c *Config) UpdateConfig(updatedConfig *Config) error {
 	// Implement logic to update the global configuration.
-	return nil
+	return fmt.Errorf("not implemented")
 }
 
 // GetConfigByModID retrieves configuration for a specific mod by its ID.
