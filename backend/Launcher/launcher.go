@@ -629,11 +629,27 @@ type Mod struct {
 type UI struct {
 	ctx context.Context
 }
+
+func (u *UI) Startup(ctx context.Context) {
+	u.ctx = ctx
+}
+
 type App struct {
 	ctx context.Context
 }
-type AKI struct {
+
+func (a *App) Startup(ctx context.Context) {
+	a.ctx = ctx
 }
+
+type AKI struct {
+	ctx context.Context
+}
+
+func (a *AKI) Startup(ctx context.Context) {
+	a.ctx = ctx
+}
+
 type MTGA struct {
 }
 
