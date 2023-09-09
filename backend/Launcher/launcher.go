@@ -428,6 +428,27 @@ func (u *UI) Error(title string, message string) {
 
 	}
 }
+// Backup error function incase above function doesnt work, due to CTX
+func (u *UI) Errorctx(title string, message string, ctx context.Context) {
+	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
+		Type:          wails.ErrorDialog,
+		Title:         title,
+		Message:       "Whoops, something went wrong, but we can continue! See error below!\n" + message,
+		Buttons:       []string{"Continue", "Exit"},
+		DefaultButton: "Continue",
+	})
+	if err != nil {
+		// Handle the error
+		fmt.Println("Error:", err)
+	}
+	switch selection {
+	case "Exit":
+		wails.Quit(u.ctx)
+	default:
+		fmt.Printf("selection: %v\n", selection)
+
+	}
+}
 
 // Send info popup message to app
 func (u *UI) Info() {
