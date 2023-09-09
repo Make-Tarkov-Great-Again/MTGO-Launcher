@@ -153,14 +153,44 @@ func flogg(logType, format string, silent bool, args ...interface{}) {
 		fmt.Println(prefix, message)
 	}
 }
-func init() {
+func LogInit() {
+	var err error
+	logsFolder, err = storage.GetAppDataDir()
+	logsFolderAppDir = path.Join(logsFolder, "/logs")
+	logsFolder = logsFolderAppDir
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	// Create the logs folder if it doesn't exist
+	if _, err := os.Stat(logsFolder); os.IsNotExist(err) {
+		os.Mkdir(logsFolder, 0755)
+	}
+
+	// Create logType folders if they don't exist
+	logTypes := []string{"warn", "error", "info", "debug", "server"}
+	for _, logType := range logTypes {
+		logTypeFolder := path.Join(logsFolder, logType)
+		if _, err := os.Stat(logTypeFolder); os.IsNotExist(err) {
+			os.Mkdir(logTypeFolder, 0755)
+		}
+	}
+
+	// Update the logging routes file
 	updateLoggingRoutesFile()
 	readLoggingRoutesFile()
 
 	flog = map[string]func(message string, args ...interface{}){
-		"warn":  createLogFunction("warn"),
-		"error": createLogFunction("error"),
-		"info":  createLogFunction("info"),
-		"debug": createLogFunction("debug"),
+		"warn":   createLogFunction("warn"),
+		"error":  createLogFunction("error"),
+		"info":   createLogFunction("info"),
+		"debug":  createLogFunction("debug"),
+		"aki":    createLogFunction("aki"),
+		"mtga":   createLogFunction("mtga"),
+		"online": createLogFunction("online"),
 	}
+
+	flogg("info", "Hello world", true)
+}
 }
