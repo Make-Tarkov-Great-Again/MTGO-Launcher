@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	launcher "mtgolauncher/backend/Launcher"
+	log "mtgolauncher/backend/Logging"
 	storage "mtgolauncher/backend/Storage"
 )
 
@@ -28,7 +29,10 @@ func (a *App) startup(ctx context.Context) {
 		return
 	}
 	fmt.Println("Data stored successfully!")
-
+	//Initialization for logging.
+	log.LogInit()
+	log.Info("MTGO-Launcher version 0.0.1. This application falls under MIT licence. If you paid money for this, you got scammed. | https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher")
+	log.Info("Yeah so basiclly you wont see this unless your log surfing. In that case. Fuck you. Get off my lawn.", true)
 	//Online check
 	if app.Online.Check() {
 		fmt.Println("Connected to the internet... Starting in online mode.")
