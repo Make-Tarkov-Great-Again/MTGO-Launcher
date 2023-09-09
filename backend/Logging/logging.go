@@ -193,4 +193,60 @@ func LogInit() {
 
 	flogg("info", "Hello world", true)
 }
+
+func Info(message string, args ...interface{}) {
+	silent := false
+	if len(args) > 0 {
+		if val, ok := args[0].(bool); ok {
+			silent = val
+			args = args[1:]
+		}
+	}
+	flogg("info", message, silent, args...)
+}
+
+func Error(message string, args ...interface{}) {
+	silent := false
+	if len(args) > 0 {
+		if val, ok := args[0].(bool); ok {
+			silent = val
+			args = args[1:]
+		}
+	}
+	flogg("error", message, silent, args...)
+}
+
+func Debug(message string, args ...interface{}) {
+	silent := true //Def true becaue debug
+	if len(args) > 0 {
+		if val, ok := args[0].(bool); ok {
+			silent = val
+			args = args[1:]
+		}
+	}
+	flogg("debug", message, silent, args...)
+}
+
+// Flog: File Logging -> AKI
+func AKIServerOutput(message string, args ...interface{}) {
+	silent := true //Def true because its server output
+	if len(args) > 0 {
+		if val, ok := args[0].(bool); ok {
+			silent = val
+			args = args[1:]
+		}
+	}
+	flogg("aki", message, silent, args...)
+}
+
+// Flog: File Logging -> mtga
+func MTGAServerOutput(message string, args ...interface{}) {
+	silent := true
+	if len(args) > 0 {
+		if val, ok := args[0].(bool); ok {
+			silent = val
+			args = args[1:]
+		}
+	}
+	flogg("mtga", message, silent, args...)
 }
