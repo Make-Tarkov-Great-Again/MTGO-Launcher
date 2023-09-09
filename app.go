@@ -62,9 +62,4 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-// default greet thing
-func (a *App) Sex(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
-
 // TODO: Database interactions
