@@ -428,6 +428,7 @@ func (u *UI) Error(title string, message string) {
 
 	}
 }
+
 // Backup error function incase above function doesnt work, due to CTX
 func (u *UI) Errorctx(title string, message string, ctx context.Context) {
 	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
@@ -449,6 +450,12 @@ func (u *UI) Errorctx(title string, message string, ctx context.Context) {
 
 	}
 }
+//func (u *UI) TestError(title string, message string, ctx context.Context) {
+//	runtime.MessageDialog(u.ctx, runtime.MessageDialogOptions{
+//		Type:  runtime.InfoDialog,
+//		Title: "Works",
+//	})
+//}
 
 // Send info popup message to app
 func (u *UI) Info() {
