@@ -91,6 +91,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
+	flog "mtgolauncher/backend/Logging"
 	appData "mtgolauncher/backend/Storage"
 
 	config "mtgolauncher/backend/Storage/config"
@@ -102,6 +103,7 @@ var program *Launcher
 
 func init() {
 	program = NewLauncher()
+	//	flogc := logging.GetFlog()
 }
 
 //#region Storage
@@ -554,11 +556,13 @@ func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
 
 	// Define the outputCallback function
 	outputCallback := func(line string) {
+		flog.AKIServerOutput(line)
 		fmt.Println("Server Output:", line)
 	}
 
 	// Create the command
 	cmd := exec.Command(exePath)
+	cmd.Dir = serverPath
 
 	// Set up pipes for capturing standard output and standard error
 	stdoutPipe, _ := cmd.StdoutPipe()
