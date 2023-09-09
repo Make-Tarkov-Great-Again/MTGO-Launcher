@@ -401,7 +401,7 @@ func (u *UI) Panic(title string, message string) {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-	if selection == "Ok" {
+	if selection != "" {
 		wails.Quit(u.ctx)
 	}
 	return
@@ -411,22 +411,22 @@ func (u *UI) Panic(title string, message string) {
 func (u *UI) Error(title string, message string) {
 	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
+		Title:         title,
 		Message:       "Whoops, something went wrong, but we can continue! See error below!\n" + message,
-		Buttons:       []string{"Continue"},
+		Buttons:       []string{"Continue", "Exit"},
 		DefaultButton: "Continue",
 	})
 	if err != nil {
 		// Handle the error
 		fmt.Println("Error:", err)
 	}
+	switch selection {
+	case "Exit":
+		wails.Quit(u.ctx)
+	default:
 	fmt.Printf("selection: %v\n", selection)
-}
 
-func (u *UI) TestError(title string, message string, ctx context.Context) {
-	runtime.MessageDialog(u.ctx, runtime.MessageDialogOptions{
-		Type:  runtime.InfoDialog,
-		Title: "Works",
-	})
+	}
 }
 
 // Send info popup message to app
