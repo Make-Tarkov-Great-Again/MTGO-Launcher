@@ -695,3 +695,46 @@ background: transparent !important;
   position: relative;
   z-index: 2
 }
+
+.download-progress {
+  position: fixed;
+  bottom: -21px; /* Initially hidden below the viewport */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 330px;
+  background-color: #333; /* Adjust the background color as needed */
+  border-radius: 10px;
+  transition: bottom 0.3s ease-in-out; /* Smooth transition for sliding */
+  z-index: 999999;
+}
+
+.progress-label,
+.progress-bar {
+  display: block;
+  width: 100%;
+}
+
+.progress-bar {
+  border: none;
+  background-color: #00adee; /* Adjust the color to match Steam's green */
+  border-radius: 10px;
+  height: 20px;
+}
+
+.progress-label {
+  text-align: center;
+  padding: 10px 0;
+  color: white; /* Adjust the text color to your liking */
+  opacity: 15%;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Style the progress text inside the progress bar (optional) */
+.progress-bar::after {
+  content: attr(value) '%';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}

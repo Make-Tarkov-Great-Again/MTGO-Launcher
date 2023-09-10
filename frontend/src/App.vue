@@ -2,6 +2,7 @@
       <component :is="selectedComponent" v-if="selected" />
 
 
+
       <div class="game-choices" v-else>
         <h1 class="flavor">Pick your poison</h1>
         <div class="game-choice" @click="selectGame('spt-aki')">

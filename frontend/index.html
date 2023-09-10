@@ -24,6 +24,17 @@
     <image x="0px" y="0px" width="11px" height="2px"
       xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAACCAQAAAAkqu5lAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCBUOMQUsi7PBAAAAGUlEQVQI12M0fskgyoAO/rIwPGT4hCH8HwByTwUGWZVcMwAAAABJRU5ErkJggg==" />
   </svg>
+
+
+
+  <div class="download-progress">
+    <label for="progress" class="progress-label"
+      style="position: fixed; bottom: 25px; left: 50%; translate: -50%;">Installing SPT-AKI 3.6.1</label>
+    <progress class="progress-bar" style="position: fixed; bottom: 5px; left: 50%; translate: -50%; width: 330px;"
+      id="file" value="64" max="100"></progress>
+      <label for="progress-label" class="progress-label"
+      style="position: fixed; bottom: 25px; left: 80%; translate: -50%;">(?/?)</label>
+  </div>
   <svg class="close" onclick="window.runtime.Quit()">
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -39,25 +50,61 @@
       <tspan font-size="50px" font-family="Bender" fill="#FFFFFF">MTGO&#32;Launcher</tspan>
     </text>
   </svg>
+  <div class="outerApp">
   <div class="main-container" id="app">
     <script src="./src/main.js" type="module"></script>
+    <script>
+      const downloadProgress = document.querySelector('.download-progress');
+      const progressBar = document.querySelector('.progress-bar');
+      const label = document.querySelector('.progress-label')
+
+      downloadProgress.addEventListener('mouseenter', () => {
+        downloadProgress.style.bottom = '5px';
+        label.style.opacity = "100%"
+      });
+
+      downloadProgress.addEventListener('mouseleave', () => {
+        downloadProgress.style.bottom = '-20px';
+        label.style.opacity = "15%"
+      });
+
+      downloadProgress.addEventListener('mousemove', (e) => {
+        const mouseY = e.clientY;
+        const progressRect = progressBar.getBoundingClientRect();
+        const progressTop = progressRect.top;
+        const progressBottom = progressRect.bottom;
+
+        if (mouseY >= progressTop - 50 && mouseY <= progressBottom + 60) {
+          console.log("fuck")
+          downloadProgress.style.bottom = '5px';
+        } else {
+          console.log("fuck 2")
+          downloadProgress.style.bottom = '-20px';
+        }
+      });
+
+    </script>
   </div>
+</div>
 </body>
 <style>
+   .outerApp {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Hide overflow */
+    position: relative;
+  }
+
   #app {
     background-color: black;
-    max-width: 902px;
-    max-height: 592px;
-
-    --wails-draggable: no-drag;
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    overflow: auto; /* Enable scrolling */
   }
 
   .mainapp {
     background-color: black;
-    left: 0px;
-    top: 0px;
-    width: 956px;
-    height: 662px;
     z-index: 9;
   }
 
