@@ -12,28 +12,33 @@ import (
 	flog "mtgolauncher/backend/Logging"
 )
 
+// WebSocketManager handles WebSocket connections and download requests.
 type WebSocketManager struct {
 	server   *http.Server
 	download chan *DownloadRequest
 }
 
+// upgrader is a configuration for upgrading HTTP connections to WebSocket.
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
 
+// DownloadRequest represents a request to download a file via WebSocket.
 type DownloadRequest struct {
 	ModID   int
 	FileURL string
 	Conn    *websocket.Conn
 }
 
+// Message is a WebSocket message structure.
 type Message struct {
 	Type    string `json:"type"`
 	ModID   int    `json:"modID"`
 	FileURL string `json:"fileURL"`
 }
 
+// InitWebSocket initializes the WebSocketManager and sets up routes.
 func (wsm *WebSocketManager) InitWebSocket() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ws", wsm.handleWebSocket)
@@ -56,25 +61,29 @@ func (wsm *WebSocketManager) InitWebSocket() {
 	go wsm.handleDownloadRequests()
 }
 
+// StartServer starts the WebSocket server.
 func (wsm *WebSocketManager) StartServer() {
 	err := wsm.server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatal("Error starting WebSocket server: ", err)
 	}
-	fmt.Println("Websocket has started.. Maybe. ")
-	flog.OnlineLog("Websocket has started.")
+	fmt.Println("WebSocket has started.. Maybe.")
+	flog.OnlineLog("WebSocket has started.")
 }
 
+// handleDownloadRequests processes download requests by communicating with the launcher.
 func (wsm *WebSocketManager) handleDownloadRequests() {
 	app := launcher.NewLauncher()
 	for request := range wsm.download {
 		err := app.Download.Mod(request.ModID, request.FileURL, request.Conn)
 		if err != nil {
 			log.Println("Error handling download:", err)
+			app.UI.Error(fmt.Sprintf("Failed to download %s", request.FileURL), fmt.Sprintf("A error occured when downloading the following mod: \n %s \n\n %s", request.FileURL, err))
 		}
 	}
 }
 
+// handleWebSocket upgrades an HTTP connection to a WebSocket and handles incoming messages.
 func (wsm *WebSocketManager) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	log.Println("Request Headers:")
 	for name, values := range r.Header {
