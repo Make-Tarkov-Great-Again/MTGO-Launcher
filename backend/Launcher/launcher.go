@@ -321,8 +321,91 @@ func (c *Config) GetConfigByModName(modName string) (*Config, error) {
 //#endregion Config
 
 // #region Download
-func (d *Download) Mod(modID string) {
-	return
+func (d *Download) Mod(modID int, fileURL string, wsConn *websocket.Conn) error {
+	// TODO: Get download url from Database via ModID
+
+	// Start the download
+	resp, err := http.Get(fileURL)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	//File name getter thing through header and backup for if the header doesnt exist
+	fileName := resp.Header.Get("Content-Disposition")
+	if fileName == "" {
+		u, err := url.Parse(fileURL)
+		if err != nil {
+			return err
+		}
+		fileName = path.Base(u.Path)
+	} else {
+		_, params, err := mime.ParseMediaType(fileName)
+		if err == nil {
+			fileName = params["filename"]
+		}
+	}
+
+	//Convert mod id to syring because haha funny number cant be a string ever
+	modIDst := strconv.Itoa(modID)
+
+	localFile, err := os.Create(path.Join(d.ModsFolder, modIDst, fileName))
+	if err != nil {
+		return err
+	}
+	defer localFile.Close()
+
+	fileSize := resp.ContentLength
+	var downloaded int64
+
+	buffer := make([]byte, 1024)
+
+	for {
+		n, err := resp.Body.Read(buffer)
+		if err != nil {
+			if err == io.EOF {
+				break // End of file
+			}
+			return err
+		}
+
+		_, err = localFile.Write(buffer[:n])
+		if err != nil {
+			return err
+		}
+
+		downloaded += int64(n)
+
+		percentage := int(float64(downloaded) / float64(fileSize) * 100)
+
+		progress := struct {
+			FileName   string `json:"filename"`
+			FileSize   int64  `json:"filesize"`
+			Percentage int    `json:"percentage"`
+		}{FileName: fileName, FileSize: fileSize, Percentage: percentage}
+
+		jsonProgress, err := json.Marshal(progress)
+		if err != nil {
+			return err
+		}
+
+		wsConn.WriteMessage(websocket.TextMessage, jsonProgress)
+	}
+
+	progress := struct {
+		FileName   string `json:"filename"`
+		FileSize   int64  `json:"filesize"`
+		Percentage int    `json:"percentage"`
+	}{FileName: fileName, FileSize: fileSize, Percentage: 100}
+
+	jsonProgress, err := json.Marshal(progress)
+	if err != nil {
+		return err
+	}
+
+	wsConn.WriteMessage(websocket.TextMessage, jsonProgress)
+
+	return nil
 }
 
 //#endregion Config
