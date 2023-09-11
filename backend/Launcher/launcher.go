@@ -787,7 +787,18 @@ func NewConfig() *Config {
 
 // NewDownload creates and returns a new Download instance.
 func NewDownload() *Download {
+
+	appDataDir, err := appData.GetAppDataDir()
+	ModsFolder := path.Join(appDataDir, "Mods")
+	if err != nil {
+		fmt.Println("Error:", err)
 	return &Download{}
+	}
+
+	return &Download{
+		AppDataDir: appDataDir,
+		ModsFolder: ModsFolder,
+	}
 }
 
 // NewOnline creates and returns a new Online instance.
