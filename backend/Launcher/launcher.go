@@ -1010,7 +1010,7 @@ func NewDownload() *Download {
 	ModsFolder := path.Join(appDataDir, "Mods")
 	if err != nil {
 		fmt.Println("Error:", err)
-	return &Download{}
+		return &Download{}
 	}
 
 	return &Download{
