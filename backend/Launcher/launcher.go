@@ -371,8 +371,24 @@ func (c *Config) GetConfigByModName(modName string) (*Config, error) {
 //#endregion Config
 
 // #region Download
-func (d *Download) Mod(modID int, fileURL string, wsConn *websocket.Conn) error {
-	// TODO: Get download url from Database via ModID
+
+func sendErrorMessage(wsConn *websocket.Conn, err error) {
+	errorMessage := struct {
+		Step  string `json:"step"`
+		Error string `json:"error"`
+	}{Step: "Error", Error: err.Error()}
+
+	sendMessage(wsConn, errorMessage)
+}
+
+func sendMessage(wsConn *websocket.Conn, message interface{}) {
+	jsonMessage, err := json.Marshal(message)
+	if err != nil {
+		NewUI().Error("JSON Marshaling Error", err.Error())
+		return
+	}
+	wsConn.WriteMessage(websocket.TextMessage, jsonMessage)
+}
 
 	// Start the download
 	resp, err := http.Get(fileURL)
