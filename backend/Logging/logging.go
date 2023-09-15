@@ -41,12 +41,13 @@ package logging
 import (
 	"fmt"
 	"log"
-	storage "mtgolauncher/backend/Storage"
 	"os"
 	"path"
 	"runtime"
 	"strings"
 	"time"
+
+	storage "mtgolauncher/backend/Storage"
 )
 
 var logsFolder string
