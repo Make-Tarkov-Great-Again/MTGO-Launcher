@@ -105,12 +105,7 @@ import (
 	config "mtgolauncher/backend/Storage/config"
 )
 
-var program *Launcher
-
-func init() {
-	program = NewLauncher()
-	//	flogc := logging.GetFlog()
-}
+var wailsContext context.Context
 
 //#region Storage
 
@@ -389,6 +384,7 @@ func sendMessage(wsConn *websocket.Conn, message interface{}) {
 	}
 	wsConn.WriteMessage(websocket.TextMessage, jsonMessage)
 }
+
 func (d *Download) EnqueueDownload(modID int, fileURL string, wsConn *websocket.Conn, modName string, modAuthor string) {
 	d.queueMutex.Lock()
 	defer d.queueMutex.Unlock()
@@ -718,7 +714,7 @@ func (m *Mod) DisableMods() {
 
 // Send Panic popup message to app and closes on button press
 func (u *UI) Panic(title string, message string) {
-	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
+	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
 		Message:       "Whoops, something went very wrong, and we can't continue! See error below!\n" + message,
 		Buttons:       []string{"Ok"},
@@ -728,17 +724,19 @@ func (u *UI) Panic(title string, message string) {
 		fmt.Println("Error:", err)
 	}
 	if selection != "" {
-		wails.Quit(u.ctx)
+		wails.Quit(wailsContext)
 	}
 	return
 }
 
 // Send error popup message to app
 func (u *UI) Error(title string, message string) {
-	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
+	fmt.Println("UI Error ctx:")
+	fmt.Println(u.ctx)
+	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
 		Title:         title,
-		Message:       "Whoops, something went wrong, but we can continue! See error below!\n" + message,
+		Message:       "Whoops, something went wrong, but we can continue! See error below!\n\n" + message,
 		Buttons:       []string{"Continue", "Exit"},
 		DefaultButton: "Continue",
 	})
@@ -755,25 +753,22 @@ func (u *UI) Error(title string, message string) {
 	}
 }
 
-// Backup error function incase above function doesnt work, due to CTX
-func (u *UI) Errorctx(title string, message string, ctx context.Context) {
-	selection, err := wails.MessageDialog(u.ctx, wails.MessageDialogOptions{
-		Type:          wails.ErrorDialog,
-		Title:         title,
-		Message:       "Whoops, something went wrong, but we can continue! See error below!\n" + message,
-		Buttons:       []string{"Continue", "Exit"},
-		DefaultButton: "Continue",
+func (u *UI) Question(title, message string) bool {
+	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
+		Type:    wails.QuestionDialog,
+		Title:   title,
+		Message: message,
 	})
 	if err != nil {
 		// Handle the error
 		fmt.Println("Error:", err)
 	}
 	switch selection {
-	case "Exit":
-		wails.Quit(u.ctx)
+	case "No":
+		return false
 	default:
 		fmt.Printf("selection: %v\n", selection)
-
+		return true
 	}
 }
 
@@ -783,12 +778,6 @@ func (u *UI) Errorctx(title string, message string, ctx context.Context) {
 //		Title: "Works",
 //	})
 //}
-
-// Send info popup message to app
-func (u *UI) Info() {
-	// TODO: Implement Info popup
-	return
-}
 
 // Reloads frontend.
 func (u *UI) Reload() {
@@ -867,7 +856,6 @@ func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
 				exePath = filepath.Join(serverPath, file.Name())
 				break
 			} else {
-				program.UI.Errorctx("Unknown file", "The file you have selected for your AKI Path doesn't seem to be an AKI Server... Make sure it's named \"AKI.Server\" and is a .exe file!", a.ctx)
 			}
 		}
 	}
@@ -875,7 +863,6 @@ func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
 	if exePath == "" {
 		title := "Starting AKI Server Failed"
 		message := fmt.Sprintf("No server was found in AKI server path: %s. Is this the root folder of your AKI installation?", serverPath)
-		program.UI.Errorctx(title, message, a.ctx)
 		return nil, fmt.Errorf("%s: %s", title, message)
 	}
 
@@ -931,17 +918,6 @@ func (m *MTGA) StartServer() {
 //#endregion EMU
 
 // #region structs
-type Launcher struct {
-	Storage  *Storage
-	Config   *Config
-	Download *Download
-	Online   *Online
-	Mod      *Mod
-	UI       *UI
-	App      *App
-	AKI      *AKI
-	MTGA     *MTGA
-}
 
 type Storage struct {
 	AppDataDir string
@@ -950,6 +926,18 @@ type Config struct {
 	AppDataDir string
 }
 type Download struct {
+	AppDataDir string
+	ModsFolder string
+	queue      []*DownloadRequest
+	queueMutex sync.Mutex
+}
+
+type DownloadRequest struct {
+	ModID     int
+	FileURL   string
+	WsConn    *websocket.Conn
+	ModName   string
+	ModAuthor string
 }
 type Online struct {
 }
@@ -977,6 +965,7 @@ type AKI struct {
 
 func (a *AKI) Startup(ctx context.Context) {
 	a.ctx = ctx
+	wailsContext = ctx
 }
 
 type MTGA struct {
@@ -987,19 +976,6 @@ type MTGA struct {
 //#region === Component Initialization ===
 
 // NewLauncher creates a new Launcher instance with initialized components.
-func NewLauncher() *Launcher {
-	return &Launcher{
-		Storage:  NewStorage(),
-		Config:   NewConfig(),
-		Download: NewDownload(),
-		Online:   NewOnline(),
-		Mod:      NewMod(),
-		UI:       NewUI(),
-		App:      NewApp(),
-		AKI:      NewAKI(),
-		MTGA:     NewMTGA(),
-	}
-}
 
 // NewStorage creates and returns a new Storage instance.
 func NewStorage() *Storage {
