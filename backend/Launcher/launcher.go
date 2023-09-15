@@ -152,6 +152,16 @@ func (s *Storage) moveContents(srcDir, destDir string) error {
 	return nil
 }
 
+// This function uses code from the "github.com/mholt/archiver" library,
+// which is licensed under the MIT License.
+func (s *Storage) ExtractArchive(archivePath, destinationDir string) error {
+	err := archiver.Unarchive(archivePath, destinationDir)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 /*
 Package Launcher
 
