@@ -63,7 +63,6 @@ export default {
   }
 };
 </script>
-<link rel="stylesheet" href="@/assets/styles/style.css">
 
 
 

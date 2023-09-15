@@ -2,7 +2,6 @@
   <header>
   </header>
 
-  <div class="container">
     <div class="floating-page" v-if="showFloatingPage">
       <button class="close-button" @click="closeFloatingPage">Close</button>
       <router-view></router-view>
@@ -51,6 +50,7 @@
             <div class="mod-tags" style="margin-bottom: 5px">
               <div class="versions">
                 <p>Versions</p>
+                <a href="#" class="pill version">3.6.1</a>
                 <a href="#" class="pill version">3.5.0</a>
                 <a href="#" class="pill version">Outdated</a>
               </div>
@@ -102,20 +102,18 @@
                 <div class="mod_author">By {{ mod.author }}</div>
                 <div class="mod_tags ellipsis tag version">{{ mod.version }}</div>
                 <div class="mod_tags ellipsis tag" v-for="tag in mod.tags">{{ tag }}</div>
-              <div class="grab-button" style="cursor: pointer;" @click="handleGrabButtonClick(mod.id, $event)">+</div>
+              <div class="grab-button" style="cursor: pointer;" @click="handleGrabButtonClick(mod.id, mod.downloadUrl, mod.title, mod.author, $event)">+</div>
             </div>
           </div>
         </div>
 
       </div>
     </div>
-  </div>
   <div class="loading-box" style="display: none;"></div>
 </template>
 
 <script>
-import { Error } from "../../wailsjs/go/launcher/UI";
-
+import { initiateDownload } from "./js/main.js"
 
 export default {
   data() {
@@ -132,7 +130,9 @@ export default {
           imageUrl: 'https://i.imgur.com/oyrIBpI.png',
           author: 'EFHDev',
           tags: ['Server', 'Client', 'Overhaul'],
-          version: '3.5.0'
+          version: '3.5.0',
+          downloadUrl: 'https://github.com/EFHDev/Escape-From-Hell-PoC/releases/download/3.0.3/build.7z',
+          licence: 'MIT'
         },
         {
           id: 2,
@@ -140,7 +140,21 @@ export default {
           imageUrl: 'https://hub.sp-tarkov.com/files/images/file/6e/1395.png',
           author: 'Mighty_Condor',
           tags: ['Server', 'Weapons'],
-          version: '3.5.0'
+          version: '3.5.0',
+          downloadUrl: 'https://drive.google.com/uc?export=download&id=13EtKe2KtkDQNDOytz9TagMpXQzd2OkE2&confirm=t&uuid=a4c52316-1783-4ac3-a1fe-7417d90970c9&at=AB6BwCAO07Uh5T8N6Ql22K_DZFiV:1694447904030',
+          licence: 'MIT'
+
+        },
+        {
+          id: 3,
+          title: 'HEALTH PER LEVEL',
+          imageUrl: 'https://hub.sp-tarkov.com/files/images/file/c7/1423.png',
+          author: 'Capataina',
+          tags: ['Server', 'Other', "QoL"],
+          version: '3.6.1',
+          downloadUrl: 'https://github.com/Capataina/HealthPerLevel/archive/refs/heads/main.zip',
+          licence: 'MIT'
+
         }
       ],
       slideshowItems: [ //TODO: Make this use fetch
@@ -165,7 +179,6 @@ export default {
   methods: {
     ModPage(modID) {
       const ctx = this.ctx //???? wails.ctx???
-      Error("This feature isnt ready!", "Please wait for more updates!");
       //console.log(modID);
       //this.showFloatingPage = true;
       //this.selectedModID = modID;
@@ -190,9 +203,11 @@ export default {
         this.currentSlideIndex++;
       }
     },
-    handleGrabButtonClick(modID, event) {
-      event.stopPropagation(); // Stop event propagation here
-      // Rest of your logic
+    async handleGrabButtonClick(modID, downloadUrl, modName, modAuthor, event) {
+      console.log(`handleGrab ${modID}\n ${downloadUrl}\n ${modName}\n ${modAuthor}\n ${event}`);
+      event.stopPropagation(); // event -> Wails
+      localStorage.setItem("agreed", true);
+      initiateDownload(modID, downloadUrl, modName, modAuthor)
     },
     handleDocumentClick(event) {
       const floatingPageElement = this.$refs.floatingPage;

@@ -8,3 +8,5 @@ export function Check(arg1:number):Promise<boolean>;
 export function Clear():Promise<void>;
 
 export function ClearIconCache():Promise<void>;
+
+export function ExtractArchive(arg1:string,arg2:string):Promise<void>;

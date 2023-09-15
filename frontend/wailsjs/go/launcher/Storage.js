@@ -17,3 +17,7 @@ export function Clear() {
 export function ClearIconCache() {
   return window['go']['launcher']['Storage']['ClearIconCache']();
 }
+
+export function ExtractArchive(arg1, arg2) {
+  return window['go']['launcher']['Storage']['ExtractArchive'](arg1, arg2);
+}

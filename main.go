@@ -4,7 +4,9 @@ import (
 	"context"
 	"embed"
 	"log"
+
 	launcher "mtgolauncher/backend/Launcher"
+	websocket "mtgolauncher/backend/Websocket"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -20,15 +22,19 @@ var assets embed.FS
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
-	launcher := launcher.NewLauncher()
-	online := launcher.Online
-	UI := launcher.UI
-	Storage := launcher.Storage
-	Config := launcher.Config
-	Mod := launcher.Mod
-	App := launcher.App
-	AKI := launcher.AKI
-	MTGA := launcher.MTGA
+	online := launcher.NewOnline()
+	UI := launcher.NewUI()
+	Storage := launcher.NewStorage()
+	Config := launcher.NewConfig()
+	Mod := launcher.NewMod()
+	App := launcher.NewApp()
+	AKI := launcher.NewAKI()
+	MTGA := launcher.NewMTGA()
+	Download := launcher.NewDownload()
+	websocketManager := &websocket.WebSocketManager{}
+	websocketManager.InitWebSocket()
+
+	go websocketManager.StartServer()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -42,13 +48,16 @@ func main() {
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
 		OnStartup: func(ctx context.Context) {
-			UI.Startup(ctx)
-			App.Startup(ctx)
 			app.startup(ctx)
+			App.Startup(ctx)
 			AKI.Startup(ctx)
-		}, Bind: []interface{}{
+
+		},
+		OnShutdown: func(ctx context.Context) {
+			websocketManager.ShutdownServer()
+		},
+		Bind: []interface{}{
 			app,
-			launcher,
 			online,
 			UI,
 			Storage,
@@ -57,6 +66,8 @@ func main() {
 			App,
 			AKI,
 			MTGA,
+			websocketManager,
+			Download,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              true,

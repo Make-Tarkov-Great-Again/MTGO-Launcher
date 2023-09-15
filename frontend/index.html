@@ -28,12 +28,10 @@
 
 
   <div class="download-progress">
-    <label for="progress" class="progress-label"
-      style="position: fixed; bottom: 25px; left: 50%; translate: -50%;">Installing SPT-AKI 3.6.1</label>
+    <label for="progress" class="progress-label" style="position: fixed; bottom: 25px; left: 50%; translate: -50%;">No
+      downloads</label>
     <progress class="progress-bar" style="position: fixed; bottom: 5px; left: 50%; translate: -50%; width: 330px;"
-      id="file" value="64" max="100"></progress>
-      <label for="progress-label" class="progress-label"
-      style="position: fixed; bottom: 25px; left: 80%; translate: -50%;">(?/?)</label>
+      id="file" value="0" max="100"></progress>
   </div>
   <svg class="close" onclick="window.runtime.Quit()">
     xmlns="http://www.w3.org/2000/svg"
@@ -51,47 +49,85 @@
     </text>
   </svg>
   <div class="outerApp">
-  <div class="main-container" id="app">
-    <script src="./src/main.js" type="module"></script>
-    <script>
-      const downloadProgress = document.querySelector('.download-progress');
-      const progressBar = document.querySelector('.progress-bar');
-      const label = document.querySelector('.progress-label')
+    <div class="main-container" id="app">
+      <script src="./src/main.js" type="module"></script>
+      <script>
+        var downloading = false
+        var count = 0
 
-      downloadProgress.addEventListener('mouseenter', () => {
-        downloadProgress.style.bottom = '5px';
-        label.style.opacity = "100%"
-      });
+        const downloadProgress = document.querySelector('.download-progress');
+        const progressBar = document.querySelector('.progress-bar');
+        const label = document.querySelector('.progress-label')
 
-      downloadProgress.addEventListener('mouseleave', () => {
-        downloadProgress.style.bottom = '-20px';
-        label.style.opacity = "15%"
-      });
-
-      downloadProgress.addEventListener('mousemove', (e) => {
-        const mouseY = e.clientY;
-        const progressRect = progressBar.getBoundingClientRect();
-        const progressTop = progressRect.top;
-        const progressBottom = progressRect.bottom;
-
-        if (mouseY >= progressTop - 50 && mouseY <= progressBottom + 60) {
-          console.log("fuck")
+        downloadProgress.addEventListener('mouseenter', () => {
           downloadProgress.style.bottom = '5px';
-        } else {
-          console.log("fuck 2")
-          downloadProgress.style.bottom = '-20px';
-        }
-      });
+          label.style.opacity = "100%"
+        });
 
-    </script>
+        downloadProgress.addEventListener('mouseleave', () => {
+          if(!downloading){
+          downloadProgress.style.bottom = '-24px';} else {downloadProgress.style.bottom = '-21px'}
+          label.style.opacity = "15%"
+        });
+
+        downloadProgress.addEventListener('mousemove', (e) => {
+          const mouseY = e.clientY;
+          const progressRect = progressBar.getBoundingClientRect();
+          const progressTop = progressRect.top;
+          const progressBottom = progressRect.bottom;
+        });
+
+        const socket = new WebSocket("ws://localhost:42145/ws"); // Update the URL accordingly
+
+        socket.onopen = () => {
+          // WebSocket connection is open
+          console.log("WebSocket is running.");
+        };
+        socket.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          if (data && data.percentage !== undefined) {
+            if (data.percentage > 1) {
+              downloadProgress.style.bottom = "-21px"
+            }
+            // Update the progress bar with the received percentage
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.value = data.percentage;
+
+            // Update the label with the received percentage (you can format it as needed)
+            const label = document.querySelector('.progress-label');
+            const convertedsize = data.filesize / 1000000
+            if (data.percentage < 100) {
+              label.textContent = `Downloading ${data.filename} (${convertedsize} MB)`;
+            }
+            else {
+              count++
+              if(count = 1) {
+                label.textContent = `${count} mod downloaded`;
+              } else {
+              label.textContent = `${count} mods downloaded`;}
+            }
+          }
+        };
+
+
+        socket.onclose = () => {
+          // WebSocket connection is closed
+          console.log("WebSocket is not running.");
+          // Update your UI or display a message to indicate WebSocket status
+        };
+
+
+
+      </script>
+    </div>
   </div>
-</div>
 </body>
 <style>
-   .outerApp {
+  .outerApp {
     width: 100vw;
     height: 100vh;
-    overflow: hidden; /* Hide overflow */
+    overflow: hidden;
+    /* Hide overflow */
     position: relative;
   }
 
@@ -100,7 +136,8 @@
     position: absolute;
     width: 90%;
     height: 90%;
-    overflow: auto; /* Enable scrolling */
+    overflow: auto;
+    /* Enable scrolling */
   }
 
   .mainapp {

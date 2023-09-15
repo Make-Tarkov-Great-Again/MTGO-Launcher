@@ -8,23 +8,18 @@
   }
 }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--GithubM-dark) #0d1117
-}
 
 ::-webkit-scrollbar {
-  width: 13px
+  display: none !important;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0d1117
+  display: none !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--GithubM-dark);
-  border-radius: 5px;
-  border: 3px solid #21262d
+  display: none !important;
+
 }
 
 .loading-box {
@@ -145,7 +140,6 @@
   top: 0;
   left: 0;
   z-index: 1;
-  overflow: hidden
 }
 
 body {
@@ -175,6 +169,7 @@ body {
 
 .left-container {
   position: relative;
+  z-index: 5;
   padding: 10px;
   max-width: 200px;
   background-color: var(--GithubA-dark);
@@ -185,7 +180,8 @@ body {
   align-items: flex-start;
   flex-wrap: wrap;
   flex-direction: column;
-  right: 0
+  left: 20px;
+  top: 30px;
 }
 
 .mod-discovery {
@@ -194,13 +190,13 @@ body {
   height: fit-content;
   flex-grow: 1;
   background-color: var(--GithubA-dark);
-  width: 957px;
+  width: 820px;
   flex-wrap: nowrap;
   align-content: flex-start;
   overflow: hidden;
   position: absolute;
-  /* left: 24.9vw; */
-  top: 10rem;
+  left: -7vw;
+  top: 150px;
   justify-content: center;
   /* align-items: stretch; */
 }
@@ -208,22 +204,17 @@ body {
 .workshop_header {
   z-index: 1;
   background: url(https://i.imgur.com/j5Tbhz3.png) no-repeat;
-  max-width: max-content;
-  height: 203px;
-  position: relative;
-  width: 170%;
-  top: 190px;
+  width: 100% !important;
   background-size: cover;
   color: #fff;
   backdrop-filter: blur(8px);
   max-width: max-content;
   height: 203px;
   background-repeat: no-repeat;
-  position: relative;
-  width: 100%;
-  left: 3%;
-  top: 150px;
-  overflow: hidden;
+  position: absolute;
+  /* left: 6vw; */
+  top: 0px;
+  /* max-width: fit-content; */
 }
 
 .sorting-bar {
@@ -245,6 +236,9 @@ body {
   position: relative;
   height: fit-content;
   width: fit-content;
+  top: 189px;
+  left: 75px;
+  z-index: 6;
 }
 
 .mod-tags {
@@ -276,11 +270,7 @@ height: fit-content;
   font-weight: bold;
 }
 
-/* Add this for hover effect */
-.pill:hover {
-  border: white 1px solid;
 
-}
 
 .pill.version {
   display: inline-block;
@@ -302,11 +292,6 @@ height: fit-content;
   font-weight: bold;
 }
 
-/* Add this for hover effect */
-.pill.version:hover {
-      border: white 1px solid;
-
-  }
 html {
   height: 100%
 }
@@ -334,20 +319,11 @@ html {
   color: #fff
 }
 
-:-webkit-scrollbar {
-  height: 12px;
-  width: 14px;
-  background: rgba(0, 0, 0, 0);
-  z-index: 12;
-  overflow: visible
-}
-
 .mod_entry_row {
-  /* padding: 3px; */
   margin-bottom: 5px;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
-  border: 1px solid rgba(0,0,0,0);
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+  background: linear-gradient(to right, rgba(0, 0, 0, .2) 0, rgba(0, 0, 0, .5) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  border: 1px solid transparent;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, .2) 0, rgba(0, 0, 0, .5) 100%);
   background-attachment: scroll;
   background-origin: initial;
   background-clip: initial;
@@ -357,28 +333,9 @@ html {
   height: fit-content;
   overflow: hidden;
   position: relative;
+  bottom: 100px;
 }
 
-:-webkit-scrollbar-thumb {
-  background: #434953;
-  width: 10px;
-  border-radius: 10px;
-  z-index: 12;
-  border: 4px solid transparent;
-  background-clip: padding-box;
-  transition: background-color .32s ease-in-out;
-  margin: 4px;
-  min-height: 32px;
-  min-width: 32px
-}
-
-:-webkit-scrollbar-corner {
-  background: #202020
-}
-
-:-webkit-scrollbar-thumb:hover {
-  background-color: #4e5157
-}
 
 .browseAppDetails {
   display: table;
@@ -398,7 +355,8 @@ html {
   padding-left: 20px;
   text-align: left;
   border-bottom: 0;
-  padding-bottom: 8px
+  padding-bottom: 8px;
+  max-width: fit-content;
 }
 
 .workshop_browse_tab {
@@ -698,7 +656,7 @@ background: transparent !important;
 
 .download-progress {
   position: fixed;
-  bottom: -21px; /* Initially hidden below the viewport */
+  bottom: -24px; /* Initially hidden below the viewport */
   left: 50%;
   transform: translateX(-50%);
   width: 330px;

@@ -21,3 +21,7 @@ export function Minimize() {
 export function Show() {
   return window['go']['launcher']['App']['Show']();
 }
+
+export function Startup(arg1) {
+  return window['go']['launcher']['App']['Startup'](arg1);
+}
