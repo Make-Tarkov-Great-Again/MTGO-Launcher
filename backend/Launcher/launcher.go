@@ -118,6 +118,40 @@ func (s *Storage) AddModEntry(mod string) {
 	//what the fuck was i going to use this for??????????? i cannot fucking remember
 }
 
+func (s *Storage) moveContents(srcDir, destDir string) error {
+	files, err := os.ReadDir(srcDir)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		src := filepath.Join(srcDir, file.Name())
+		dest := filepath.Join(destDir, file.Name())
+
+		srcFile, err := os.Open(src)
+		if err != nil {
+			return err
+		}
+		defer srcFile.Close()
+
+		destFile, err := os.Create(dest)
+		if err != nil {
+			return err
+		}
+		defer destFile.Close()
+
+		if _, err := io.Copy(destFile, srcFile); err != nil {
+			return err
+		}
+
+		if err := os.Remove(src); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 /*
 Package Launcher
 
