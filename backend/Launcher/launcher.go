@@ -81,22 +81,28 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"mime"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 
+	"github.com/gorilla/websocket"
+	"github.com/mholt/archiver"
+	wails "github.com/wailsapp/wails/v2/pkg/runtime"
 	"golang.org/x/sys/windows"
 
 	flog "mtgolauncher/backend/Logging"
 	appData "mtgolauncher/backend/Storage"
-
 	config "mtgolauncher/backend/Storage/config"
-
-	wails "github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 var program *Launcher
