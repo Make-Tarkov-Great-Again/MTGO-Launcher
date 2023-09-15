@@ -4,13 +4,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/websocket"
 
 	launcher "mtgolauncher/backend/Launcher"
 	flog "mtgolauncher/backend/Logging"
 )
+
+type ErrorResponse struct {
+	Type    string `json:"type"`
+	Message string `json:"message"`
+	Details string `json:"details"`
+}
+
+var downloadInstance launcher.Download
 
 // WebSocketManager handles WebSocket connections and download requests.
 type WebSocketManager struct {
@@ -26,20 +33,26 @@ var upgrader = websocket.Upgrader{
 
 // DownloadRequest represents a request to download a file via WebSocket.
 type DownloadRequest struct {
-	ModID   int
-	FileURL string
-	Conn    *websocket.Conn
+	ModID     int
+	FileURL   string
+	ModName   string
+	ModAuthor string
+	Conn      *websocket.Conn
 }
 
 // Message is a WebSocket message structure.
 type Message struct {
-	Type    string `json:"type"`
-	ModID   int    `json:"modID"`
-	FileURL string `json:"fileURL"`
+	Type      string `json:"type"`
+	ModID     int    `json:"modID"`
+	ModName   string `json:"modName"`
+	FileURL   string `json:"fileURL"`
+	ModAuthor string `json:"modAuthor"`
 }
 
 // InitWebSocket initializes the WebSocketManager and sets up routes.
 func (wsm *WebSocketManager) InitWebSocket() {
+	downloadInstance = *launcher.NewDownload()
+	downloadInstance.StartDownloading()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ws", wsm.handleWebSocket)
 
@@ -48,9 +61,9 @@ func (wsm *WebSocketManager) InitWebSocket() {
 		Handler: mux,
 	}
 	upgrader.CheckOrigin = func(r *http.Request) bool {
-		allowedOrigin := "http://localhost:34115"
-		origin := r.Header.Get("Origin")
-		return origin == allowedOrigin || strings.HasSuffix(origin, ".localhost:34115")
+		//		allowedOrigin := "http://localhost:34115"
+		//		origin := r.Header.Get("Origin")
+		return true
 	}
 
 	wsm.download = make(chan *DownloadRequest) //should i make more of these for other functions???
@@ -73,13 +86,8 @@ func (wsm *WebSocketManager) StartServer() {
 
 // handleDownloadRequests processes download requests by communicating with the launcher.
 func (wsm *WebSocketManager) handleDownloadRequests() {
-	app := launcher.NewLauncher()
 	for request := range wsm.download {
-		err := app.Download.Mod(request.ModID, request.FileURL, request.Conn)
-		if err != nil {
-			log.Println("Error handling download:", err)
-			app.UI.Error(fmt.Sprintf("Failed to download %s", request.FileURL), fmt.Sprintf("A error occured when downloading the following mod: \n %s \n\n %s", request.FileURL, err))
-		}
+		downloadInstance.EnqueueDownload(request.ModID, request.FileURL, request.Conn, request.ModName, request.ModAuthor)
 	}
 }
 
@@ -109,13 +117,26 @@ func (wsm *WebSocketManager) handleWebSocket(w http.ResponseWriter, r *http.Requ
 		switch message.Type {
 		case "download":
 			request := &DownloadRequest{
-				ModID:   message.ModID,
-				FileURL: message.FileURL,
-				Conn:    conn,
+				ModID:     message.ModID,
+				FileURL:   message.FileURL,
+				ModName:   message.ModName,
+				ModAuthor: message.ModAuthor,
+				Conn:      conn,
 			}
 			wsm.download <- request
 		default:
 			log.Println("Unknown message type:", message.Type)
+		}
+	}
+}
+
+func (wsm *WebSocketManager) ShutdownServer() {
+	if wsm.server != nil {
+		fmt.Println("Shutting down WebSocket server...")
+		if err := wsm.server.Shutdown(nil); err != nil {
+			log.Println("Error shutting down WebSocket server:", err)
+		} else {
+			fmt.Println("WebSocket server has been shut down.")
 		}
 	}
 }

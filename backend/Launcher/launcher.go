@@ -389,19 +389,73 @@ func sendMessage(wsConn *websocket.Conn, message interface{}) {
 	}
 	wsConn.WriteMessage(websocket.TextMessage, jsonMessage)
 }
+func (d *Download) EnqueueDownload(modID int, fileURL string, wsConn *websocket.Conn, modName string, modAuthor string) {
+	d.queueMutex.Lock()
+	defer d.queueMutex.Unlock()
+
+	request := &DownloadRequest{
+		ModID:     modID,
+		FileURL:   fileURL,
+		WsConn:    wsConn,
+		ModName:   modName,
+		ModAuthor: modAuthor,
+	}
+
+	d.queue = append(d.queue, request)
+}
+
+func (d *Download) DequeueDownload() *DownloadRequest {
+	d.queueMutex.Lock()
+	defer d.queueMutex.Unlock()
+
+	if len(d.queue) == 0 {
+		return nil
+	}
+
+	request := d.queue[0]
+	d.queue = d.queue[1:]
+	return request
+}
+
+// Starts the download listener
+func (d *Download) StartDownloading() {
+	go func() {
+		for {
+			request := d.DequeueDownload()
+			if request == nil {
+				// No bitches for me to interact with, im sleeping
+				time.Sleep(time.Second)
+				continue
+			}
+
+			err := d.Mod(request.ModID, request.FileURL, request.WsConn, request.ModName, request.ModAuthor)
+			if err != nil {
+				fmt.Printf("Failed to download mod: %s\n", err)
+			}
+		}
+	}()
+}
+
+func (d *Download) Mod(modID int, fileURL string, wsConn *websocket.Conn, modName string, modAuthor string) error {
+	// TODO: Get download URL from Database via ModID
+	//database.request.mod(modID)
 
 	// Start the download
 	resp, err := http.Get(fileURL)
 	if err != nil {
+		NewUI().Error("Download Error", "Failed to download mod data: "+err.Error())
+		sendErrorMessage(wsConn, err)
 		return err
 	}
 	defer resp.Body.Close()
 
-	//File name getter thing through header and backup for if the header doesnt exist
+	// File name getter thing through header and backup for if the header doesn't exist
 	fileName := resp.Header.Get("Content-Disposition")
 	if fileName == "" {
 		u, err := url.Parse(fileURL)
 		if err != nil {
+			NewUI().Error("Download Error", err.Error())
+			sendErrorMessage(wsConn, err)
 			return err
 		}
 		fileName = path.Base(u.Path)
@@ -412,19 +466,34 @@ func sendMessage(wsConn *websocket.Conn, message interface{}) {
 		}
 	}
 
-	//Convert mod id to syring because haha funny number cant be a string ever
+	// Convert mod id to string because haha funny number can't be a string ever
 	modIDst := strconv.Itoa(modID)
+	downloadDir := path.Join(d.ModsFolder, modIDst)
+	if err := appData.CreateFolderIfNotExists(downloadDir); err != nil {
+		NewUI().Error("Download Error", err.Error())
+		sendErrorMessage(wsConn, err)
+		return err
+	}
 
-	localFile, err := os.Create(path.Join(d.ModsFolder, modIDst, fileName))
+	newfilename := modIDst + strings.ToLower(filepath.Ext(fileName))
+	localFilePath := path.Join(downloadDir, newfilename)
+
+	localFile, err := os.Create(localFilePath)
 	if err != nil {
+		NewUI().Error(fmt.Sprintf("Failed to download %s", modName), fmt.Sprintf("%s", err))
+		sendErrorMessage(wsConn, err)
 		return err
 	}
 	defer localFile.Close()
 
 	fileSize := resp.ContentLength
 	var downloaded int64
+	formattedFileSize := strconv.FormatInt(fileSize, 10)
 
+	flog.OnlineLog(fmt.Sprintf("Downloading %s, %s bytes, to %s", fileName, formattedFileSize, localFilePath))
 	buffer := make([]byte, 1024)
+
+	var name string = ""
 
 	for {
 		n, err := resp.Body.Read(buffer)
@@ -432,11 +501,15 @@ func sendMessage(wsConn *websocket.Conn, message interface{}) {
 			if err == io.EOF {
 				break // End of file
 			}
+			NewUI().Error("Download Error", "Failed to download mod data: "+err.Error())
+			sendErrorMessage(wsConn, err)
 			return err
 		}
 
 		_, err = localFile.Write(buffer[:n])
 		if err != nil {
+			NewUI().Error("Download Error", "Failed to download mod data: "+err.Error())
+			sendErrorMessage(wsConn, err)
 			return err
 		}
 
@@ -444,14 +517,22 @@ func sendMessage(wsConn *websocket.Conn, message interface{}) {
 
 		percentage := int(float64(downloaded) / float64(fileSize) * 100)
 
+		if modName == "" {
+			modName = fileName
+		}
+
 		progress := struct {
-			FileName   string `json:"filename"`
+			FileName   string `json:"name"`
 			FileSize   int64  `json:"filesize"`
 			Percentage int    `json:"percentage"`
-		}{FileName: fileName, FileSize: fileSize, Percentage: percentage}
+			Modname    string `json:"modName"`
+			QueueSize  int    `json:"queueSize"`
+		}{FileName: name, FileSize: fileSize, Percentage: percentage, Modname: modName, QueueSize: len(d.queue)}
 
 		jsonProgress, err := json.Marshal(progress)
 		if err != nil {
+			sendErrorMessage(wsConn, err)
+			NewUI().Error("Download Error", ""+err.Error())
 			return err
 		}
 
@@ -459,17 +540,112 @@ func sendMessage(wsConn *websocket.Conn, message interface{}) {
 	}
 
 	progress := struct {
-		FileName   string `json:"filename"`
+		FileName   string `json:"name"`
 		FileSize   int64  `json:"filesize"`
 		Percentage int    `json:"percentage"`
-	}{FileName: fileName, FileSize: fileSize, Percentage: 100}
+		Modname    string `json:"modName"`
+		QueueSize  int    `json:"queueSize"`
+	}{FileName: name, FileSize: fileSize, Percentage: 100, Modname: modName, QueueSize: len(d.queue)}
 
 	jsonProgress, err := json.Marshal(progress)
 	if err != nil {
+		sendErrorMessage(wsConn, err)
+		NewUI().Error("Download Error", ""+err.Error())
+
 		return err
 	}
 
 	wsConn.WriteMessage(websocket.TextMessage, jsonProgress)
+
+	ext := strings.ToLower(filepath.Ext(fileName))
+	if ext == ".zip" || ext == ".rar" || ext == ".7z" || ext == ".tar" {
+		extractionDir := downloadDir
+		if err := appData.CreateFolderIfNotExists(extractionDir); err != nil {
+			NewUI().Error("Extraction Error", "Failed to extract mod: "+err.Error())
+			sendErrorMessage(wsConn, err)
+			return err
+		}
+
+		startExtractionMessage := struct {
+			Step      string `json:"step"`
+			QueueSize int    `json:"queueSize"`
+		}{Step: "Extracting", QueueSize: len(d.queue)}
+
+		jsonStartExtraction, err := json.Marshal(startExtractionMessage)
+		if err != nil {
+			NewUI().Error("Download Error", ""+err.Error())
+			sendErrorMessage(wsConn, err)
+			return err
+		}
+		wsConn.WriteMessage(websocket.TextMessage, jsonStartExtraction)
+
+		if err := NewStorage().ExtractArchive(localFilePath, extractionDir); err != nil {
+			defer localFile.Close()
+			NewUI().Error("Download Error", ""+err.Error())
+			sendErrorMessage(wsConn, err)
+			return err
+		}
+
+		// List the contents of the extractionDir
+		contents, err := os.ReadDir(extractionDir)
+		if err != nil {
+			NewUI().Error("Download Error", ""+err.Error())
+			sendErrorMessage(wsConn, err)
+			return err
+		}
+
+		//i hate my life. hour 13 of trying to get this to work as i want it.
+		for _, item := range contents {
+			//is it a folder?
+			if item.IsDir() {
+				//find package.json, if it exists, move everything within the same folder as it to the root of the mods folder (eg, %appdata%/MT-GO/Mods/modID) and pray nothing goes wrong
+				packageJSONPath := filepath.Join(extractionDir, item.Name(), "package.json")
+				if _, err := os.Stat(packageJSONPath); err == nil {
+					files, err := os.ReadDir(filepath.Join(extractionDir, item.Name()))
+					if err != nil {
+						NewUI().Error("Download Error", ""+err.Error())
+						sendErrorMessage(wsConn, err)
+						return err
+					}
+					for _, file := range files {
+						src := filepath.Join(extractionDir, item.Name(), file.Name())
+						dest := filepath.Join(downloadDir, file.Name())
+						if err := os.Rename(src, dest); err != nil {
+							NewUI().Error("Move Error", "Failed to move mod "+modName+" to local storage: "+err.Error())
+							sendErrorMessage(wsConn, err)
+							return err
+						}
+					}
+					// Remove the empty shit.
+					if err := os.Remove(filepath.Join(extractionDir, item.Name())); err != nil {
+						sendErrorMessage(wsConn, err)
+						return err
+					}
+				}
+			}
+
+		}
+	}
+	fmt.Printf("should make config now lol")
+	err = NewConfig().CreateConfigIfNotExist(modID, modName, modAuthor, "damn")
+	defer os.Remove(localFilePath)
+	if err != nil {
+		NewUI().Error("Configuration Error", "Failed to create mod configuration: "+err.Error())
+		sendErrorMessage(wsConn, err)
+		return err
+	}
+	//she done pt2
+	extractionDoneMessage := struct {
+		Step string `json:"step"`
+	}{Step: "Done"}
+
+	jsonExtractionDone, err := json.Marshal(extractionDoneMessage)
+	if err != nil {
+		sendErrorMessage(wsConn, err)
+		return err
+	}
+
+	wsConn.WriteMessage(websocket.TextMessage, jsonExtractionDone)
 
 	return nil
 }
