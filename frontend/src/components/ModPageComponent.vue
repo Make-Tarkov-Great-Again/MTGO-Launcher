@@ -1,31 +1,41 @@
 <template>
-    <div class="single-mod-page">
-      <div class="mod-page-container">
-        <div class="mod-page-main-container">
-          <div class="mod-name">{{ mod.title }}</div>
+  <div class="single-mod-page">
+    <!-- Loop through each mod -->
+    <!-- Grab Button -->
 
+    <svg class="close-button" @click="closeFloatingPage" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px" height="14px">
+      <image x="0px" y="0px" width="14px" height="14px"
+        xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAQAAAC1QeVaAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfnCQ8SNjQl7OFjAAAA4klEQVQY01XQMUrDABTG8V9NMYMFC+JgDtALZNKi4qiiIlqbgngCFyf1HoKCSO0tTK+gS0cLghUcHcyoFBzS1OYtD96fj+/Pq8R1V2rOlWde10vVtkv8uiihnsROEA292dW0KJ2gUE8ikwTR2MDI3hSHHiUyLWkQwcDIvjU1z+51ZE70qcRFz5kHVUMN3xJPkCfz9KcDS34cFe1zM4Ybk71VnIpkqOfUlzuxzcI8h4Vh4tbHv3kQEerqyLT0Z8zr0iBquNGWaU+fkONVy0HUdG3sOJef4neHViox6xZKKJ+W1z8KUj3KY02Q2QAAAABJRU5ErkJggg==" />
+    </svg>
 
+    <div class="grab_button"></div>
 
-          <div class="slideshow-containerMp">
-          <div v-for="(image, index) in mod.images" :key="index" class="slideshow-itemMp"
-            :style="{ display: index === currentSlideIndexMp ? 'block' : 'none' }">
-            <img class="loadable" :src="image" :alt="mod.title">
-            </div>
-          </div>
+    <!-- Pill 1 -->
+    <div class="pill rounded-rectangle">Pill 1</div>
 
-          <button id="prevBtn" @click="prevSlideMp">❮</button>
-          <button id="nextBtn" @click="nextSlideMp">❯</button>
-        </div>
+    <!-- Pill 2 -->
+    <div class="pill rounded-rectangle">Pill 2</div>
 
-          <div class="mod-name-subscribe">
-            <div class="mod-title">{{ mod.title }}</div>
-            <div class="grab-buttonmp" @click="handleGrabButtonClick(mod.id)">Grab</div>
-          </div>
+    <!-- Pill 3 -->
+    <div class="pill rounded-rectangle">Pill 3</div>
 
-          <div class="mod-description">{{ mod.description }}</div>
-        </div>
-      </div>
+    <!-- Mod Title -->
+    <div class="mod_title">{{ mod.title }}</div>
+
+    <!-- Mod Image -->
+    <img class="mod_image" :src="mod.images[0]" alt="Mod Image">
+
+    <!-- Mod Author -->
+    <div class="mod_author">{{ mod.author }}</div>
+
+    <!-- Mod Description -->
+    <div class="mod_description">{{ mod.description }}</div>
+
+    <!-- Mod Big Image -->
+    <img class="mod_big_image" :src="mod.images[1]" alt="Big Mod Image">
+  </div>
 </template>
+
 
 <script>
 import modexamples from './mods.json'; // TODO: Replace with API fetch
@@ -68,121 +78,114 @@ export default {
 
 <style scoped>
 .single-mod-page {
-  background-color: var(--GithubM-dark);
-  color: var(--text-color);
+  background-color: var(--github-black);
+  /* Add height to ensure the background is visible */
+  width: 903px;
+  height: 592px;
+  position: relative; /* Use relative positioning */
+  z-index: 11;
+  color: white; /* Add text color for better visibility */
 }
 
-.mod-page-container {
-    background-color: var(--GithubM-dark);
-}
 
-.mod-page-main-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    align-content: flex-start;
-    flex-wrap: wrap;
-}
-
-.mod-name {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.mod-picture-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.gallery-image {
-  flex-basis: calc(33.33% - 20px);
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.gallery-img {
-  width: 100%;
-  height: auto;
-}
-
-.mod-name-subscribe {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-.grab-buttonmp {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: var(--mtga-blue);
-  color: white;
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.mod-description {
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.slideshow-containerMp {
-  position: relative;
-  max-width: 630px;
-  height: 400px;
-  overflow: hidden;
-  background-color: var(--GithubA-dark);
-  border: #21262d 1px;
-  padding: 5px;
-  left: 35px
-}
-
-.slideshow-itemMp {
-  display: none;
-  width: 100%;
-  height: 100%
-}
-
-.slideshow-itemMp img {
-  object-fit: contain;
-  width: 100%;
-  height: 35%
-}
-
-.slideshow-itemMp-details {
-  background-color: rgb(0 0 0 / 40%);
-  color: #fff;
-  padding: 10px;
+.close-button {
+  background-image: url("float-close.png");
   position: absolute;
-  bottom: 0;
-  width: 100%
+  left: 874px;
+  top: 99px;
+  width: 14px;
+  height: 14px;
+  z-index: 15;
 }
-
-#nextBtn,
-#prevBtn {
+.grab_button {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 24px;
-  background: 0 0;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  z-index: 1
+  left: 780px;
+  top: 415px;
+  width: 58px;
+  height: 58px;
+  z-index: 14;
+}
+.pill {
+  position: absolute;
+  left: 226px;
+  top: 327px;
+  width: 64px;
+  height: 30px;
+  z-index: 13;
+}
+.pill {
+  position: absolute;
+  left: 149px;
+  top: 327px;
+  width: 64px;
+  height: 30px;
+  z-index: 12;
+}
+.pill {
+  position: absolute;
+  left: 201px;
+  top: 204px;
+  width: 52px;
+  height: 25px;
+  z-index: 11;
+}
+.pill {
+  position: absolute;
+  left: 72px;
+  top: 327px;
+  width: 64px;
+  height: 30px;
+  z-index: 10;
+}
+.mod_title {
+  position: absolute;
+  left: 201px;
+  top: 127px;
+  width: 248px;
+  height: 39px;
+  z-index: 9;
+}
+.mod_image {
+  position: absolute;
+  left: 71px;
+  top: 119px;
+  width: 112px;
+  height: 111px;
+  z-index: 8;
+}
+.mod_author {
+  position: absolute;
+  left: 202px;
+  top: 169px;
+  width: 126px;
+  height: 27px;
+  z-index: 7;
+}
+.mod_description {
+  position: absolute;
+  left: 57px;
+  top: 409px;
+  width: 672px;
+  height: 163px;
+  z-index: 6;
+}
+.mod_big_image {
+  position: absolute;
+  left: 57px;
+  top: 91px;
+  width: 845px;
+  height: 227px;
+  z-index: 5;
+}
+.floating_page_container {
+  border-radius: 10px;
+  background-color: rgb(13, 17, 23);
+  position: absolute;
+  left: 27px;
+  top: 35px;
+  width: 903px;
+  height: 592px;
+  z-index: 4;
 }
 
-#prevBtn {
-  left: 10px
-}
-
-#nextBtn {
-  right: 10px
-}
 </style>

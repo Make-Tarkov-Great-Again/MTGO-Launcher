@@ -29,7 +29,7 @@ func (a *App) startup(ctx context.Context) {
 	}
 	fmt.Println("Data stored successfully!")
 	//Initialization for logging.
-	log.LogInit()
+	log.Init()
 	log.Info("MTGO-Launcher version 0.0.1. This application falls under MIT licence. If you paid money for this, you got scammed. | https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher")
 	log.Info("Yeah so basiclly you wont see this unless your log surfing. In that case. Fuck you. Get off my lawn.", true)
 	//Online check

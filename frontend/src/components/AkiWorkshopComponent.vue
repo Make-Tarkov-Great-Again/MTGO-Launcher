@@ -3,7 +3,6 @@
   </header>
 
     <div class="floating-page" v-if="showFloatingPage">
-      <button class="close-button" @click="closeFloatingPage">Close</button>
       <router-view></router-view>
     </div>
     <div class="workshop_header">
@@ -155,6 +154,17 @@ export default {
           downloadUrl: 'https://github.com/Capataina/HealthPerLevel/archive/refs/heads/main.zip',
           licence: 'MIT'
 
+        },
+        {
+          id: 3,
+          title: 'SEX PER LEVEL',
+          imageUrl: 'https://hub.sp-tarkov.com/files/images/file/c7/1423.png',
+          author: 'Capataina',
+          tags: ['Server', 'Other', "QoL"],
+          version: '3.6.1',
+          downloadUrl: 'https://github.com/Capataina/HealthPerLevel/archive/refs/heads/main.zip',
+          licence: 'MIT'
+
         }
       ],
       slideshowItems: [ //TODO: Make this use fetch
@@ -179,10 +189,10 @@ export default {
   methods: {
     ModPage(modID) {
       const ctx = this.ctx //???? wails.ctx???
-      //console.log(modID);
-      //this.showFloatingPage = true;
-      //this.selectedModID = modID;
-      //this.$router.push({ name: 'modpage', params: { id: modID } });
+      console.log(modID);
+      this.showFloatingPage = true;
+      this.selectedModID = modID;
+      this.$router.push({ name: 'modpage', params: { id: modID } });
     },
     openFloatingPage() {
       console.log('Door open sound')
@@ -228,35 +238,14 @@ export default {
 
 
 <style scoped>
-.floating-page {
-  color: black;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 85vw;
-  max-height: 65vh;
-  background-color: var(--GithubM-dark);
+
+.floating-page{
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  background-color: rgb(13, 17, 23);
+  position: fixed;
+  left: 0px;
+  top: 35px;
+  z-index: 4;
 }
 
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.close-button:hover {
-  background-color: #d32f2f;
-}
 </style>

@@ -12,10 +12,11 @@ const router = createRouter({
             props: true
         }
     ]
+});
 
-})
+const app = createApp(App);
 
-
-createApp(App)
+const vueApp = app
   .use(router)
   .mount('#app');
+

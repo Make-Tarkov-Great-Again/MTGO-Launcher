@@ -55,6 +55,9 @@ async function checkOnlineStatus() {
 setInterval(checkOnlineStatus, 60000);
 
 
+
+
+
 window.addEventListener('online', () => {
     console.log("Came online")
     checkOnlineStatus()

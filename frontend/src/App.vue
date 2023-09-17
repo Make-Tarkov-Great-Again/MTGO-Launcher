@@ -1,6 +1,14 @@
 <template>
+    <div v-on:="updatePopoutPosition"
+      class="settings-popout-container"
+      v-if="showSettings"
+      :style="{ top: popoutTop + 'px', left: popoutLeft + 'px' }"
+    >
+      <settings-popout @closeSettings="toggleSettings" />
+    </div>
       <component :is="selectedComponent" v-if="selected" />
 
+    <!-- Settings popout container -->
 
 
       <div class="game-choices" v-else>
@@ -26,13 +34,15 @@
 import AkiWorkshopComponent from './components/AkiWorkshopComponent.vue';
 import MtgaContentComponent from './components/AkiWorkshopComponent.vue'; //haha aki template go brrrr
 import ModPageComponent from './components/ModPageComponent.vue'; //haha aki template go brrrr
+import SettingsPopout from './components/Settings.vue';
 
 
 export default {
   components: {
     AkiWorkshopComponent,
     MtgaContentComponent,
-    ModPageComponent
+    ModPageComponent,
+    SettingsPopout
     //TODO: Mod pages
     // TODO: Mod-pack pages
     // TODO: Search
@@ -42,9 +52,26 @@ export default {
   data() {
     return {
       selected: '',
-      isLoading: false
+      isLoading: false,
+      showSettings: false,
+      popoutTop: 0, // Initialize with the desired initial top position
+      popoutLeft: 0, // Initialize with the desired initial left position
     };
   },
+  mounted() {
+  // Access the Vue instance using the ref and add the click event listener
+  const settingsIcon = document.querySelector('.settings');
+  if (settingsIcon) {
+    settingsIcon.addEventListener('click', () => {
+      this.toggleSettings();
+    });
+  }
+
+  if(this.showSettings)
+
+  // Register the scroll event listener here
+  window.addEventListener('scroll', this.updatePopoutPosition);
+},
   computed: {
     selectedComponent() {
       if (this.selected === 'spt-aki') {
@@ -57,12 +84,44 @@ export default {
     }
   },
   methods: {
+    updatePopoutPosition() {
+      // Calculate the new position based on scroll
+      console.log("Fuck you. I hate you.")
+      const scrollTop = window.scrollY || window.scrollY;
+      const scrollLeft = window.scrollX || window.scrollX;
+
+      // Update the popout's position
+      this.popoutTop = 50 + scrollTop; // Adjust the top position as needed
+      this.popoutLeft = 50 + scrollLeft; // Adjust the left position as needed
+    },
+    toggleSettings() {
+    // Toggle the visibility of settings popout
+    this.showSettings = !this.showSettings;
+
+    // Add or remove the class on the body element to disable or enable scrolling
+    if (this.showSettings) {
+      document.body.classList.add('settings-open');
+    } else {
+      document.body.classList.remove('settings-open');
+    }
+  },
     selectGame(game) {
       this.selected = game;
     }
   }
 };
 </script>
+<style scoped>
+.settings-popout-container {
+  position: absolute;
+}
+body.settings-open {
+    overflow: hidden;
+  }
+
+  /* Modify the styles for your settings popout */
+
+</style>
 
 
 
