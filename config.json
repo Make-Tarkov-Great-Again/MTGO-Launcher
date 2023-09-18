@@ -1,0 +1,19 @@
+{
+    "AppInfo": {
+        "version": "pre=0.5.1",
+        "build": "1"
+    },
+    "UserSettings": {
+        "clientPath": "",
+        "protections": true,
+        "server": {
+        "akiServerPath": "",
+        "mtgaServerPath": "",
+        "mtgaServerAddress": "127.0.0.1:8080",
+        "akiServerAddress": "127.0.0.1:6969"
+        },
+        "language": "enUS",
+        "theme": "defaultDark",
+        "lastProfile": ""
+    }
+}

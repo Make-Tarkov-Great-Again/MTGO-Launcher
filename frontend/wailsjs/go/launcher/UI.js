@@ -6,8 +6,20 @@ export function Error(arg1, arg2) {
   return window['go']['launcher']['UI']['Error'](arg1, arg2);
 }
 
+export function ErrorStatement(arg1, arg2) {
+  return window['go']['launcher']['UI']['ErrorStatement'](arg1, arg2);
+}
+
+export function OpenFileSelector(arg1, arg2) {
+  return window['go']['launcher']['UI']['OpenFileSelector'](arg1, arg2);
+}
+
 export function Panic(arg1, arg2) {
   return window['go']['launcher']['UI']['Panic'](arg1, arg2);
+}
+
+export function PanicStatement(arg1, arg2) {
+  return window['go']['launcher']['UI']['PanicStatement'](arg1, arg2);
 }
 
 export function Question(arg1, arg2) {

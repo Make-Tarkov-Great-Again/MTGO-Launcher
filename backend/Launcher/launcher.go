@@ -729,8 +729,66 @@ func (u *UI) Panic(title string, message string) {
 	return
 }
 
+func (u *UI) OpenFileSelector(title string, filters []struct{ displayName, pattern string }) string {
+	selection, err := wails.OpenDirectoryDialog(wailsContext, wails.OpenDialogOptions{
+		DefaultDirectory:     "C:\\",
+		Title:                title,
+		ShowHiddenFiles:      true,
+		CanCreateDirectories: true,
+		ResolvesAliases:      true,
+	})
+	if err != nil {
+		return err.Error()
+	}
+	if selection == "" {
+		flog.Error("Selection came back empty")
+		return "Error"
+	}
+	return selection
+}
+
+// Send Panic popup message to app and closes on button press
+func (u *UI) PanicStatement(title string, message string) {
+	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
+		Type:          wails.ErrorDialog,
+		Message:       message,
+		Buttons:       []string{"Ok"},
+		DefaultButton: "Ok",
+	})
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	if selection != "" {
+		wails.Quit(wailsContext)
+	}
+	return
+}
+
 // Send error popup message to app
 func (u *UI) Error(title string, message string) {
+	fmt.Println("UI Error ctx:")
+	fmt.Println(u.ctx)
+	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
+		Type:          wails.ErrorDialog,
+		Title:         title,
+		Message:       message,
+		Buttons:       []string{"Continue", "Exit"},
+		DefaultButton: "Continue",
+	})
+	if err != nil {
+		// Handle the error
+		fmt.Println("Error:", err)
+	}
+	switch selection {
+	case "Exit":
+		wails.Quit(u.ctx)
+	default:
+		fmt.Printf("selection: %v\n", selection)
+
+	}
+}
+
+func (u *UI) ErrorStatement(title string, message string) {
 	fmt.Println("UI Error ctx:")
 	fmt.Println(u.ctx)
 	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{

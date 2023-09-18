@@ -6,6 +6,7 @@ import (
 	launcher "mtgolauncher/backend/Launcher"
 	log "mtgolauncher/backend/Logging"
 	storage "mtgolauncher/backend/Storage"
+	"mtgolauncher/backend/Storage/config"
 )
 
 // App struct
@@ -17,21 +18,18 @@ func NewApp() *App {
 	return &App{}
 }
 
-// @param ctx context.Context
-// Functions to run on startup
+// Initilize app.
 func (a *App) startup(ctx context.Context) {
+	log.Init()
 	a.ctx = ctx
 
-	err := storage.InitializeAppDataDir() // Corrected function call
+	err := storage.InitializeAppDataDir()
 	if err != nil {
 		fmt.Println("Error initializing app data directory:", err)
 		return
 	}
-	fmt.Println("Data stored successfully!")
-	//Initialization for logging.
-	log.Init()
+
 	log.Info("MTGO-Launcher version 0.0.1. This application falls under MIT licence. If you paid money for this, you got scammed. | https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher")
-	log.Info("Yeah so basiclly you wont see this unless your log surfing. In that case. Fuck you. Get off my lawn.", true)
 	//Online check
 	if launcher.NewOnline().Check() {
 		fmt.Println("Connected to the internet... Starting in online mode.")
@@ -40,6 +38,8 @@ func (a *App) startup(ctx context.Context) {
 		fmt.Println("No internet connection... Starting in offline mode. Check your firewall if this is a error.")
 		//TODO: Offline mode
 	}
+	//Jarvis, Initilize my subsystems pls. kthx
+	config.Init()
 
 	// TODO: Database check
 	// TODO: If either fails -> Offline mode

@@ -139,7 +139,11 @@ func (l *Logger) log(logType string, message string, args ...interface{}) {
 	if len(args) > 0 {
 		if val, ok := args[len(args)-1].(bool); ok {
 			silentLogging = val
-			args = args[:len(args)-1] // get that fucking "EXTRA-BOOL=TRUE(MISSING)" out of my nice log output fucker
+			if len(args) > 1 {
+				args = args[:len(args)-1]
+			} else {
+				args = nil
+			}
 		}
 	}
 
@@ -148,6 +152,7 @@ func (l *Logger) log(logType string, message string, args ...interface{}) {
 		parts := strings.Split(callerFuncNameFull, ".")
 
 		if len(parts) > 1 {
+			//If its a method receiver. (If it has "(*" ) extract the method receivers name, and put it infront of func name so i dont get shit like "Launcher.StartServer" WHICH ONE?
 			if strings.Contains(parts[1], "(*") {
 				receiverPart := strings.Trim(parts[1], "(*")
 				receiverPart = strings.Trim(receiverPart, ")")
@@ -155,9 +160,10 @@ func (l *Logger) log(logType string, message string, args ...interface{}) {
 				callerPackageName = packageParts[len(packageParts)-1]
 				callerFuncName = receiverPart + "." + parts[2]
 			} else {
+				// Non-method receiver
 				packageParts := strings.Split(parts[0], "/")
 				callerPackageName = packageParts[len(packageParts)-1]
-				callerFuncName = parts[1] + "." + parts[2]
+				callerFuncName = "Unknown" /*parts[1] + "." + parts[2]*/ //Bypassed for now, as it causes issues during run time for whatever reason,
 			}
 		}
 	}

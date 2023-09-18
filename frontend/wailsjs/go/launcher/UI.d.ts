@@ -4,7 +4,13 @@ import {context} from '../models';
 
 export function Error(arg1:string,arg2:string):Promise<void>;
 
+export function ErrorStatement(arg1:string,arg2:string):Promise<void>;
+
+export function OpenFileSelector(arg1:string,arg2:Array<any>):Promise<string>;
+
 export function Panic(arg1:string,arg2:string):Promise<void>;
+
+export function PanicStatement(arg1:string,arg2:string):Promise<void>;
 
 export function Question(arg1:string,arg2:string):Promise<boolean>;
 

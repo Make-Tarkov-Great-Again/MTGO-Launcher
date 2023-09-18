@@ -6,6 +6,7 @@ import (
 	"log"
 
 	launcher "mtgolauncher/backend/Launcher"
+	"mtgolauncher/backend/Storage/config"
 	websocket "mtgolauncher/backend/Websocket"
 
 	"github.com/wailsapp/wails/v2"
@@ -31,6 +32,7 @@ func main() {
 	AKI := launcher.NewAKI()
 	MTGA := launcher.NewMTGA()
 	Download := launcher.NewDownload()
+	ConfigRunT := config.NewConfig()
 	websocketManager := &websocket.WebSocketManager{}
 	websocketManager.InitWebSocket()
 
@@ -48,9 +50,9 @@ func main() {
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
 		OnStartup: func(ctx context.Context) {
-			app.startup(ctx)
+			AKI.Startup(ctx) // Put this first so ctx is set first in Launchers context.
 			App.Startup(ctx)
-			AKI.Startup(ctx)
+			app.startup(ctx)
 
 		},
 		OnShutdown: func(ctx context.Context) {
@@ -68,6 +70,7 @@ func main() {
 			MTGA,
 			websocketManager,
 			Download,
+			ConfigRunT,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              true,
