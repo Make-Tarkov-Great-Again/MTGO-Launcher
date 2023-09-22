@@ -26,7 +26,6 @@ function playSound() {
 
 // Function to periodically check timers
     function checkTimers() {
-        // Iterate over the "ScavTimers" array in local storage
         const scavTimers = JSON.parse(localStorage.getItem('ScavTimers')) || {};
 
         for (const username in scavTimers) {
@@ -34,18 +33,13 @@ function playSound() {
                 const epochTimestamp = scavTimers[username];
 
                 if (hasTimerExpired(epochTimestamp)) {
-                    // Calculate the time difference in seconds
                     const timeDifference = Math.floor(Date.now() / 1000) - epochTimestamp;
 
-                    // Check if the timer has expired by more than 5 seconds
                     if (timeDifference < 5) {
-                        // Timer has expired by more than 5 seconds, play a sound
                         playSound();
 
-                        // Optionally, you can remove the expired timer from the array
                         delete scavTimers[username];
 
-                        // Update the "ScavTimers" array in local storage
                         localStorage.setItem('ScavTimers', JSON.stringify(scavTimers));
                     }
                     else {
@@ -58,5 +52,4 @@ function playSound() {
         }
     }
 
-// Periodically check timers every 5 seconds (5000 milliseconds)
 setInterval(checkTimers, 1000);
