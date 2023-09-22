@@ -61,8 +61,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/fsnotify/fsnotify"
 )
 
 const appSubdir = "MT-GO"
@@ -303,4 +306,57 @@ func CopyFile(src, dest string) error {
 		return err
 	}
 	return nil
+}
+
+func StartListener() {
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer watcher.Close()
+
+	dirToWatch, err := GetAppDataDir()
+
+	err = watchDirRecursive(watcher, dirToWatch)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go func() {
+		for {
+			select {
+			case event, ok := <-watcher.Events:
+				if !ok {
+					return
+				}
+				if event.Op&fsnotify.Create == fsnotify.Create {
+					log.Printf("New file created: %s\n", event.Name)
+				}
+			case err, ok := <-watcher.Errors:
+				if !ok {
+					return
+				}
+				log.Printf("Error: %v\n", err)
+			}
+		}
+	}()
+
+	select {}
+}
+
+func watchDirRecursive(watcher *fsnotify.Watcher, dir string) error {
+	err := watcher.Add(dir)
+	if err != nil {
+		return err
+	}
+
+	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return watcher.Add(path)
+		}
+		return nil
+	})
 }

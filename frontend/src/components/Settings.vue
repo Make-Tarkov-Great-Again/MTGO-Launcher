@@ -1,6 +1,7 @@
 <template>
-  <div class="settings-popout">
+   <div class="settings-popout">
     <h2>Settings</h2>
+    <a>* Changed</a>
     <div class="setting">
       <label for="AkiPath">AKI Server Path:</label>
       <input type="text" id="AkiPath" v-model="akiServerPath" readonly
@@ -28,8 +29,8 @@
     </div>
 
     <div class="setting">
-      <label for="placeholder-setting-2">Theme:</label>
-      <input type="text" id="placeholder-setting-2" v-model="placeholderSetting2" />
+      <label for="Theme">Theme:</label>
+      <input type="text" id="Theme" v-model="placeholderSetting2" />
       <br>
       <a>Wanna spice it up? Load custom css!</a>
     </div>
@@ -39,6 +40,7 @@
 <script>
 import { GetRuntimeConfig } from "../../wailsjs/go/config/ConfigRunT"
 import { OpenFileSelector } from "../../wailsjs/go/launcher/UI"
+import { SetConfigVariable } from "../../wailsjs/go/config/ConfigRunT"
 export default {
   data() {
     return {
@@ -80,9 +82,29 @@ export default {
     async openFolderDialog(inputField, title, filters) {
       const selectedPath = await OpenFileSelector(title, filters);
       document.getElementById(inputField).value = selectedPath;
+      await SetConfigVariable(inputField, selectedPath)
+      const labelElement = document.querySelector(`label[for="${inputField}"]`);
+      labelElement.innerHTML = labelElement.innerHTML + "\*"
+    },
+    async fetchData() {
+      try {
+        // Call GetRuntimeConfig to retrieve the configuration data
+        const runtimeConfig = await GetRuntimeConfig();
+
+        // Set the component's data properties based on the received data
+        this.akiServerPath = runtimeConfig.UserSettings.server.akiServerPath;
+        this.mtgaServerPath = runtimeConfig.UserSettings.server.mtgaServerPath;
+        this.clientPath = runtimeConfig.UserSettings.clientPath;
+        this.placeholderSetting1 = runtimeConfig.UserSettings.language;
+        this.placeholderSetting2 = runtimeConfig.UserSettings.theme;
+      } catch (error) {
+        // Handle any errors here, e.g., log or display an error message
+        console.error("Error fetching configuration:", error);
+      }
     },
   },
   mounted() {
+    this.fetchData()
   }
 };
 </script>

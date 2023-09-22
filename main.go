@@ -6,6 +6,7 @@ import (
 	"log"
 
 	launcher "mtgolauncher/backend/Launcher"
+	profile "mtgolauncher/backend/Profile"
 	"mtgolauncher/backend/Storage/config"
 	websocket "mtgolauncher/backend/Websocket"
 
@@ -34,6 +35,7 @@ func main() {
 	Download := launcher.NewDownload()
 	ConfigRunT := config.NewConfig()
 	websocketManager := &websocket.WebSocketManager{}
+	profile := profile.NewProfileRunT()
 	websocketManager.InitWebSocket()
 
 	go websocketManager.StartServer()
@@ -71,6 +73,7 @@ func main() {
 			websocketManager,
 			Download,
 			ConfigRunT,
+			profile,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              true,
@@ -119,7 +122,6 @@ func main() {
 			OpenInspectorOnStartup: false,
 		},
 	})
-
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -18,6 +18,16 @@ func NewConfig() *ConfigRunT {
 	return &ConfigRunT{}
 }
 
+var settingsMap = map[string]*string{
+	"AkiPath":     &runtimeConfig.UserSettings.Server.AkiServerPath,
+	"AkiAddress":  &runtimeConfig.UserSettings.Server.AkiServerAddress,
+	"MtgaPath":    &runtimeConfig.UserSettings.Server.MtgaServerPath,
+	"MtgaAddress": &runtimeConfig.UserSettings.Server.MtgaServerAddress,
+	"ClientPath":  &runtimeConfig.UserSettings.ClientPath,
+	"Language":    &runtimeConfig.UserSettings.Language,
+	"Theme":       &runtimeConfig.UserSettings.Theme,
+}
+
 type Config struct {
 	AppInfo struct {
 		Version string `json:"version"`
@@ -79,13 +89,11 @@ func FindConfigFiles(dirPath string) (map[string]string, error) {
 var runtimeConfig Config
 
 func Init() {
-	// Initialize the app directory
 	appDir, err := storage.GetAppDataDir()
 	if err != nil {
 		logging.Error("Failed to get app data directory: %v", err)
 	}
 
-	// Create the "Runtime" directory if it doesn't exist
 	runtimeDir := path.Join(appDir, "Runtime")
 	if _, err := os.Stat(runtimeDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(runtimeDir, 0755); err != nil {
@@ -93,12 +101,9 @@ func Init() {
 		}
 	}
 
-	// Define the path to the config file
 	configPath := path.Join(runtimeDir, "config.json")
 
-	// Check if the config file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		// Create the config file with default values
 		defaultConfig := Config{
 			AppInfo: struct {
 				Version string `json:"version"`
@@ -148,7 +153,6 @@ func Init() {
 		}
 	}
 
-	// Read and parse the config file
 	configData, err := os.ReadFile(configPath)
 	if err != nil {
 		count++
@@ -324,6 +328,14 @@ func (c ConfigRunT) SetConfigVariable(key, value string) error {
 		logging.Error("Failed to unmarshal runtime config")
 		return err
 	}
+
+	//if strPtr, ok := settingsMap[key]; ok {
+	//	*strPtr = value
+	//} else {
+	//	fmt.Printf("Unsupported configuration key: %s\n", key)
+	//	return fmt.Errorf("Unsupported configuration Key %s", key)
+	//}
+	// Doesnt like to set for some reason...
 
 	switch key {
 	case "AkiPath":

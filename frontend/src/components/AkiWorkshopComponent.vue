@@ -113,7 +113,6 @@
 
 <script>
 import { initiateDownload } from "./js/main.js"
-
 export default {
   data() {
     return {
@@ -229,6 +228,7 @@ export default {
   },
   mounted() {
     document.addEventListener('click', this.handleDocumentClick);
+
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleDocumentClick);

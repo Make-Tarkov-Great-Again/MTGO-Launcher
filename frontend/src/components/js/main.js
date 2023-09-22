@@ -8,6 +8,8 @@ let wasOffline;
 var count = 0
 var failedCount = 0
 
+
+
 const downloadProgress = document.querySelector('.download-progress');
 const progressBar = document.querySelector('.progress-bar');
 const label = document.querySelector('.progress-label')
@@ -68,31 +70,38 @@ window.addEventListener('offline', () => {
     checkOnlineStatus()
 });
 
-downloadProgress.addEventListener('mouseenter', () => {
-    if (online) {
-        downloadProgress.style.bottom = '5px';
-        label.style.opacity = "100%"
-    }
-});
+document.addEventListener('DOMContentLoaded', () => {
+    downloadProgress.addEventListener('mouseenter', () => {
+        if (online) {
+            downloadProgress.style.bottom = '5px';
+            label.style.opacity = "100%"
+        }
+    });
 
 
-downloadProgress.addEventListener('mouseleave', () => {
-    if (online) {
+    downloadProgress.addEventListener('mouseleave', () => {
+        if (online) {
+            if (!downloading) {
+                downloadProgress.style.bottom = '-22px';
+            } else { downloadProgress.style.bottom = '-21px' }
+            label.style.opacity = "15%"
+        }
+    });
+
+    downloadProgress.addEventListener('mousemove', (e) => {
+        if (online) {
+            const mouseY = e.clientY;
+            const progressRect = progressBar.getBoundingClientRect();
+            const progressTop = progressRect.top;
+            const progressBottom = progressRect.bottom;
+        }
+    });
+    label.addEventListener('click', () => {
         if (!downloading) {
-            downloadProgress.style.bottom = '-22px';
-        } else { downloadProgress.style.bottom = '-21px' }
-        label.style.opacity = "15%"
-    }
-});
-
-downloadProgress.addEventListener('mousemove', (e) => {
-    if (online) {
-        const mouseY = e.clientY;
-        const progressRect = progressBar.getBoundingClientRect();
-        const progressTop = progressRect.top;
-        const progressBottom = progressRect.bottom;
-    }
-});
+            label.textContent = "No downlaods"
+        }
+    });
+})
 
 const socket = new WebSocket("ws://localhost:42145/ws"); // Update the URL accordingly
 
@@ -102,10 +111,10 @@ socket.onopen = () => {
 socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
-    if(data.step === 'Error') {
+    if (data.step === 'Error') {
         failedCount++
-            label.textContent = `Failed to download ${failedCount} mod(s), Downloaded ${count} mod(s)`;
-            return;
+        label.textContent = `Failed to download ${failedCount} mod(s), Downloaded ${count} mod(s)`;
+        return;
     }
 
     if (data && data.percentage !== undefined) {
@@ -148,11 +157,7 @@ socket.onmessage = (event) => {
     }
 };
 
-label.addEventListener('click', () => {
-    if (!downloading) {
-        label.textContent = "No downlaods"
-    }
-});
+
 
 socket.onclose = () => {
     console.log("WebSocket is not running.");
@@ -179,18 +184,4 @@ export function initiateDownload(modID, fileURL, modName, modAuthor) {
         modAuthor: modAuthor
     };
     socket.send(JSON.stringify(message));
-}
-
-async function elapsedTime(fileName) {
-    if (stopElapsedTime) {
-        return;
-    }
-
-    const minutes = Math.floor(elapsedTimeInSeconds / 60);
-    const seconds = elapsedTimeInSeconds % 60;
-    const elapsedTimeFormatted = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    label.textContent = `Installing & Parsing ${fileName} | ${elapsedTimeFormatted}`;
-    elapsedTimeInSeconds++;
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    elapsedTime(fileName);
 }
