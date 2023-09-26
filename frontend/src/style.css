@@ -147,8 +147,8 @@ body {
   text-align: left;
   font: 300 14px "Motiva Sans", Arial, Helvetica, sans-serif;
   margin: 0;
-  background: var(--GithubM-dark);
-  color: #969696;
+  /* background: var(--GithubM-dark); */
+  /* color: #969696; */
   overflow-x: hidden;
 }
 
@@ -193,7 +193,6 @@ body {
   width: 820px;
   flex-wrap: nowrap;
   align-content: flex-start;
-  overflow: hidden;
   position: absolute;
   left: -7vw;
   top: 150px;
@@ -234,7 +233,7 @@ body {
 .mod-results {
   margin-top: 20px;
   position: relative;
-  height: fit-content;
+  /* height: fit-content; */
   width: fit-content;
   top: 189px;
   left: 75px;
@@ -655,7 +654,7 @@ background: transparent !important;
 }
 
 .download-progress {
-  position: fixed;
+  position: absolute;
   bottom: -24px; /* Initially hidden below the viewport */
   left: 50%;
   transform: translateX(-50%);
@@ -668,6 +667,8 @@ background: transparent !important;
 
 .progress-label,
 .progress-bar {
+  overflow: hidden;
+  position: absolute !important;
   display: block;
   width: 100%;
 }

@@ -93,12 +93,6 @@ func (wsm *WebSocketManager) handleDownloadRequests() {
 
 // handleWebSocket upgrades an HTTP connection to a WebSocket and handles incoming messages.
 func (wsm *WebSocketManager) handleWebSocket(w http.ResponseWriter, r *http.Request) {
-	log.Println("Request Headers:")
-	for name, values := range r.Header {
-		for _, value := range values {
-			log.Printf("%s: %s\n", name, value)
-		}
-	}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)

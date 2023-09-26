@@ -27,7 +27,6 @@ import {
   VTooltip,
   VClosePopper,
   // Components
-  Dropdown,
   Tooltip,
   Menu
 } from 'floating-vue'
@@ -117,15 +116,7 @@ export default {
 
 <style scoped>
 
-.v-popper--theme-info-tooltip {
-  .v-popper__inner {
-    background: #010205;
-  }
 
-  .v-popper__arrow-inner {
-    border-color: #004499;
-  }
-}
 
 .profile-container {
   position: relative;

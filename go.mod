@@ -8,6 +8,7 @@ require (
 	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/frankban/quicktest v1.14.6 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
 	github.com/nwaples/rardecode v1.1.3 // indirect
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
@@ -45,6 +46,7 @@ require (
 	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/sys v0.11.0
 	golang.org/x/text v0.12.0 // indirect
+	gopkg.in/toast.v1 v1.0.0-20180812000517-0a84660828b2
 )
 
 // replace github.com/wailsapp/wails/v2 v2.5.1 => C:\Users\armyo\go\pkg\mod

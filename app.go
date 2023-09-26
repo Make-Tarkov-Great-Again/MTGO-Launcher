@@ -5,8 +5,10 @@ import (
 	"fmt"
 	launcher "mtgolauncher/backend/Launcher"
 	log "mtgolauncher/backend/Logging"
+	notifications "mtgolauncher/backend/Notifications"
 	profile "mtgolauncher/backend/Profile"
 	storage "mtgolauncher/backend/Storage"
+
 	"mtgolauncher/backend/Storage/config"
 )
 
@@ -43,6 +45,8 @@ func (a *App) startup(ctx context.Context) {
 	go config.Init()
 	go profile.ParseAndSaveProfile("E:\\SPT-AKI\\user\\profiles\\beb27d576cc4f1b8b8fae52d.json")
 	go storage.StartListener()
+	notifications.UpdateAvaiable()
+
 	// TODO: Database check
 	// TODO: If either fails -> Offline mode
 }

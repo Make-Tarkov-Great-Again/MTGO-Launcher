@@ -10,4 +10,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  template: {
+    compilerOptions: {
+      isCustomElement: (tag) => ['cus-'].includes(tag),
+
+    }
+  }
 });

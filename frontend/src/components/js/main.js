@@ -97,10 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     label.addEventListener('click', () => {
-        if (!downloading) {
-            label.textContent = "No downlaods"
-        }
-    });
+    if (!downloading) {
+        label.textContent = "No downlaods"
+    }
+});
 })
 
 const socket = new WebSocket("ws://localhost:42145/ws"); // Update the URL accordingly

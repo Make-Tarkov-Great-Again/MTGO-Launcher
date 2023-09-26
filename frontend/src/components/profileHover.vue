@@ -95,7 +95,7 @@ export default {
     background-color: #010205;
     color: white;
     height: 200px;
-    width: 500px;
+    width: 220px;
     border: 1px solid white;
 }
 

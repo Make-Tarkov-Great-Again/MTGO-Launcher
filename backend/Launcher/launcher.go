@@ -105,7 +105,7 @@ import (
 	config "mtgolauncher/backend/Storage/config"
 )
 
-var wailsContext context.Context
+var WailsContext context.Context
 
 //#region Storage
 
@@ -714,7 +714,7 @@ func (m *Mod) DisableMods() {
 
 // Send Panic popup message to app and closes on button press
 func (u *UI) Panic(title string, message string) {
-	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
+	selection, err := wails.MessageDialog(WailsContext, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
 		Message:       "Whoops, something went very wrong, and we can't continue! See error below!\n" + message,
 		Buttons:       []string{"Ok"},
@@ -724,13 +724,13 @@ func (u *UI) Panic(title string, message string) {
 		fmt.Println("Error:", err)
 	}
 	if selection != "" {
-		wails.Quit(wailsContext)
+		wails.Quit(WailsContext)
 	}
 	return
 }
 
 func (u *UI) OpenFileSelector(title string, filters []struct{ displayName, pattern string }) string {
-	selection, err := wails.OpenDirectoryDialog(wailsContext, wails.OpenDialogOptions{
+	selection, err := wails.OpenDirectoryDialog(WailsContext, wails.OpenDialogOptions{
 		DefaultDirectory:     "C:\\",
 		Title:                title,
 		ShowHiddenFiles:      true,
@@ -749,7 +749,7 @@ func (u *UI) OpenFileSelector(title string, filters []struct{ displayName, patte
 
 // Send Panic popup message to app and closes on button press
 func (u *UI) PanicStatement(title string, message string) {
-	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
+	selection, err := wails.MessageDialog(WailsContext, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
 		Message:       message,
 		Buttons:       []string{"Ok"},
@@ -759,7 +759,7 @@ func (u *UI) PanicStatement(title string, message string) {
 		fmt.Println("Error:", err)
 	}
 	if selection != "" {
-		wails.Quit(wailsContext)
+		wails.Quit(WailsContext)
 	}
 	return
 }
@@ -768,7 +768,7 @@ func (u *UI) PanicStatement(title string, message string) {
 func (u *UI) Error(title string, message string) {
 	fmt.Println("UI Error ctx:")
 	fmt.Println(u.ctx)
-	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
+	selection, err := wails.MessageDialog(WailsContext, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
 		Title:         title,
 		Message:       message,
@@ -791,7 +791,7 @@ func (u *UI) Error(title string, message string) {
 func (u *UI) ErrorStatement(title string, message string) {
 	fmt.Println("UI Error ctx:")
 	fmt.Println(u.ctx)
-	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
+	selection, err := wails.MessageDialog(WailsContext, wails.MessageDialogOptions{
 		Type:          wails.ErrorDialog,
 		Title:         title,
 		Message:       "Whoops, something went wrong, but we can continue! See error below!\n\n" + message,
@@ -812,7 +812,7 @@ func (u *UI) ErrorStatement(title string, message string) {
 }
 
 func (u *UI) Question(title, message string) bool {
-	selection, err := wails.MessageDialog(wailsContext, wails.MessageDialogOptions{
+	selection, err := wails.MessageDialog(WailsContext, wails.MessageDialogOptions{
 		Type:    wails.QuestionDialog,
 		Title:   title,
 		Message: message,
@@ -839,7 +839,7 @@ func (u *UI) Question(title, message string) bool {
 
 // Reloads frontend.
 func (u *UI) Reload() {
-	wails.WindowReloadApp(u.ctx)
+	wails.WindowReloadApp(WailsContext)
 }
 
 //#endregion UI
@@ -1023,7 +1023,7 @@ type AKI struct {
 
 func (a *AKI) Startup(ctx context.Context) {
 	a.ctx = ctx
-	wailsContext = ctx
+	WailsContext = ctx
 }
 
 type MTGA struct {

@@ -5,13 +5,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="transparent" content="true">
-  <title>myproject</title>
+  <title>MT-GO Launcher</title>
   
-  <script type="module" crossorigin src="/assets/index.cdb1721c.js"></script>
-  <link rel="stylesheet" href="/assets/index.326dddfb.css">
+
+  <script type="module" crossorigin src="/assets/index.effc2154.js"></script>
+  <link rel="stylesheet" href="/assets/index.3e003c95.css">
 </head>
 <body>
-  <div class="outerApp">
+  <div class="overlay" id="overlay">
     <div class="main-container" id="app">
       
       
@@ -20,6 +21,7 @@
       </script>
     </div>
   </div>
+
 </body>
 <style>
   .outerApp {
@@ -29,6 +31,7 @@
     /* Hide overflow */
     position: absolute;
     color: dimgray;
+    background-color: transparent;
   }
   .notification {
   position: absolute;
@@ -45,7 +48,7 @@
 .notification:hover {
   border: white 1px solid;
   background-color: white;
-  animation: ring 1s infinite alternate;
+  animation: ring 1.5s infinite alternate;
 
 }
 
@@ -56,8 +59,11 @@
   50% {
     transform: rotate(15deg);
   }
-  100% {
+  75% {
     transform: rotate(-15deg);
+  }
+  100% {
+    transform: rotate(0deg);
   }
 }
 

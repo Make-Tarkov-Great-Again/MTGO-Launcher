@@ -24,19 +24,9 @@ const vueApp = app
 
 
 
-  import {
-    // Directives
-    VTooltip,
-    VClosePopper,
-    // Components
-    Dropdown,
-    Tooltip,
-    Menu
-  } from 'floating-vue'
 
-  app.directive('tooltip', VTooltip)
-  app.directive('close-popper', VClosePopper)
-  app.component('VDropdown', Dropdown)
-  app.component('VTooltip', Tooltip)
-  app.component('VMenu', Menu)
+
+  app.use(FloatingVue, {
+    container: document.getElementById("#systemApp")
+  })
 
