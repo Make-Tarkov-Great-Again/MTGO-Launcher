@@ -5,7 +5,7 @@
     <div class="floating-page" v-if="showFloatingPage">
       <router-view></router-view>
     </div>
-    <div class="workshop_header">
+    <div class="workshop_header" style="overflow-x: hidden;">
       <div class="browseAppDetails loadable">
       </div>
       <div class="workshop_browse_menu_area">
@@ -118,7 +118,7 @@ export default {
     return {
       components: {
       },
-      showFloatingPage: false, // Initially set to false
+      showFloatingPage: false,
       selectedModID: null,
 
       mods: [ // temp json-like mods for testing
@@ -179,7 +179,6 @@ export default {
           title: 'MP-43 12GA SAWED-OFF DOUBLE-BARREL SHOTGUN',
           author: 'Mighty_Condor'
         }
-        // Add more slideshow items here as needed
       ],
 
       currentSlideIndex: 0
@@ -187,8 +186,6 @@ export default {
   },
   methods: {
     ModPage(modID) {
-      const ctx = this.ctx //???? wails.ctx???
-      console.log(modID);
       this.showFloatingPage = true;
       this.selectedModID = modID;
       this.$router.push({ name: 'modpage', params: { id: modID } });

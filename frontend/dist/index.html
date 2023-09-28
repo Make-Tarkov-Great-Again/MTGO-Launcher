@@ -7,31 +7,27 @@
   <meta name="transparent" content="true">
   <title>MT-GO Launcher</title>
   
+  <link href="https://pastebin.com/raw/LHRPBQ2X" rel="stylesheet">
 
-  <script type="module" crossorigin src="/assets/index.effc2154.js"></script>
-  <link rel="stylesheet" href="/assets/index.3e003c95.css">
+  <script type="module" crossorigin src="/assets/index.0d1fe70b.js"></script>
+  <link rel="stylesheet" href="/assets/index.19d1c0bd.css">
 </head>
 <body>
-  <div class="overlay" id="overlay">
+  <div class="outerApp">
     <div class="main-container" id="app">
       
-      
-
-      <script>
-      </script>
     </div>
   </div>
-
 </body>
 <style>
   .outerApp {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    /* Hide overflow */
     position: absolute;
     color: dimgray;
-    background-color: transparent;
+    background: rgb(1,4,9);
+    background: linear-gradient(90deg, rgba(1,4,9,1) 0%, rgba(7,11,16,0.3) 50%, rgba(13,17,23,1) 100%);
   }
   .notification {
   position: absolute;
@@ -39,17 +35,13 @@
   top: 5px;
   width: 21px;
   height: 24px;
-  z-index: 9;
   border-radius: 120px;
-  animation: ring 1s infinite alternate;
 
 }
 
-.notification:hover {
+.notification:active {
   border: white 1px solid;
-  background-color: white;
   animation: ring 1.5s infinite alternate;
-
 }
 
 @keyframes ring {
@@ -74,12 +66,12 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    /* Enable scrolling */
+    background: rgb(1,4,9);
+    background: linear-gradient(90deg, rgba(1,4,9,1) 0%, rgba(7,11,16,0.3) 50%, rgba(13,17,23,1) 100%);
   }
 
   .mainapp {
     background-color: black;
-    z-index: 9;
   }
 
   .home {
@@ -88,7 +80,6 @@
     top: 12px;
     width: 19px;
     height: 24px;
-    z-index: 8;
   }
 
   .minimize {
@@ -98,7 +89,6 @@
     top: 16px;
     width: 11px;
     height: 2px;
-    z-index: 7;
   }
 
   .close {
@@ -107,7 +97,6 @@
     top: 10px;
     width: 14px;
     height: 14px;
-    z-index: 6;
   }
 
   .branding {
@@ -117,7 +106,6 @@
     top: 9px;
     width: 147px;
     height: 16px;
-    z-index: 9;
     --wails-draggable: drag
   }
 
@@ -128,7 +116,6 @@
     top: 6px;
     width: 22px;
     height: 22px;
-    z-index: 8;
   }
 
   .main_container {
@@ -139,7 +126,6 @@
     top: 70px;
     width: 903px;
     height: 592px;
-    z-index: 4;
   }
 </style>
 

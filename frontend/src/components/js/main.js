@@ -8,6 +8,12 @@ let wasOffline;
 var count = 0
 var failedCount = 0
 
+window.addEventListener('storage', (event) => {
+    if (event.key === 'notifications') {
+      const updatedNotifications = JSON.parse(event.newValue);
+      eventBus.$emit('notifications-changed', updatedNotifications);
+    }
+  });
 
 
 const downloadProgress = document.querySelector('.download-progress');
@@ -103,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 })
 
-const socket = new WebSocket("ws://localhost:42145/ws"); // Update the URL accordingly
+const socket = new WebSocket("ws://localhost:42145/ws");
 
 socket.onopen = () => {
     console.log("WebSocket is running.");

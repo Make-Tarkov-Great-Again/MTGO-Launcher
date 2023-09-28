@@ -5,7 +5,6 @@
   </div>
 
 
-  <!-- Render profiles here -->
   <h1 v-if="!isLoading && selected && !selectedProfile" style="position: absolute; top: 25px;">Pick a profile nerd</h1>
   <div :class="[profileLayoutClass]" v-if="!isLoading && selected && !selectedProfileVariable">
     <template v-if="profiles.length > 8">
@@ -69,7 +68,7 @@ export default {
         'AKI': [],
         'MTGA': [],
       },
-      selectedProfileVariable: null, // Initialize selected profile variable
+      selectedProfileVariable: null,
     };
   },
   computed: {
@@ -120,7 +119,6 @@ export default {
       this.selectedProfileVariable = null;
       this.selectingProfile = true;
 
-      // Store the selected game in sessionStorage
       sessionStorage.setItem('selectedGame', game);
 
     },

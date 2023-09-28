@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@Event': path.resolve(__dirname, 'src/main.js') //Vue event emit thingie ma-bob
     },
   },
   template: {

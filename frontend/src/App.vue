@@ -1,7 +1,7 @@
 <template>
   <div class="systemApp">
     <Topbar></Topbar>
-</div>
+  </div>
   <div class="outerApp2">
     <div class="main-container" id="app">
       <MainApp></MainApp>
@@ -23,32 +23,161 @@ import { Menu as VMenu } from "floating-vue";
 import FloatingVue from 'floating-vue'
 import Topbar from './components/System/cus-Topbar.vue';
 
-
-
+import mitt from 'mitt';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 import MainApp from './components/main.vue';
+import eventEmitter from "./components/js/notifacation.js"
+
 export default {
   components: {
     Topbar,
     MainApp,
-  }
+  },
+  setup() {
+    const notifications = ref([]);
+
+    const emitter = eventEmitter
+
+    emitter.on('new-notification', (notification) => {
+      console.log("New notification");
+    });
+
+    onMounted(() => {
+      const storedNotifications = JSON.parse(localStorage.getItem('notifications'));
+      if (storedNotifications) {
+        notifications.value = storedNotifications;
+      } else {
+        notifications.value = [];
+      }
+    });
+
+    const addEpNotification = () => {
+      let notification = {};
+
+      notification = {
+        title: "RE: Hey",
+        description: `Hey, feds are watching my texts, gotta talk through here. Wanna come to my island and party?`,
+        type: "sus",
+        from: "From Epstein"
+      };
+
+      emitter.emit("new-notification", notification);
+
+      const existingNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
+      existingNotifications.push(notification);
+      localStorage.setItem('notifications', JSON.stringify(existingNotifications));
+
+
+    }
+
+
+    const addNotification = () => {
+      const types = ["scavTimers", "normal", "system", "modUpdate"];
+      const randomType = types[Math.floor(Math.random() * types.length)];
+
+      let notification = {};
+
+      switch (randomType) {
+        case "scavTimers":
+          const randomUsername = ["Kestrel", "Nehax", "King", "Pixel", "SlejmUr", "SSH__"];
+          const randomScavUsername = randomUsername[Math.floor(Math.random() * randomUsername.length)];
+          notification = {
+            title: "Scav Timer",
+            description: `${randomScavUsername}'s scav is ready!`,
+            type: "scavTimers",
+            from: "From System"
+          };
+          break;
+
+        case "normal":
+          notification = {
+            title: "Hideout production complete",
+            description: "Your production for \n Bitcoin \n is complete.",
+            type: "normal",
+            from: "From Hideout"
+          };
+          break;
+
+        case "system":
+          notification = {
+            title: "MTGA Updater Ready",
+            description: "MTGA has a new release \n version 1.2.3, over 9000 bug fixes.",
+            type: "system",
+            from: "From System"
+          };
+          break;
+
+        case "modUpdate":
+          const randomModNames = [
+            { name: "MAS", author: "SSH__" },
+            { name: "KMC", author: "The_Katto" }
+          ];
+          const randomMod = randomModNames[Math.floor(Math.random() * randomModNames.length)];
+          notification = {
+            title: `Mod update for ${randomMod.name}`,
+            description: `A new update was released for ${randomMod.name} by ${randomMod.author}. Click to download now.`,
+            type: "mods",
+            from: "From Mods"
+          };
+          break;
+
+        default:
+          notification = {
+            title: "Unknown Notification Type",
+            description: "This is an unknown notification type.",
+            type: "unknown",
+            from: "From System"
+          };
+          break;
+      }
+
+      emitter.emit("new-notification", notification);
+
+      const existingNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
+      existingNotifications.push(notification);
+      localStorage.setItem('notifications', JSON.stringify(existingNotifications));
+    };
+
+    const handleKeyPress = (event) => {
+      if (event.key === 'r') {
+        addNotification();
+      } else if (event.key === 'e') {
+        addEpNotification()
+      }
+    };
+
+    onBeforeUnmount(() => {
+      document.removeEventListener('keydown', handleKeyPress);
+    });
+
+    return {
+      notifications,
+      addNotification,
+      handleKeyPress,
+      emitter,
+    };
+  },
+  mounted() {
+    document.addEventListener('keydown', this.handleKeyPress);
+  },
 };
 </script>
 
 
 <style scoped>
-
-
 body {
   background-color: rgb(255, 1, 1) !important;
 }
+
 .outerApp2 {
   width: 918px;
   height: 596px;
   overflow: scroll;
   color: dimgray;
   border-radius: 15px;
-  border: red solid;
+  background: transparent;
+
 }
 
 .systemApp {
@@ -71,11 +200,9 @@ body {
 
 }
 
-.notification:hover {
+.notification:active {
   border: white 1px solid;
-  background-color: white;
-  animation: ring 1s infinite alternate;
-
+  animation: ring 1.5s infinite alternate;
 }
 
 @keyframes ring {
@@ -94,7 +221,7 @@ body {
 
 
 #app {
-  background-color: #0d1117;
+  background-color: transparent;
   position: absolute;
   width: 90%;
   height: 90%;
