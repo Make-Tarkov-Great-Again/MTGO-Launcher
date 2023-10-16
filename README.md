@@ -29,6 +29,16 @@ MTGO Launcher simplifies the management of mods by providing the ability to hand
 ### Cross Emulation
 MTGO Launcher serves as a unified platform for both SPT-AKI and MTGA, enabling users to conveniently select, download, install, and cross-launch mods for either game. This centralized approach simplifies the modding experience by offering a single launcher for multiple emulators, making it more efficient and user-friendly.
 
+## Planned Features
+
+Out of game Stash UI
+
+Numerous debugging tools
+
+A few secert ones we cant tell you about... 
+
+Charcter Editor
+
 
 ## Usage
 
