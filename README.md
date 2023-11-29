@@ -28,11 +28,9 @@ MTGO Launcher introduces the concept of multiple mod profiles, allowing users to
 ### Auto Updates for Mods
 Stay up-to-date effortlessly with the auto update feature of MTGO Launcher. When a new version of a mod is released, the launcher will automatically download and install the latest version, ensuring that you always have the most current enhancements and fixes.
 
-### Seamless Management of Mods for MTGA and SPT-AKI
-MTGO Launcher simplifies the management of mods by providing the ability to handle mods from both Make Tarkov Great Again and SPT-AKI separately. This dual compatibility allows users to organize and customize their mods for each emu independently. Additionally, the launcher enables users to switch between these two games effortlessly, eliminating the hassle of navigating through multiple interfaces.
+### Seamless Management of Mods for MTGA
+MTGO Launcher simplifies the management of mods by providing the ability to handle mods for Make Tarkov Great Again. This compatibility allows users to organize and customize their mods for each profile independently. Additionally, the launcher enables users to switch between these profiles in one click eliminating the hassle of navigating through multiple interfaces.
 
-### Cross Emulation
-MTGO Launcher serves as a unified platform for both SPT-AKI and MTGA, enabling users to conveniently select, download, install, and cross-launch mods for either game. This centralized approach simplifies the modding experience by offering a single launcher for multiple emulators, making it more efficient and user-friendly.
 
 ## Planned Features
 
@@ -49,7 +47,7 @@ Charcter Editor
 
 
 
-AKI Version: 3.6.1
+AKI Version: ~3.6.1~ Deprecated Use MTGA
 
 MTGA Version: Latest
 
@@ -76,7 +74,7 @@ MTGA is a organization founded by a few Altered Escape developers.
 
 
 
-We felt that there shouldn't just be one option for emulation and began development on MTGA, but for our launcher, we decided we dont want to keep thease features to ourselves, and so we decided to expand to allow our launcher, and mod managment system to work with SPT-AKI aswell,
+We felt that there shouldn't just be one option for emulation and began development on MTGA
 
 We are developing this launcher to offer an accessible experience to all those in the tarkov offline scene.
 
