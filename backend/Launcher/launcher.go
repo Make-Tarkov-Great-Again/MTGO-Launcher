@@ -882,47 +882,30 @@ func (a App) CloseServers() {
 //#region EMU
 
 /*
-AKI.StartServer starts an AKI server from the specified serverPath.
+MTGA.StartServer starts an MTGA server from the specified serverPath.
 
 Parameters:
-- serverPath: The path to the AKI server executable.
+- serverPath: The path to the MTGA server executable.
 
 Returns:
 - *os.Process: A pointer to the started process if successful.
 - error: An error if the server couldn't be started.
 
 Example usage:
-process, err := aki.StartServer("C:/path/to/aki-server")
+process, err := mtga.StartServer("C:/path/to/aki-server")
 
 	if err != nil {
-	    fmt.Println("Error starting AKI server:", err)
+	    fmt.Println("Error starting MTGA server:", err)
 	} else {
 
-	    fmt.Println("AKI server started with process ID:", process.Pid)
+	    fmt.Println("mtga server started with process ID:", process.Pid)
 	}
 */
-func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
-	files, err := os.ReadDir(serverPath)
-	if err != nil {
-		return nil, err
-	}
-
-	var exePath string
-	for _, file := range files {
-		if strings.HasPrefix(filepath.Base(file.Name()), "Aki.Server") {
-			if strings.HasSuffix(file.Name(), ".exe") {
-				exePath = filepath.Join(serverPath, file.Name())
-				break
-			} else {
-			}
-		}
-	}
-
-	if exePath == "" {
-		title := "Starting AKI Server Failed"
-		message := fmt.Sprintf("No server was found in AKI server path: %s. Is this the root folder of your AKI installation?", serverPath)
-		return nil, fmt.Errorf("%s: %s", title, message)
-	}
+// Starts the MTGA server via @mtga-path
+func (m *MTGA) StartServer(serverPath string) (*os.Process, error) {
+	// Construct the command to run "go run backend.go" in the given folder
+	cmd := exec.Command("go", "run", "backend.go")
+	cmd.Dir = serverPath
 
 	// Define the outputCallback function
 	outputCallback := func(line string) {
@@ -930,16 +913,12 @@ func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
 		fmt.Println("Server Output:", line)
 	}
 
-	// Create the command
-	cmd := exec.Command(exePath)
-	cmd.Dir = serverPath
-
 	// Set up pipes for capturing standard output and standard error
 	stdoutPipe, _ := cmd.StdoutPipe()
 	stderrPipe, _ := cmd.StderrPipe()
 
 	// Start the command
-	err = cmd.Start()
+	err := cmd.Start()
 	if err != nil {
 		return nil, err
 	}
@@ -966,11 +945,6 @@ func (a *AKI) StartServer(serverPath string) (*os.Process, error) {
 	}()
 
 	return process, nil
-}
-
-// Starts the MTGA server via @mtga-path
-func (m *MTGA) StartServer() {
-	// TODO: Implement the StartServer method
 }
 
 //#endregion EMU
