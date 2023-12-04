@@ -903,7 +903,6 @@ process, err := mtga.StartServer("C:/path/to/aki-server")
 */
 // Starts the MTGA server via @mtga-path
 func (m *MTGA) StartServer(serverPath string) (*os.Process, error) {
-	// Construct the command to run "go run backend.go" in the given folder
 	cmd := exec.Command("go", "run", "backend.go")
 	cmd.Dir = serverPath
 

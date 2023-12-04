@@ -11,6 +11,7 @@
   "dependencies": {
     "@vueuse/core": "^10.4.1",
     "@vueuse/shared": "^10.4.1",
+    "fitty": "^2.3.7",
     "floating-vue": "^2.0.0-beta.24",
     "mitt": "^3.0.1",
     "react-loading": "^2.0.3",

@@ -41,6 +41,7 @@
 import { GetRuntimeConfig } from "../../wailsjs/go/config/ConfigRunT"
 import { OpenFileSelector } from "../../wailsjs/go/launcher/UI"
 import { SetConfigVariable } from "../../wailsjs/go/config/ConfigRunT"
+import { CopyProfiles } from "../../wailsjs/go/config/ConfigRunT"
 export default {
   data() {
     return {
@@ -85,6 +86,7 @@ export default {
       await SetConfigVariable(inputField, selectedPath)
       const labelElement = document.querySelector(`label[for="${inputField}"]`);
       labelElement.innerHTML = labelElement.innerHTML + "\*"
+      CopyProfiles()
     },
     async fetchData() {
       try {

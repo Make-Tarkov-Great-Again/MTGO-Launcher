@@ -2,8 +2,11 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	logging "mtgolauncher/backend/Logging"
+	profile "mtgolauncher/backend/Profile"
 	storage "mtgolauncher/backend/Storage"
 	"os"
 	"path"
@@ -214,7 +217,6 @@ func (c ConfigRunT) GetRuntimeConfig() (Config, error) {
 func GetAKIServerInfo() (string, string, string, string, error) {
 	appDir, err := storage.GetAppDataDir()
 	if err != nil {
-		logging.Error("Failed to get runtime config")
 		return "", "", "", "", err
 	}
 
@@ -222,17 +224,69 @@ func GetAKIServerInfo() (string, string, string, string, error) {
 
 	configData, err := os.ReadFile(configPath)
 	if err != nil {
-		logging.Error("Failed to read runtime config")
 		return "", "", "", "", err
 	}
 
 	var runtimeConfig Config
 	if err := json.Unmarshal(configData, &runtimeConfig); err != nil {
-		logging.Error("Failed to unmarshal runtime config")
 		return "", "", "", "", err
 	}
 
+	// Check if the AKI Server path is not empty
+	if runtimeConfig.UserSettings.Server.AkiServerPath == "" {
+		return "", "", "", "", errors.New("AKI Server path is empty")
+	}
+
 	return runtimeConfig.UserSettings.Server.AkiServerPath, runtimeConfig.UserSettings.Server.AkiServerAddress, runtimeConfig.UserSettings.LastProfile, runtimeConfig.UserSettings.ClientPath, nil
+}
+
+func (c ConfigRunT) CopyProfiles() error {
+	appDir, err := storage.GetAppDataDir()
+	sourcePath := path.Join(runtimeConfig.UserSettings.Server.AkiServerPath, "user/profiles")
+	destinationPath := path.Join(appDir, "/profiles/AKI")
+	// Ensure the destination directory exists
+	if err := os.MkdirAll(destinationPath, os.ModePerm); err != nil {
+		return err
+	}
+
+	// List profile files in the source directory
+	profileFiles, err := os.ReadDir(sourcePath)
+	if err != nil {
+		return err
+	}
+
+	// Iterate over profile files and copy each one
+	for _, profileFile := range profileFiles {
+		if profileFile.IsDir() {
+			continue
+		}
+
+		srcFilePath := filepath.Join(sourcePath, profileFile.Name())
+		destFilePath := filepath.Join(destinationPath, profileFile.Name())
+
+		srcFile, err := os.Open(srcFilePath)
+		if err != nil {
+			return err
+		}
+		defer srcFile.Close()
+
+		destFile, err := os.Create(destFilePath)
+		if err != nil {
+			return err
+		}
+		defer destFile.Close()
+
+		if _, err := io.Copy(destFile, srcFile); err != nil {
+			return err
+		}
+
+		// Parse and save the profile after copying
+		if err := profile.ParseAndSaveProfile(destFilePath); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // Returns Client path, mtga server path, mtga server address, and last profile.
@@ -361,7 +415,9 @@ func (c ConfigRunT) SetConfigVariable(key, value string) error {
 	if err != nil {
 		logging.Error("Failed to marshal updated runtime config")
 		return err
+
 	}
+	defer NewConfig().CopyProfiles()
 
 	if err := os.WriteFile(configPath, updatedConfigData, 0644); err != nil {
 		logging.Error("Failed to write updated runtime config")

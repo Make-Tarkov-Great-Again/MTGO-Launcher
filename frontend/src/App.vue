@@ -1,11 +1,9 @@
 <template>
   <div class="systemApp">
-    <Topbar></Topbar>
+    <Sidebar></Sidebar>
   </div>
   <div class="outerApp2">
-    <div class="main-container" id="app">
       <MainApp></MainApp>
-    </div>
   </div>
 </template>
 
@@ -22,18 +20,19 @@ import {
 import { Menu as VMenu } from "floating-vue";
 import FloatingVue from 'floating-vue'
 import Topbar from './components/System/cus-Topbar.vue';
-
 import mitt from 'mitt';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 import MainApp from './components/main.vue';
 import eventEmitter from "./components/js/notifacation.js"
+import Sidebar from './components/app/Sidebar.vue';
 
 export default {
   components: {
     Topbar,
     MainApp,
-  },
+    Sidebar
+},
   setup() {
     const notifications = ref([]);
 
@@ -171,13 +170,16 @@ body {
 }
 
 .outerApp2 {
-  width: 918px;
-  height: 596px;
-  overflow: scroll;
-  color: dimgray;
-  border-radius: 15px;
-  background: transparent;
-
+  position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    color: dimgray;
+    border-radius: 15px;
+    background: transparent;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
 }
 
 .systemApp {
@@ -186,6 +188,7 @@ body {
   position: absolute;
   overflow: hidden;
   background: transparent;
+  z-index: 9999;
 }
 
 .notification {
@@ -220,13 +223,7 @@ body {
 }
 
 
-#app {
-  background-color: transparent;
-  position: absolute;
-  width: 90%;
-  height: 90%;
-  overflow: auto;
-}
+
 
 .mainapp {
   background-color: black;

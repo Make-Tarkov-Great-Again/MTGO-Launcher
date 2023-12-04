@@ -5,7 +5,7 @@
     <div class="floating-page" v-if="showFloatingPage">
       <router-view></router-view>
     </div>
-    <div class="workshop_header" style="overflow-x: hidden;">
+    <div class="workshop_header">
       <div class="browseAppDetails loadable">
       </div>
       <div class="workshop_browse_menu_area">
@@ -112,7 +112,8 @@
 </template>
 
 <script>
-import { initiateDownload } from "./js/main.js"
+import { initiateDownload } from "../js/main.js"
+import { Error } from "../../../wailsjs/go/launcher/UI";
 export default {
   data() {
     return {
@@ -154,17 +155,6 @@ export default {
           licence: 'MIT'
 
         },
-        {
-          id: 3,
-          title: 'SEX PER LEVEL',
-          imageUrl: 'https://hub.sp-tarkov.com/files/images/file/c7/1423.png',
-          author: 'Capataina',
-          tags: ['Server', 'Other', "QoL"],
-          version: '3.6.1',
-          downloadUrl: 'https://github.com/Capataina/HealthPerLevel/archive/refs/heads/main.zip',
-          licence: 'MIT'
-
-        }
       ],
       slideshowItems: [ //TODO: Make this use fetch
         {
@@ -186,9 +176,10 @@ export default {
   },
   methods: {
     ModPage(modID) {
-      this.showFloatingPage = true;
-      this.selectedModID = modID;
-      this.$router.push({ name: 'modpage', params: { id: modID } });
+      Error("Not implmented", "Check back later!")
+      //this.showFloatingPage = true;
+      //this.selectedModID = modID;
+      //this.$router.push({ name: 'modpage', params: { id: modID } });
     },
     openFloatingPage() {
       console.log('Door open sound')

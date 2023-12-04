@@ -1,15 +1,15 @@
 <template>
     <div class="container">
-        <p class="craft1">Nothings Crafting!</p>
-        <h3 class="craftingTime">Crafting Time</h3>
-        <h3 class="scavTimer">Scav Timer</h3>
+        <p class="craft1">Yeah this is heavily redacted</p>
+        <h3 class="craftingTime">tree fiddy</h3>
+        <h3 class="scavTimer">Some timer</h3>
         <p class="scavtimeText" :style="{ color: scavTimeColor }">{{ formattedScavTime }}</p>
         <p class="euroAmount">{{ formatNumber(profile.eurAmount) }}</p>
         <p class="usdAmount">{{ formatNumber(profile.usdAmount) }}</p>
         <p class="roublesAmount">{{ formatNumber(profile.rubAmount) }}</p>
-        <h1 class="roublesSymbol">₽</h1>
+        <h1 class="roublesSymbol">¥</h1>
         <h1 class="euroSymbol">€</h1>
-        <h1 class="usdSymbol">$</h1>
+        <h1 class="usdSymbol">£</h1>
         <hr class="1">
     </div>
 </template>

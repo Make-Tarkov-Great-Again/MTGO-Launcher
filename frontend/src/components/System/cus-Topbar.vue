@@ -1,7 +1,7 @@
 <template>
   <div class="settings-popout-container" v-if="showSettings">
   </div>
-  <svg class="home" onclick="">
+  <svg class="home" onclick="location.reload()">
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     width="19px" height="24px">
@@ -39,6 +39,13 @@
   </svg>
 
 
+  <div class="branding">
+    <p>© Make-Tarkov-Great-Again 2023. Drag here to move window
+      <br>
+      This beta version does not represent the final quality of the product.
+    </p>
+  </div>
+
 
   <svg class="settings" @click="toggleSettings" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" width="22px" height="22px">
@@ -63,6 +70,7 @@
 <script>
 import {
   // Directives
+
   VTooltip,
   VClosePopper,
   // Components
@@ -103,20 +111,24 @@ export default {
   },
   mounted() {
     eventEmitter.on('new-notification', (notification) => {
-  const notificationIcon = document.querySelector(".notification");
-  const notificationIconActive = document.querySelector(".notification.active");
+      const notificationIcon = document.querySelector(".notification");
+      const notificationIconActive = document.querySelector(".notification.active");
+      const box = document.querySelector(".box")
 
 
+      if (box === null) {
+        console.log("Box = ", box)
+        if (!notificationIcon.classList.contains("active")) {
+          console.log("sexxu 121231")
+          notificationIcon.classList.add("active");
+        }
 
-  if (!notificationIcon.classList.contains("active")) {
-    notificationIcon.classList.add("active");
-  }
-
-  notificationIcon.addEventListener("click", function clickHandler() {
-    notificationIcon.classList.remove("active");
-      notificationIcon.removeEventListener("click", clickHandler);
+        notificationIcon.addEventListener("click", function clickHandler() {
+          notificationIcon.classList.remove("active");
+          notificationIcon.removeEventListener("click", clickHandler);
+        })
+      } else { console.log("bruhh") };
     });
-});
 
 
 
@@ -288,12 +300,22 @@ export default {
   position: absolute;
   left: 50%;
   translate: -50%;
-  top: 9px;
-  width: 147px;
+  top: -10px;
   height: 16px;
   z-index: 9;
   --wails-draggable: drag
 }
+
+.branding p {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1;
+}
+
 
 
 .settings {
@@ -314,5 +336,4 @@ export default {
   width: 903px;
   height: 592px;
   z-index: 4;
-}
-</style>
+}</style>

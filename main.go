@@ -78,7 +78,7 @@ func main() {
 		Windows: &windows.Options{
 			WebviewIsTransparent:              true,
 			WindowIsTranslucent:               true,
-			BackdropType:                      windows.Tabbed,
+			BackdropType:                      windows.Acrylic,
 			DisableWindowIcon:                 false,
 			DisableFramelessWindowDecorations: false,
 			IsZoomControlEnabled:              false,

@@ -9,14 +9,13 @@
   
   <link href="https://pastebin.com/raw/LHRPBQ2X" rel="stylesheet">
 
-  <script type="module" crossorigin src="/assets/index.0d1fe70b.js"></script>
-  <link rel="stylesheet" href="/assets/index.19d1c0bd.css">
+  <script type="module" crossorigin src="/assets/index.a9002605.js"></script>
+  <link rel="stylesheet" href="/assets/index.27376190.css">
 </head>
+
 <body>
-  <div class="outerApp">
     <div class="main-container" id="app">
       
-    </div>
   </div>
 </body>
 <style>
@@ -26,48 +25,53 @@
     overflow: hidden;
     position: absolute;
     color: dimgray;
-    background: rgb(1,4,9);
-    background: linear-gradient(90deg, rgba(1,4,9,1) 0%, rgba(7,11,16,0.3) 50%, rgba(13,17,23,1) 100%);
+    background: rgb(1, 4, 9);
+    background: linear-gradient(90deg, rgba(1, 4, 9, 1) 0%, rgba(7, 11, 16, 0.3) 50%, rgba(13, 17, 23, 1) 100%);
   }
+
   .notification {
-  position: absolute;
-  left: 909px;
-  top: 5px;
-  width: 21px;
-  height: 24px;
-  border-radius: 120px;
+    position: absolute;
+    left: 909px;
+    top: 5px;
+    width: 21px;
+    height: 24px;
+    border-radius: 120px;
 
-}
+  }
 
-.notification:active {
-  border: white 1px solid;
-  animation: ring 1.5s infinite alternate;
-}
+  .notification:active {
+    border: white 1px solid;
+    animation: ring 1.5s infinite alternate;
+  }
 
-@keyframes ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(15deg);
-  }
-  75% {
-    transform: rotate(-15deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
+  @keyframes ring {
+    0% {
+      transform: rotate(0deg);
+    }
 
+    50% {
+      transform: rotate(15deg);
+    }
+
+    75% {
+      transform: rotate(-15deg);
+    }
+
+    100% {
+      transform: rotate(0deg);
+    }
+  }
 
   #app {
-    background-color: #0d1117;
+    background-color: transparent;
     position: absolute;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background: rgb(1,4,9);
-    background: linear-gradient(90deg, rgba(1,4,9,1) 0%, rgba(7,11,16,0.3) 50%, rgba(13,17,23,1) 100%);
+    background: url("/assets/mtga-glow-background.3692815c.png"), transparent;
+    background-repeat: no-repeat, no-repeat;
+    background-position: bottom, center;
+    background-blend-mode: hard-light;
   }
 
   .mainapp {
@@ -99,17 +103,6 @@
     height: 14px;
   }
 
-  .branding {
-    position: absolute;
-    left: 50%;
-    translate: -50%;
-    top: 9px;
-    width: 147px;
-    height: 16px;
-    --wails-draggable: drag
-  }
-
-
   .settings {
     position: absolute;
     left: 940px;
@@ -127,6 +120,48 @@
     width: 903px;
     height: 592px;
   }
+
+  body {
+  margin: 0;
+  line-height: normal;
+}
+
+  :root {
+  /* fonts */
+  --font-inter: Inter;
+
+  /* font sizes */
+  --font-size-13xl: 32px;
+  --font-size-xs: 12px;
+  --font-size-base: 16px;
+
+  /* Colors */
+  --color-gray-100: #1e1e1e;
+  --color-gray-300: #171719;
+  --color-gray-200: #151618;
+  --color-white: #fff;
+  --color-silver-100: #bdbdc0;
+  --color-silver-200: rgba(189, 189, 192, 0.08);
+  --color-crimson: #e64343;
+  --color-darkslateblue-100: #375a9b;
+  --color-mediumseagreen: #36ba5f;
+
+  /* Gaps */
+  --gap-5xl: 24px;
+
+  /* Paddings */
+  --padding-base: 16px;
+  --padding-13xl: 32px;
+  --padding-5xs: 8px;
+  --padding-8xs: 5px;
+  --padding-3xs: 10px;
+
+  /* Border radiuses */
+  --br-5xs: 8px;
+  --br-8869xl: 8888px;
+}
+
+
 </style>
 
 </html>

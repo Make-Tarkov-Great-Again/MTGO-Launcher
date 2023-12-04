@@ -1,5 +1,5 @@
 <template>
-  <VDropdown :theme="'hover'" :placement="'auto'" :triggers="['hover']" @show="showHoverInfo" @hide="hideHoverInfo">
+  <VDropdown :theme="'hover'" :placement="'auto'" :triggers="['hover']" :hideTriggers="['click']" @show="showHoverInfo" @hide="hideHoverInfo">
 
     <div class="profile-container" @mouseover="showHoverInfo" @mouseleave="hideHoverInfo" alt="Profile Background">
 
@@ -102,6 +102,7 @@ export default {
     },
   },
   mounted() {
+    this.hoverInfoVisible = true
 
     const maxExperience = levels[0]['80'];
     const nextLevel = Math.ceil(this.profile.Level / 5) * 5 + 5;

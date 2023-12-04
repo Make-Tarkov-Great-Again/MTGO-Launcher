@@ -12,10 +12,8 @@
 </head>
 
 <body>
-  <div class="outerApp">
     <div class="main-container" id="app">
       <script src="./src/main.js" type="module"></script>
-    </div>
   </div>
 </body>
 <style>
@@ -69,8 +67,10 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background: rgb(1, 4, 9);
-    background: linear-gradient(90deg, rgba(1, 4, 9, 1) 0%, rgba(7, 11, 16, 0.3) 50%, rgba(13, 17, 23, 1) 100%);
+    background: url("/src/assets/images/mtga-glow-background.png"), transparent;
+    background-repeat: no-repeat, no-repeat;
+    background-position: bottom, center;
+    background-blend-mode: hard-light;
   }
 
   .mainapp {
@@ -102,16 +102,6 @@
     height: 14px;
   }
 
-  .branding {
-    position: absolute;
-    left: 50%;
-    translate: -50%;
-    top: 9px;
-    width: 147px;
-    height: 16px;
-    --wails-draggable: drag
-  }
-
 
   .settings {
     position: absolute;
@@ -130,6 +120,48 @@
     width: 903px;
     height: 592px;
   }
+
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+body {
+  margin: 0;
+  line-height: normal;
+}
+:root {
+  /* fonts */
+  --font-inter: Inter;
+
+  /* font sizes */
+  --font-size-13xl: 32px;
+  --font-size-xs: 12px;
+  --font-size-base: 16px;
+
+  /* Colors */
+  --color-gray-100: #1e1e1e;
+  --color-gray-300: #171719;
+  --color-gray-200: #151618;
+  --color-white: #fff;
+  --color-silver-100: #bdbdc0;
+  --color-silver-200: rgba(189, 189, 192, 0.08);
+  --color-crimson: #e64343;
+  --color-darkslateblue-100: #375a9b;
+  --color-mediumseagreen: #36ba5f;
+
+  /* Gaps */
+  --gap-5xl: 24px;
+
+  /* Paddings */
+  --padding-base: 16px;
+  --padding-13xl: 32px;
+  --padding-5xs: 8px;
+  --padding-8xs: 5px;
+  --padding-3xs: 10px;
+
+  /* Border radiuses */
+  --br-5xs: 8px;
+  --br-8869xl: 8888px;
+}
+
+
 </style>
 
 </html>
