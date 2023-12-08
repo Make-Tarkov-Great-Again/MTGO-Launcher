@@ -28,14 +28,13 @@
   <div class="game-choices" v-if="!selectingProfile">
 
     <h1 class="flavor">Pick your poison</h1>
-
-    <div class="game-choice" v-if="!selectingProfile" @click="selectGame('AKI')">
-      <img src="/src/assets/images/AKI-Logo.jpg" alt="" class="game-image">
-      <p class="game-name">SPT-AKI</p>
-    </div>
     <div class="game-choice" v-if="!selectingProfile" @click="selectGame('MTGA')">
       <img src="/src/assets/images/MTGA-Logo.png" alt="MTGA" class="game-image">
       <p class="game-name">MTGA</p>
+    </div>
+    <div class="game-choice" v-if="!selectingProfile" @click="selectGame('AKI')">
+      <img src="/src/assets/images/Fork-Logo.png" alt="" class="game-image">
+      <p class="game-name">MTGA-Forks</p>
     </div>
   </div>
 </template>

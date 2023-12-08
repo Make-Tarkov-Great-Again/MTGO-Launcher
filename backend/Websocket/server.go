@@ -74,6 +74,11 @@ func (wsm *WebSocketManager) InitWebSocket() {
 	go wsm.handleDownloadRequests()
 }
 
+// handles popups, and the responses from them.
+func PENWS() {
+
+}
+
 // StartServer starts the WebSocket server.
 func (wsm *WebSocketManager) StartServer() {
 	err := wsm.server.ListenAndServe()

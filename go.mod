@@ -2,7 +2,10 @@ module mtgolauncher
 
 go 1.18
 
-require github.com/wailsapp/wails/v2 v2.5.1
+require (
+	github.com/denisbrodbeck/machineid v1.0.1
+	github.com/wailsapp/wails/v2 v2.5.1
+)
 
 require (
 	github.com/dsnet/compress v0.0.1 // indirect

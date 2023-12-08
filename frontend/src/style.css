@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bender:wght@400&display=swap");
+
 @keyframes loadingAnimation {
   0% {
     transform: rotate(0)
@@ -324,6 +327,56 @@ html {
   --text-color: #EDEDED;
   --aki-orange: #ffc107;
   --mtga-blue: #262f83;
+  --color-gray-400: #23262a;
+  --color-gray-500: #23252a;
+  --button-2: #1e1e1e;
+  --color-gray-300: #171719;
+  --select: #151618;
+  --color-darkslateblue-100: #375a9b;
+  --main-text: #bdbdc0;
+  --stroce: rgba(189, 189, 192, 0.08);
+  --color-white: #fff;
+  --green: #36ba5f;
+  --color-crimson: #e64343;
+    /* fonts */
+    --text: Inter;
+    --font-bender: Bender;
+
+    /* font sizes */
+    --text-size: 16px;
+    --h1-size: 32px;
+    --button-size: 12px;
+    --font-size-xl: 20px;
+
+    /* Colors */
+    --color-gray-400: #23262a;
+    --color-gray-500: #23252a;
+    --button-2: #1e1e1e;
+    --color-gray-300: #171719;
+    --select: #151618;
+    --color-darkslateblue-100: #375a9b;
+    --main-text: #bdbdc0;
+    --stroce: rgba(189, 189, 192, 0.08);
+    --color-white: #fff;
+    --green: #36ba5f;
+    --color-crimson: #e64343;
+
+    /* Gaps */
+    --gap-5xl: 24px;
+    --gap-7xs: 6px;
+    --gap-8xs: 5px;
+
+    /* Paddings */
+    --padding-base: 16px;
+    --padding-13xl: 32px;
+    --padding-5xs: 8px;
+    --padding-8xs: 5px;
+    --padding-3xs: 10px;
+    --padding-9xs: 4px;
+
+    /* Border radiuses */
+    --br-8869xl: 8888px;
+    --br-5xs: 8px;
 }
 
 @media screen and (min-width:1280px) {

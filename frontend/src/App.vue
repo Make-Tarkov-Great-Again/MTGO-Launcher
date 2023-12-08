@@ -171,15 +171,17 @@ body {
 
 .outerApp2 {
   position: absolute;
-    width: 100%;
+    width: 850px;
     height: 100%;
+    right: 128px;
     overflow: scroll;
     color: dimgray;
     border-radius: 15px;
     background: transparent;
-    left: 50%;
+    left: 57%;
     top: 50%;
     translate: -50% -50%;
+    z-index: 9999;
 }
 
 .systemApp {
@@ -188,7 +190,7 @@ body {
   position: absolute;
   overflow: hidden;
   background: transparent;
-  z-index: 9999;
+  z-index: 9998;
 }
 
 .notification {

@@ -432,6 +432,8 @@ func (d *Download) StartDownloading() {
 	}()
 }
 
+// This function will be greatly changed for how it gets mods, you can already see hints of this, via "MOD-ID",
+// Mods will be gotten in a secure and centerailzed way in not too long,
 func (d *Download) Mod(modID int, fileURL string, wsConn *websocket.Conn, modName string, modAuthor string) error {
 	// TODO: Get download URL from Database via ModID
 	//database.request.mod(modID)

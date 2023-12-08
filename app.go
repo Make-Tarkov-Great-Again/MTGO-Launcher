@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	anal "mtgolauncher/backend/Anal"
 	launcher "mtgolauncher/backend/Launcher"
 	log "mtgolauncher/backend/Logging"
 	notifications "mtgolauncher/backend/Notifications"
 	profile "mtgolauncher/backend/Profile"
 	storage "mtgolauncher/backend/Storage"
 
+	identifcation "mtgolauncher/backend/Identifcation"
 	"mtgolauncher/backend/Storage/config"
 )
 
@@ -23,6 +25,10 @@ func NewApp() *App {
 
 // Initilize app.
 func (a *App) startup(ctx context.Context) {
+	hwid, err := identifcation.GetHWID()
+	if err != nil {
+		fmt.Println(err)
+	}
 	go log.Init()
 	a.ctx = ctx
 	log.Info("MTGO-Launcher version 0.0.1. This application falls under MIT licence. If you paid money for this, you got scammed. | https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher")
@@ -30,6 +36,7 @@ func (a *App) startup(ctx context.Context) {
 	//Online check
 	if launcher.NewOnline().Check() {
 		fmt.Println("Connected to the internet... Starting in online mode.")
+		anal.SendIdleRequest(hwid)
 		//I guess i really dont have to do anything here...
 	} else {
 		fmt.Println("No internet connection... Starting in offline mode. Check your firewall if this is a error.")
