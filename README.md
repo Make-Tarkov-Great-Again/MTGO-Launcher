@@ -1,123 +1,93 @@
+<p align="center">
+    <img align="center" alt="GitHub" style="height: 64px; width: 54px;" src="https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher/assets/70953258/8e6a91ce-f602-4aad-ab9e-3f15b85f1fe8"/>
 
-
-<p  align="center">
-
-<img  src="https://user-images.githubusercontent.com/21200584/224684261-cfd9d151-91f5-4c31-8cfa-93cac25295e5.png"  alt="MTGABABYYY">
-
-<br>
-
-<b>It's going to be great, so great, in fact it will be the best</b>
-
+  <p align="center">
+  <a href="https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher/blob/master/LICENSE">
+    <img alt="GitHub" src="https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher/assets/70953258/32cb1434-2829-4cb3-8fb9-19fb548acb6e"/>
+  </a>
+  <a href="https://goreportcard.com/report/github.com/wailsapp/wails">
+    <img src="https://goreportcard.com/badge/github.com/Make-Tarkov-Great-Again/MTGO-Launcher"/>
+  </a>
+  <a href="https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher/issues">
+    <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="CodeFactor" />
+  </a>
+  <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FEFHDev%2FMTGO-Launcher?utm_source=share_link" alt="FOSSA Status">
+    <img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FEFHDev%2FMTGO-Launcher.svg?type=shield&issueType=license" />
+  </a>
+  <a href="https://discord.gg/maketarkovgreatagain">
+    <img alt="Discord" src="https://dcbadge.vercel.app/api/server/maketarkovgreatagain?style=flat"/>
+  </a>
+  <br/>
 </p>
 
-# NOTICE
+<h1 align="center">Event Horizion</h1>
+<p align="center"> 
+<img alt="" style="width: 45vw; height: auto;" src="https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher/assets/70953258/9f498454-e7f9-452e-84d2-807c29baabf6"/>
+</p>
 
-This Github source WILL be missing code that relates to security and how we encrypt things.  
+<p align="center" style="text-decoration: underline dotted red;">It's going to be great, so great, in fact, it will be the best.</p>
+
+## NOTICE
+
+This Github source will be missing code related to security and encryption.
 
 ## Screenshots
-### MTGA Fork Workshop
-![image](https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher/assets/70953258/a984f21b-9f46-4969-9ec7-eab07ddfa8bf)
 
-Planning on Forking MTGA for your project? Contact us! You can have one of these to call your own, and have full creative control over it!
+### Event Horizon: User pages
+<img src="https://github.com/Make-Tarkov-Great-Again/MTGO-Launcher/assets/70953258/3c4b4727-ae82-43b2-a005-6cc862a6f770" width="510" height="332">
+
 
 ## Features
 
-### Steam-Like Subscription Based Downloading and Installing
-MTGO Launcher offers a subscription-based model similar to Steam, allowing users to access and download mods seamlessly. This feature streamlines the process of acquiring and installing mods, making it more convenient and user-friendly.
+### Download and Install Mods
 
+Event Horizon offers a seamless subscription-based model similar to Steam, allowing users to access and download mods with unimaginable speed. This feature streamlines the process of acquiring and installing mods, making it more convenient and user-friendly than ever before.
 
-### Multiple Mod Profiles with Separate User-Profiles
-MTGO Launcher introduces the concept of multiple mod profiles, allowing users to create and manage different sets of mods for their games. Each mod profile can have its own separate user-profiles, enabling users to customize their experience for different gameplay styles or preferences.
+### Multiple Mod Profiles
 
-### Auto Updates for Mods
-Stay up-to-date effortlessly with the auto update feature of MTGO Launcher. When a new version of a mod is released, the launcher will automatically download and install the latest version, ensuring that you always have the most current enhancements and fixes.
+Event Horizon introduces the concept of multiple mod profiles, allowing users to create and manage different sets of mods for their games. Each mod profile can have its own separate user-profiles, enabling users to customize their experience for different gameplay styles or preferences, just like exploring different galaxies.
+
+### Auto-Updates for Mods
+
+Stay up-to-date effortlessly with the auto-update feature of Event Horizon. When a new version of a mod is released, the launcher will automatically download and install the latest version, ensuring you always have the most current enhancements and fixes, like a cosmic update from the center of the black hole.
 
 ### Seamless Management of Mods for MTGA
-MTGO Launcher simplifies the management of mods by providing the ability to handle mods for Make Tarkov Great Again. This compatibility allows users to organize and customize their mods for each profile independently. Additionally, the launcher enables users to switch between these profiles in one click eliminating the hassle of navigating through multiple interfaces.
 
+Event Horizon simplifies the management of mods by providing the ability to handle mods for Make Tarkov Great Again. This compatibility allows users to organize and customize their mods for each profile independently, like arranging constellations in the night sky. Additionally, the launcher enables users to switch between these profiles in one click, eliminating the hassle of navigating through multiple interfaces.
 
 ## Planned Features
 
-Out of game Stash UI
-
-Numerous debugging tools
-
-A few secert ones we cant tell you about... 
-
-Charcter Editor
-
+* Out-of-game Stash UI
+* Numerous debugging tools
+* A few we cant reveal yet
+* Character Editor
 
 ## Usage
 
-
-
-AKI Version: ~3.6.1~ Deprecated Use MTGA
-
-MTGA Version: Latest
-
-GO Version: 1.21.0 windows/amd64
+**AKI Version:** ~3.6.1~ (Deprecated, use MTGA)  
+**MTGA Version:** Latest  
+**GO Version:** 1.21.0 windows/amd64
 
 ```diff
 ! Right now this is a prototype, a proof of concept. A backend server has not been made yet. As such, no functionality is ready.
 ```
-
-
 ## Known issues
-
-
 
 None at the moment.
 
-
-
 ## Who are we, and why are we doing this?
 
+Make Tarkov Great Again is a project founded by a few Altered Escape developers. We felt that there shouldn't just be one option for Tarkov offline play and began development on MTGA.
 
-
-MTGA is a organization founded by a few Altered Escape developers.
-
-
-
-We felt that there shouldn't just be one option for emulation and began development on MTGA
-
-We are developing this launcher to offer an accessible experience to all those in the tarkov offline scene.
-
-
-
-## Community
-
-
-
-Our Discord is undergoing construction and is only available to those we invite.
-
-
-
-[For the time being, any serious inquiries should be forwarded to Discussions](https://github.com/Make-Tarkov-Great-Again/MTGA-Backend/discussions)
-
+We are developing this launcher to offer an accessible experience to all those in the EmuTarkov Scene.
 
 
 ## Contribution
 
-
-
 - Is there a part of the launcher you want to tackle?
-
 - Some code you would like to refactor?
-
 - Got an idea you would like to share/implement?
 
+Feel free to create a fork, open a pull request, and request a review: **We are open to any contribution!**
 
-
-Feel free to create a fork, open a pull request and request a review: **We are open to any contribution!**
-
-
-
-**To keep your fork up-to-date**, [we recommend using Pull](https://github.com/wei/pull)!
-
-## Third-party Libraries and Licenses
-
-- **github.com/mholt/archiver:** This project uses the "github.com/mholt/archiver" library, which is licensed under the MIT License. You can find the full text of the MIT License in the [LICENCE ARCHIVER](Licences/Archiver/LICENCE%20ARCHIVER) file.
-
-  
-
-<p  align="center"><img  src = "https://user-images.githubusercontent.com/21200584/183050357-6c92f1cd-68ca-4f74-b41d-1706915c67cf.gif"></p>
+**To keep your fork up-to-date, we recommend using Pull!**
