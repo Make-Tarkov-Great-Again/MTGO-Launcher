@@ -45,15 +45,15 @@ Event Horizon offers a seamless subscription-based model similar to Steam, allow
 
 ### Multiple Mod Profiles
 
-Event Horizon introduces the concept of multiple mod profiles, allowing users to create and manage different sets of mods for their games. Each mod profile can have its own separate user-profiles, enabling users to customize their experience for different gameplay styles or preferences, just like exploring different galaxies.
+Event Horizon introduces the concept of multiple mod profiles, allowing users to create and manage different sets of mods for their games. Each mod profile can have its own separate user-profiles, enabling users to customize their experience for different gameplay styles or preferences
 
 ### Auto-Updates for Mods
 
-Stay up-to-date effortlessly with the auto-update feature of Event Horizon. When a new version of a mod is released, the launcher will automatically download and install the latest version, ensuring you always have the most current enhancements and fixes, like a cosmic update from the center of the black hole.
+Stay up-to-date effortlessly with the auto-update feature of Event Horizon. When a new version of a mod is released, the launcher will automatically download and install the latest version, ensuring you always have the most current enhancements and fixes,
 
 ### Seamless Management of Mods for MTGA
 
-Event Horizon simplifies the management of mods by providing the ability to handle mods for Make Tarkov Great Again. This compatibility allows users to organize and customize their mods for each profile independently, like arranging constellations in the night sky. Additionally, the launcher enables users to switch between these profiles in one click, eliminating the hassle of navigating through multiple interfaces.
+Event Horizon simplifies the management of mods by providing the ability to handle mods for Make Tarkov Great Again. This compatibility allows users to organize and customize their mods for each profile independently.
 
 ## Planned Features
 
